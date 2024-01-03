@@ -5,9 +5,4 @@ interface DataProps<T> {
   children?: ReactElement;
 }
 
-interface AdminPageProps {
-  auth: ReactElement;
-  layout: ReactElement;
-}
-
-export type { DataProps, AdminPageProps };
+export type { DataProps };

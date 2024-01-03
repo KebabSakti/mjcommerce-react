@@ -11,5 +11,5 @@ export default function AdminPageMiddleware({
     return children;
   }
 
-  return <Navigate to="/admin" />;
+  return <Navigate replace to="/admin" />;
 }

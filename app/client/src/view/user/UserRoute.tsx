@@ -1,11 +1,15 @@
+import { Provider } from "react-redux";
 import { RouteObject } from "react-router-dom";
 import UserLayout from "./UserLayout";
 import HomePage from "./home/HomePage";
-import ErrorPage from "../ErrorPage";
+import { userStore } from "./userStoreRedux";
 
 const userRoute: RouteObject = {
-  element: <UserLayout />,
-  errorElement: <ErrorPage />,
+  element: (
+    <Provider store={userStore}>
+      <UserLayout />
+    </Provider>
+  ),
   children: [
     {
       path: "/",

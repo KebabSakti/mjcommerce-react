@@ -1,11 +1,19 @@
 import { faker } from "@faker-js/faker";
 import { Carousel } from "@material-tailwind/react";
+import { useEffect } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Currency from "../../../lib/helper/currency";
+import { RootState } from "../userStoreRedux";
 
 export default function HomePage() {
+  const hello = useSelector((state: RootState) => state.hello.value);
+
+  useEffect(() => {
+    console.log(hello);
+  }, []);
+
   return (
     <div className="min-h-screen">
       {/* BANNER */}
@@ -16,11 +24,11 @@ export default function HomePage() {
               return (
                 <img
                   key={i}
-                  src={`https://picsum.photos/800/500.webp?random=${i + 250}`}
+                  src={`https://picsum.photos/500/500.webp?random=${i + 250}`}
                   alt=""
-                  width={800}
+                  width={500}
                   height={500}
-                  className="w-full h-full object-cover grow"
+                  className="bg-gray-100 object-cover h-full w-full"
                 />
               );
             })}
@@ -28,20 +36,20 @@ export default function HomePage() {
           <div className="flex h-24 gap-1 lg:h-52 lg:flex-1 lg:flex-col">
             <Link to="" className="flex-1 overflow-hidden">
               <img
-                src={`https://picsum.photos/800/500.webp?random=99`}
+                src={`https://picsum.photos/500/500.webp?random=99`}
                 alt=""
-                width={1000}
-                height={602}
-                className="w-full h-full object-cover"
+                width={500}
+                height={500}
+                className="bg-gray-100 w-full h-full object-cover"
               />
             </Link>
             <Link to="" className="flex-1 overflow-hidden">
               <img
-                src={`https://picsum.photos/800/500.webp?random=100`}
+                src={`https://picsum.photos/500/500.webp?random=100`}
                 alt=""
-                width={1000}
-                height={667}
-                className="w-full h-full object-cover"
+                width={500}
+                height={500}
+                className="bg-gray-100 w-full h-full object-cover"
               />
             </Link>
           </div>
@@ -225,14 +233,14 @@ export default function HomePage() {
       <div className="mt-2 mx-4 grid grid-cols-2 gap-2 md:grid-cols-5 lg:grid-cols-6 lg:w-3/5 lg:mx-auto">
         {[...Array(102)].map((_, i) => {
           return (
-            <Link key={i} to="" className="bg-surface w-full">
-              <div className="h-36">
+            <Link key={i} to="" className="bg-surface">
+              <div className="h-36 w-full overflow-hidden">
                 <LazyLoadImage
                   src={`https://picsum.photos/200/200.webp?random=${i + 50}`}
                   alt=""
                   height={200}
                   width={200}
-                  className="bg-gray-100 object-cover h-full"
+                  className="bg-gray-100 object-cover h-full w-full"
                 />
               </div>
               <div className="p-2 h-28 text-onSurface flex flex-col justify-between">
