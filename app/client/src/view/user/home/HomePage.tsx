@@ -72,84 +72,27 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <Carousel
-          navigation={() => null}
-          nextArrow={({ handleNext }) => {
+        <div className="grid grid-rows-2 grid-flow-col gap-1 overflow-x-scroll justify-start snap-x">
+          {[...Array(50)].map((_, i) => {
             return (
-              <button
-                onClick={handleNext}
-                className="bg-primary text-onPrimary font-bold border-4 border-background pl-1 h-12 w-12 rounded-full flex justify-start items-center !absolute top-2/4 !-right-5 -translate-y-2/4"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m8.25 4.5 7.5 7.5-7.5 7.5"
-                  />
-                </svg>
-              </button>
-            );
-          }}
-          prevArrow={({ handlePrev }) => {
-            return (
-              <button
-                onClick={handlePrev}
-                className="bg-primary text-onPrimary font-bold border-4 border-background pl-4 h-12 w-12 rounded-full flex justify-start items-center !absolute top-2/4 !-left-5 -translate-y-2/4"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 19.5 8.25 12l7.5-7.5"
-                  />
-                </svg>
-              </button>
-            );
-          }}
-        >
-          {[...Array(Math.floor(50 / 16))].map((_, i) => {
-            return (
-              <div
+              <Link
                 key={i}
-                className="w-full grid grid-rows-2 grid-flow-col gap-1"
+                to=""
+                className="bg-surface w-24 h-24 snap-start flex flex-col justify-center items-center md:w-28 md:h-28 lg:w-32 lg:h-32"
               >
-                {[...Array(16)].map((_, n) => {
-                  return (
-                    <Link
-                      key={n}
-                      to=""
-                      className="bg-surface px-2 py-4 snap-start flex flex-col justify-center items-center"
-                    >
-                      <img
-                        src={`https://picsum.photos/50.webp?random=${n + i}`}
-                        alt=""
-                        width={50}
-                        height={50}
-                      />
-                      <div className="mt-2 text-onSurface text-xs text-center px-4 line-clamp-2 lg:text-sm">
-                        {faker.commerce.productName()}
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
+                <LazyLoadImage
+                  src={`https://picsum.photos/40/40.webp?random=${i + 90}`}
+                  width={40}
+                  height={40}
+                  className="bg-gray-100"
+                />
+                <div className="text-onSurface text-xs font-semibold mt-2 line-clamp-2">
+                  {faker.commerce.department()}
+                </div>
+              </Link>
             );
           })}
-        </Carousel>
+        </div>
       </div>
       {/* KATEGORI */}
 
