@@ -7,7 +7,7 @@ export default function AdminPageMiddleware({
   children: ReactElement;
 }) {
   //validation goes here
-  if (false) {
+  if (true) {
     return children;
   }
 

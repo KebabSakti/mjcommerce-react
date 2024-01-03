@@ -1,5 +1,6 @@
 import { RouteObject } from "react-router-dom";
 import AdminPageMiddleware from "./AdminPageMiddleware";
+import AdminLayout from "./AdminLayout";
 
 const adminRoute: RouteObject = {
   path: "/admin",
@@ -9,16 +10,24 @@ const adminRoute: RouteObject = {
       element: <div>LOGIN</div>,
     },
     {
-      path: "authenticated",
+      path: "app",
       element: (
         <AdminPageMiddleware>
-          <div>LAYOUT</div>
+          <AdminLayout />
         </AdminPageMiddleware>
       ),
       children: [
         {
+          index: true,
+          element: <div>DASHBOARD</div>,
+        },
+        {
           path: "dashboard",
           element: <div>DASHBOARD</div>,
+        },
+        {
+          path: "product",
+          element: <div>PRODUCT</div>,
         },
       ],
     },

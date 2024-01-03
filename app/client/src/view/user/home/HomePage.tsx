@@ -1,5 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { Carousel } from "@material-tailwind/react";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 import { Link } from "react-router-dom";
 import Currency from "../../../lib/helper/currency";
 
@@ -119,18 +121,18 @@ export default function HomePage() {
             );
           }}
         >
-          {[...Array(Math.floor(50 / 6))].map((_, i) => {
+          {[...Array(Math.floor(50 / 16))].map((_, i) => {
             return (
               <div
                 key={i}
                 className="w-full grid grid-rows-2 grid-flow-col gap-1"
               >
-                {[...Array(6)].map((_, n) => {
+                {[...Array(16)].map((_, n) => {
                   return (
                     <Link
                       key={n}
                       to=""
-                      className="bg-surface p-2 snap-start flex flex-col justify-center items-center"
+                      className="bg-surface px-2 py-4 snap-start flex flex-col justify-center items-center"
                     >
                       <img
                         src={`https://picsum.photos/50.webp?random=${n + i}`}
@@ -176,15 +178,17 @@ export default function HomePage() {
         <div className="grid grid-rows-1 grid-flow-col gap-2 overflow-x-scroll justify-start snap-x">
           {[...Array(50)].map((_, i) => {
             return (
-              <Link key={i} to="" className="w-40 snap-start flex flex-col">
-                <img
-                  src={`https://picsum.photos/200.webp?random=${i}`}
-                  alt=""
-                  width={200}
-                  height={200}
-                  className="w-full object-cover grow"
-                />
-                <div className="text-onSurface h-28 p-2 flex flex-col justify-between">
+              <Link key={i} to="" className="w-36 snap-start">
+                <div className="h-36">
+                  <LazyLoadImage
+                    src={`https://picsum.photos/200/200.webp?random=${i}`}
+                    alt=""
+                    height={200}
+                    width={200}
+                    className="bg-gray-100 object-cover h-full"
+                  />
+                </div>
+                <div className="p-2 h-28 text-onSurface flex flex-col justify-between">
                   <div className="text-sm line-clamp-2">
                     {faker.commerce.productName()}
                   </div>
@@ -192,7 +196,7 @@ export default function HomePage() {
                     <div className="text-xs">
                       per {faker.science.unit().name}
                     </div>
-                    <div className="text-sm font-bold">
+                    <div className="font-semibold">
                       {Currency.format(
                         faker.commerce.price({
                           min: 1000,
@@ -235,15 +239,17 @@ export default function HomePage() {
         <div className="grid grid-rows-1 grid-flow-col gap-2 overflow-x-scroll justify-start snap-x">
           {[...Array(50)].map((_, i) => {
             return (
-              <Link key={i} to="" className="w-40 snap-start flex flex-col">
-                <img
-                  src={`https://picsum.photos/200.webp?random=${i + 10}`}
-                  alt=""
-                  width={200}
-                  height={200}
-                  className="w-full object-cover grow"
-                />
-                <div className="text-onSurface h-28 p-2 flex flex-col justify-between">
+              <Link key={i} to="" className="w-36 snap-start">
+                <div className="h-36">
+                  <LazyLoadImage
+                    src={`https://picsum.photos/200/200.webp?random=${i + 30}`}
+                    alt=""
+                    height={200}
+                    width={200}
+                    className="bg-gray-100 object-cover h-full"
+                  />
+                </div>
+                <div className="p-2 h-28 text-onSurface flex flex-col justify-between">
                   <div className="text-sm line-clamp-2">
                     {faker.commerce.productName()}
                   </div>
@@ -251,7 +257,7 @@ export default function HomePage() {
                     <div className="text-xs">
                       per {faker.science.unit().name}
                     </div>
-                    <div className="text-sm font-bold">
+                    <div className="font-semibold">
                       {Currency.format(
                         faker.commerce.price({
                           min: 1000,
@@ -276,21 +282,23 @@ export default function HomePage() {
       <div className="mt-2 mx-4 grid grid-cols-2 gap-2 md:grid-cols-5 lg:grid-cols-6 lg:w-3/5 lg:mx-auto">
         {[...Array(102)].map((_, i) => {
           return (
-            <Link key={i} to="" className="bg-surface flex flex-col">
-              <img
-                src={`https://picsum.photos/200.webp?random=${i + 20}`}
-                alt=""
-                width={200}
-                height={200}
-                className="w-full object-cover grow"
-              />
-              <div className="text-onSurface h-28 p-2 flex flex-col justify-between">
+            <Link key={i} to="" className="bg-surface w-full">
+              <div className="h-36">
+                <LazyLoadImage
+                  src={`https://picsum.photos/200/200.webp?random=${i + 50}`}
+                  alt=""
+                  height={200}
+                  width={200}
+                  className="bg-gray-100 object-cover h-full"
+                />
+              </div>
+              <div className="p-2 h-28 text-onSurface flex flex-col justify-between">
                 <div className="text-sm line-clamp-2">
                   {faker.commerce.productName()}
                 </div>
                 <div>
                   <div className="text-xs">per {faker.science.unit().name}</div>
-                  <div className="text-sm font-bold">
+                  <div className="font-semibold">
                     {Currency.format(
                       faker.commerce.price({
                         min: 1000,
