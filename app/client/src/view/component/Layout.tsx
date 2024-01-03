@@ -1,7 +1,7 @@
 import { Badge } from "@material-tailwind/react";
 import { Link, Outlet } from "react-router-dom";
 
-export default function UserLayout() {
+export default function Layout() {
   return (
     <div className="bg-background">
       {/* AUTH BAR */}

@@ -4,8 +4,8 @@ import { useEffect } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import Currency from "../../../lib/helper/currency";
-import { RootState } from "../userStoreRedux";
+import Currency from "../lib/helper/currency";
+import { RootState } from "./redux/store";
 
 export default function HomePage() {
   const hello = useSelector((state: RootState) => state.hello.value);
