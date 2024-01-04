@@ -1,11 +1,11 @@
 import express, { Request, Response } from "express";
-import { Failure } from "../../../lib/helper/failure";
+import { Failure } from "../../lib/helper/failure";
 
 const router = express.Router();
 
 router.get("/", async (_: Request, res: Response) => {
   try {
-    res.status(200).json("AUTH API");
+    res.status(200).json({ token: "thisisyourtoken" });
   } catch (error: any) {
     Failure.handle(error, res);
   }

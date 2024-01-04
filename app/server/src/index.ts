@@ -1,11 +1,10 @@
-require("dotenv").config();
-
+import "dotenv/config";
 import cors from "cors";
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import http from "http";
 import { SocketIo } from "./lib/helper/socket_io";
-import userMiddleware from "./view/user/userMiddleware";
-import userAuthRoute from "./view/user/route/userAuthRoute";
+import userMiddleware from "./view/middleware/userMiddleware";
+import userAuthRoute from "./view/route/userAuthRoute";
 
 const app = express();
 const server = http.createServer(app);
