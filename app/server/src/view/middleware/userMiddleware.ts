@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import UserAuthController from "../../lib/controller/userAuthController";
-import { Unauthorized } from "../../lib/helper/failure";
+import { Failure, Unauthorized } from "../../lib/helper/failure";
 
 const userAuthController = new UserAuthController();
 
@@ -9,15 +9,25 @@ export default function userMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  const payloads = req.headers.authorization?.split(" ");
+  try {
+    const authorization = req.headers.authorization;
 
-  if (payloads != undefined) {
-    const token = payloads[1];
-    const authModel = userAuthController.decrypt(token);
-    req.app.locals.auth = authModel;
+    if (authorization != undefined) {
+      const payloads = authorization.split(" ");
 
-    console.log(authModel);
+      if (payloads.length == 2) {
+        const token = payloads[1];
+        const userId = userAuthController.decrypt(token);
+        req.app.locals.userId = userId;
 
-    return next();
+        console.log(req.app.locals.userId);
+
+        return next();
+      }
+    }
+
+    throw new Unauthorized();
+  } catch (error: any) {
+    Failure.handle(error, res);
   }
 }

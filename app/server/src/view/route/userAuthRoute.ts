@@ -7,10 +7,11 @@ const userAuthController = new UserAuthController();
 
 router.get("/guest", async (req: Request, res: Response) => {
   try {
-    const authModel = await userAuthController.guest();
-    req.app.locals.auth = authModel;
+    const token = await userAuthController.guest();
+    const userId = userAuthController.decrypt(token);
+    req.app.locals.userId = userId;
 
-    res.json({ token: authModel.token });
+    res.json({ token: token });
   } catch (error: any) {
     Failure.handle(error, res);
   }
