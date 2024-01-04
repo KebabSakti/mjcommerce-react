@@ -27,6 +27,9 @@ app.use(express.urlencoded({ extended: true }));
 
 //REST
 app.use("/user", userMiddleware);
+app.use("/user/home", (req, res) => {
+  res.end();
+});
 app.use("/user/auth", userAuthRoute);
 
 //route not found 404

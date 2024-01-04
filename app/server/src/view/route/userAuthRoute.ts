@@ -1,11 +1,16 @@
 import express, { Request, Response } from "express";
 import { Failure } from "../../lib/helper/failure";
+import UserAuthController from "../../lib/controller/userAuthController";
 
 const router = express.Router();
+const userAuthController = new UserAuthController();
 
-router.get("/", async (_: Request, res: Response) => {
+router.get("/guest", async (req: Request, res: Response) => {
   try {
-    res.status(200).json({ token: "thisisyourtoken" });
+    const authModel = await userAuthController.guest();
+    req.app.locals.auth = authModel;
+
+    res.json({ token: authModel.token });
   } catch (error: any) {
     Failure.handle(error, res);
   }
