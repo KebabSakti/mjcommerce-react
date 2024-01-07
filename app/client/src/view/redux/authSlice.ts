@@ -1,14 +1,14 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { SignInParams, StateData, StateType } from "../../lib/config/type";
 import AuthController from "../../lib/controller/authController";
-
-type AuthState = {
-  value: string | null;
-};
 
 const authController = new AuthController();
 
-const initialState: AuthState = {
-  value: null,
+const initialState: StateType<StateData> = {
+  value: {
+    loading: true,
+    data: null,
+  },
 };
 
 export const authSlice = createSlice({
@@ -16,11 +16,19 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     check: (state) => {
+      state.value = { ...state.value, loading: true };
       const token = authController.check();
-      state.value = token;
+      state.value = { loading: false, data: token };
+    },
+    sign: (state, action: PayloadAction<SignInParams>) => {
+      state.value = { ...state.value, loading: true };
+
+      authController.sign(action.payload).then((result) => {
+        state.value = { loading: false, data: result.token };
+      });
     },
   },
 });
 
-export const { check } = authSlice.actions;
+export const { check, sign } = authSlice.actions;
 export default authSlice.reducer;

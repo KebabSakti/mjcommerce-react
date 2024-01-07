@@ -1,6 +1,16 @@
 export default class HTTP {
-  static async get(url: string, option?: Request): Promise<Response> {
-    const response = await fetch(url, option);
+  static async get(
+    url: string,
+    token?: string,
+    option?: Request
+  ): Promise<Response> {
+    const response = await fetch(url, {
+      ...option,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     return response;
   }
@@ -8,6 +18,7 @@ export default class HTTP {
   static async post(
     url: string,
     data: Object,
+    token?: string,
     option?: Request
   ): Promise<Response> {
     const response = await fetch(url, {
@@ -16,6 +27,7 @@ export default class HTTP {
       cache: "no-store",
       body: JSON.stringify(data),
       headers: {
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
@@ -26,6 +38,7 @@ export default class HTTP {
   static async put(
     url: string,
     data: Object,
+    token?: string,
     option?: Request
   ): Promise<Response> {
     const response = await fetch(url, {
@@ -34,6 +47,7 @@ export default class HTTP {
       cache: "no-store",
       body: JSON.stringify(data),
       headers: {
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
@@ -44,6 +58,7 @@ export default class HTTP {
   static async delete(
     url: string,
     data?: Object,
+    token?: string,
     option?: Request
   ): Promise<Response> {
     const response = await fetch(url, {
@@ -52,6 +67,7 @@ export default class HTTP {
       cache: "no-store",
       body: JSON.stringify(data),
       headers: {
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
@@ -62,12 +78,18 @@ export default class HTTP {
   static async upload(
     url: string,
     data: FormData,
+    token?: string,
     option?: Request
   ): Promise<Response> {
     const response = await fetch(url, {
       ...option,
-      method: "POST",
+      method: "post",
+      cache: "no-store",
       body: data,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     });
 
     return response;

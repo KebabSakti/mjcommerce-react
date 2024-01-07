@@ -1,14 +1,22 @@
 import { ReactElement } from "react";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../view/redux/store";
 
-interface DataProps<T> {
+type PropData<T> = {
   data?: T;
   children?: ReactElement;
-}
+};
 
-const useAppDispatch: () => AppDispatch = useDispatch;
-const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+type StateType<T> = {
+  value: T;
+};
 
-export { useAppDispatch, useAppSelector };
-export type { DataProps };
+type StateData = {
+  loading: boolean;
+  data?: Object | null;
+};
+
+type SignInParams = {
+  email: string;
+  password: string;
+};
+
+export type { PropData, SignInParams, StateData, StateType };
