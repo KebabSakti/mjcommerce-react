@@ -24,7 +24,7 @@ export default function HomePage() {
               return (
                 <img
                   key={i}
-                  src={`https://picsum.photos/500/500.webp?random=${i + 250}`}
+                  src={`https://picsum.photos/1920/1080.webp?random=${i + 250}`}
                   alt=""
                   width={500}
                   height={500}
@@ -36,7 +36,7 @@ export default function HomePage() {
           <div className="flex h-24 gap-1 lg:h-52 lg:flex-1 lg:flex-col">
             <Link to="" className="flex-1 overflow-hidden">
               <img
-                src={`https://picsum.photos/500/500.webp?random=99`}
+                src={`https://picsum.photos/1920/1080.webp?random=99`}
                 alt=""
                 width={500}
                 height={500}
@@ -45,7 +45,7 @@ export default function HomePage() {
             </Link>
             <Link to="" className="flex-1 overflow-hidden">
               <img
-                src={`https://picsum.photos/500/500.webp?random=100`}
+                src={`https://picsum.photos/1920/1080.webp?random=100`}
                 alt=""
                 width={500}
                 height={500}

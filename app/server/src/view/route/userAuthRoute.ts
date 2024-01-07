@@ -5,11 +5,11 @@ import UserAuthController from "../../lib/controller/userAuthController";
 const router = express.Router();
 const userAuthController = new UserAuthController();
 
-router.get("/guest", async (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
     const token = await userAuthController.guest();
     const userId = userAuthController.decrypt(token);
-    req.app.locals.userId = userId;
+    req.app.locals.id = userId;
 
     res.json({ token: token });
   } catch (error: any) {

@@ -1,11 +1,22 @@
-import AuthModel from "../model/authModel";
 import env from "../config/env";
+import HTTP from "../helper/http";
+import AuthModel from "../model/authModel";
 
 export default class AuthController {
-  async token(): Promise<AuthModel> {
-    const request = await fetch(`${env["BASE_URL"]}/user/auth`);
-    const result = await request.json();
+  check(): string | null {
+    const token = localStorage.getItem("token");
 
-    return result;
+    return token;
+  }
+
+  async sign(email: string, password: string): Promise<AuthModel> {
+    const response = await HTTP.post(`${env["BASE_URL"]}/user/auth`, {
+      email: email,
+      password: password,
+    });
+
+    const data = await response.json();
+
+    return data;
   }
 }

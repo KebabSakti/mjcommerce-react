@@ -1,5 +1,5 @@
-import "dotenv/config";
 import cors from "cors";
+import "dotenv/config";
 import express from "express";
 import http from "http";
 import { SocketIo } from "./lib/helper/socket_io";
@@ -26,11 +26,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //REST
+app.use("/auth/user", userAuthRoute);
 app.use("/user", userMiddleware);
-app.use("/user/home", (req, res) => {
-  res.end();
-});
-app.use("/user/auth", userAuthRoute);
 
 //route not found 404
 app.use("*", (_, res) => res.status(404).json("Route path not found"));
