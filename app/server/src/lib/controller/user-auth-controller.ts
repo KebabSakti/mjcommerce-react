@@ -1,15 +1,15 @@
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
 import jwt from "jsonwebtoken";
 import { Unauthorized } from "../helper/failure";
-import UserModel from "../model/userModel";
+import UserModel from "../model/user-model";
+import UserRepository from "../repository/user-repository";
 
-const prisma = new PrismaClient();
+const userRepository = new UserRepository();
 
 export default class UserAuthController {
-  encrypt(userModel: UserModel): string {
-    const token = jwt.sign(userModel.id, process.env.HASH_SALT as string);
+  encrypt(user: UserModel): string {
+    const token = jwt.sign(user.id!, process.env.HASH_SALT as string);
 
     return token;
   }
@@ -28,11 +28,7 @@ export default class UserAuthController {
   }
 
   async sign(email: string, password: string): Promise<string> {
-    const user = (await prisma.user.findUnique({
-      where: {
-        email: email,
-      },
-    })) as any as UserModel | null;
+    const user = await userRepository.getByEmail(email);
 
     if (user) {
       const userValid = await bcrypt.compare(password, user.password!);
@@ -50,9 +46,10 @@ export default class UserAuthController {
   async register(userModel: UserModel): Promise<string> {
     const hashedPassword = await bcrypt.hash(userModel.password!, 10);
 
-    const user = (await prisma.user.create({
-      data: { ...userModel, password: hashedPassword },
-    })) as any as UserModel;
+    const user = await userRepository.createUser({
+      ...userModel,
+      password: hashedPassword,
+    });
 
     const token = this.encrypt(user);
 
@@ -60,11 +57,9 @@ export default class UserAuthController {
   }
 
   async guest(): Promise<string> {
-    const user = (await prisma.user.create({
-      data: {
-        link: randomUUID(),
-      },
-    })) as any as UserModel;
+    const user = await userRepository.createUser({
+      link: randomUUID(),
+    });
 
     const token = this.encrypt(user);
 

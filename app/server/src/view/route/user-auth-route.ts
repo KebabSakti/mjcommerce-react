@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { Failure } from "../../lib/helper/failure";
-import UserAuthController from "../../lib/controller/userAuthController";
+import UserAuthController from "../../lib/controller/user-auth-controller";
 
 const router = express.Router();
 const userAuthController = new UserAuthController();

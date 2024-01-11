@@ -1,22 +1,30 @@
 import { ReactElement } from "react";
+import { Failure } from "../helper/failure";
 
-type PropData<T> = {
+export type PropData<T> = {
   data?: T;
   children?: ReactElement;
 };
 
-type StateType<T> = {
+export type FailureData = {
+  code: number;
+  message: string;
+};
+
+export type StateType<T> = {
   value: T;
 };
 
-type StateData = {
-  loading: boolean;
-  data?: Object | null;
+export type StateData<T> = {
+  data?: T | null | undefined;
+  error?: FailureData | null | undefined;
 };
 
-type SignInParams = {
+export type SignInParams = {
   email: string;
   password: string;
 };
 
-export type { PropData, SignInParams, StateData, StateType };
+export type AuthToken = {
+  token: string;
+};

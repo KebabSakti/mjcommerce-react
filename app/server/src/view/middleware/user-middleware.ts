@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import UserAuthController from "../../lib/controller/userAuthController";
+import UserAuthController from "../../lib/controller/user-auth-controller";
 import { Failure, Unauthorized } from "../../lib/helper/failure";
 
 const userAuthController = new UserAuthController();
