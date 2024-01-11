@@ -1,6 +1,6 @@
 import CartItemModel from "./cart-item-model";
 
-export default class CartModel {
+export default interface CartModel {
   id?: string;
   userId?: string;
   qty?: number;

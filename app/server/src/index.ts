@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import "dotenv/config";
@@ -7,14 +6,14 @@ import http from "http";
 import { SocketIo } from "./lib/helper/socket-io";
 import userMiddleware from "./view/middleware/user-middleware";
 import userAuthRoute from "./view/route/user-auth-route";
+import userBannerRoute from "./view/route/user-banner-route";
 import userCartRoute from "./view/route/user-cart-route";
+import userCategoryRoute from "./view/route/user-category-route";
 
 const app = express();
 const server = http.createServer(app);
 const io = SocketIo.init(server);
 const port = 1001;
-
-//init
 
 //websocket
 io.use(async (_, next) => {
@@ -32,6 +31,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/auth/user", userAuthRoute);
 app.use("/user", userMiddleware);
 app.use("/user/cart", userCartRoute);
+app.use("/user/banner", userBannerRoute);
+app.use("/user/category", userCategoryRoute);
 
 app.get("/user/debug", async (req, res) => {
   const prisma = new PrismaClient();
