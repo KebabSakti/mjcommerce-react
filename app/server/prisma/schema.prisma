@@ -68,18 +68,19 @@ model Banner {
   name        String
   description String?  @db.Text
   picture     String
+  big         Boolean
   active      Boolean  @default(false)
   created     DateTime @default(now())
   updated     DateTime @default(now())
 
-  @@index([name, active])
+  @@index([name])
 }
 
 model Store {
   id          String    @id @default(uuid())
   userId      String    @unique
   name        String
-  description String
+  description String    @db.Text
   address     String    @db.Text
   phone       String
   lat         String?
@@ -99,7 +100,7 @@ model Product {
   categoryId     String
   pritority      Int             @default(0)
   name           String
-  description    String
+  description    String          @db.Text
   picture        String
   stok           Int             @default(0)
   min            Int?
@@ -141,7 +142,7 @@ model ProductRating {
   productId   String
   productName String
   rating      Int
-  comment     String?
+  comment     String?  @db.Text
   created     DateTime @default(now())
   updated     DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])
@@ -244,7 +245,7 @@ model OrderStatus {
   id      String   @id @default(uuid())
   orderId String
   status  Status   @default(PENDING)
-  note    String?
+  note    String?  @db.Text
   created DateTime @default(now())
   updated DateTime @default(now())
   order   Order    @relation(fields: [orderId], references: [id])
@@ -254,7 +255,7 @@ model PaymentStatus {
   id      String   @id @default(uuid())
   orderId String
   status  Status   @default(PENDING)
-  note    String?
+  note    String?  @db.Text
   created DateTime @default(now())
   updated DateTime @default(now())
   order   Order    @relation(fields: [orderId], references: [id])
@@ -265,7 +266,7 @@ model ShippingStatus {
   orderId     String?
   orderItemId String
   status      Status    @default(PENDING)
-  note        String?
+  note        String?   @db.Text
   created     DateTime  @default(now())
   updated     DateTime  @default(now())
   orderItem   OrderItem @relation(fields: [orderItemId], references: [id])

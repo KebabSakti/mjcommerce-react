@@ -55,11 +55,12 @@ CREATE TABLE `Banner` (
     `name` VARCHAR(191) NOT NULL,
     `description` TEXT NULL,
     `picture` VARCHAR(191) NOT NULL,
+    `big` BOOLEAN NOT NULL,
     `active` BOOLEAN NOT NULL DEFAULT false,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    INDEX `Banner_name_active_idx`(`name`, `active`),
+    INDEX `Banner_name_idx`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -68,7 +69,7 @@ CREATE TABLE `Store` (
     `id` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
-    `description` VARCHAR(191) NOT NULL,
+    `description` TEXT NOT NULL,
     `address` TEXT NOT NULL,
     `phone` VARCHAR(191) NOT NULL,
     `lat` VARCHAR(191) NULL,
@@ -89,7 +90,7 @@ CREATE TABLE `Product` (
     `categoryId` VARCHAR(191) NOT NULL,
     `pritority` INTEGER NOT NULL DEFAULT 0,
     `name` VARCHAR(191) NOT NULL,
-    `description` VARCHAR(191) NOT NULL,
+    `description` TEXT NOT NULL,
     `picture` VARCHAR(191) NOT NULL,
     `stok` INTEGER NOT NULL DEFAULT 0,
     `min` INTEGER NULL,
@@ -129,7 +130,7 @@ CREATE TABLE `ProductRating` (
     `productId` VARCHAR(191) NOT NULL,
     `productName` VARCHAR(191) NOT NULL,
     `rating` INTEGER NOT NULL,
-    `comment` VARCHAR(191) NULL,
+    `comment` TEXT NULL,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -234,7 +235,7 @@ CREATE TABLE `OrderStatus` (
     `id` VARCHAR(191) NOT NULL,
     `orderId` VARCHAR(191) NOT NULL,
     `status` ENUM('PENDING', 'COMPLETE', 'FAILED') NOT NULL DEFAULT 'PENDING',
-    `note` VARCHAR(191) NULL,
+    `note` TEXT NULL,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -246,7 +247,7 @@ CREATE TABLE `PaymentStatus` (
     `id` VARCHAR(191) NOT NULL,
     `orderId` VARCHAR(191) NOT NULL,
     `status` ENUM('PENDING', 'COMPLETE', 'FAILED') NOT NULL DEFAULT 'PENDING',
-    `note` VARCHAR(191) NULL,
+    `note` TEXT NULL,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -259,7 +260,7 @@ CREATE TABLE `ShippingStatus` (
     `orderId` VARCHAR(191) NULL,
     `orderItemId` VARCHAR(191) NOT NULL,
     `status` ENUM('PENDING', 'COMPLETE', 'FAILED') NOT NULL DEFAULT 'PENDING',
-    `note` VARCHAR(191) NULL,
+    `note` TEXT NULL,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 

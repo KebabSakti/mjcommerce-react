@@ -1,3 +1,5 @@
+import { faker } from "@faker-js/faker";
+import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
@@ -5,9 +7,7 @@ import http from "http";
 import { SocketIo } from "./lib/helper/socket-io";
 import userMiddleware from "./view/middleware/user-middleware";
 import userAuthRoute from "./view/route/user-auth-route";
-import { PrismaClient } from "@prisma/client";
-import { faker } from "@faker-js/faker";
-import { randomUUID } from "crypto";
+import userCartRoute from "./view/route/user-cart-route";
 
 const app = express();
 const server = http.createServer(app);
@@ -31,12 +31,16 @@ app.use(express.urlencoded({ extended: true }));
 //REST
 app.use("/auth/user", userAuthRoute);
 app.use("/user", userMiddleware);
+app.use("/user/cart", userCartRoute);
 
-app.use("/user/debug", async (req, res) => {
+app.get("/user/debug", async (req, res) => {
   const prisma = new PrismaClient();
   const userId = req.app.locals.id;
 
   const query = await prisma.user.findFirst({
+    where: {
+      id: "bfa5d2f6-b2df-43d1-93bc-261583a3ab38",
+    },
     include: {
       store: true,
     },
