@@ -8,7 +8,7 @@ const cartController = new CartController();
 router.get("/", async (req: Request, res: Response) => {
   try {
     const userId = req.app.locals.id;
-    const cart = await cartController.getByUserId(userId);
+    const cart = await cartController.getCart(userId);
 
     res.json(cart);
   } catch (error: any) {

@@ -4,13 +4,11 @@ const authRepository = new AuthRepository();
 
 export default class AuthController {
   async getToken(): Promise<string> {
-    let token = authRepository.getToken();
+    const savedToken = authRepository.getToken();
+    const result = await authRepository.access(savedToken);
+    const token = result.token;
 
-    if (token == null) {
-      const guest = await authRepository.guestToken();
-      token = guest.token;
-      authRepository.saveToken(token);
-    }
+    authRepository.saveToken(token);
 
     return token;
   }

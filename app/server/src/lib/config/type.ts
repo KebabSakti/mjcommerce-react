@@ -1,6 +1,6 @@
 export enum SortType {
-  ASC,
-  DESC,
+  ASC = "asc",
+  DESC = "desc",
 }
 
 export type PaginationData = {
@@ -10,6 +10,7 @@ export type PaginationData = {
 
 export type QueryOption = {
   extra?: Object;
+  relation?: boolean;
   pagination?: PaginationData;
-  order?: { [key: string]: SortType };
+  order?: { [key: string]: SortType }[];
 };

@@ -1,40 +1,55 @@
 import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
 import jwt from "jsonwebtoken";
-import { Unauthorized } from "../helper/failure";
+import { InternalError, Unauthorized } from "../helper/failure";
 import UserModel from "../model/user-model";
 import UserRepository from "../repository/user-repository";
 
 const userRepository = new UserRepository();
 
 export default class UserAuthController {
-  encrypt(user: UserModel): string {
-    const token = jwt.sign(user.id!, process.env.HASH_SALT as string);
+  async access(token?: string): Promise<string> {
+    if (token == null) {
+      const userId = randomUUID();
+
+      await userRepository.create({
+        id: userId,
+        link: randomUUID(),
+      });
+
+      const user = await userRepository.readById(userId);
+
+      if (user != null) {
+        const token = this.encrypt(user.id!);
+
+        return token;
+      }
+
+      throw new InternalError();
+    }
 
     return token;
   }
 
-  decrypt(token: string): string {
-    try {
-      const userId = jwt.verify(
-        token,
-        process.env.HASH_SALT as string
-      ) as string;
+  async validate(token: string): Promise<string> {
+    const userId = this.decrypt(token);
+    const user = await userRepository.readById(userId);
 
-      return userId;
-    } catch (error) {
-      throw new Unauthorized();
+    if (user) {
+      return user.id!;
     }
+
+    throw new Unauthorized();
   }
 
-  async sign(email: string, password: string): Promise<string> {
-    const user = await userRepository.getByEmail(email);
+  async login(email: string, password: string): Promise<string> {
+    const user = await userRepository.readByEmail(email);
 
     if (user) {
       const userValid = await bcrypt.compare(password, user.password!);
 
       if (userValid) {
-        const token = this.encrypt(user);
+        const token = this.encrypt(user.id!);
 
         return token;
       }
@@ -46,23 +61,38 @@ export default class UserAuthController {
   async register(userModel: UserModel): Promise<string> {
     const hashedPassword = await bcrypt.hash(userModel.password!, 10);
 
-    const user = await userRepository.createUser({
+    await userRepository.create({
       ...userModel,
       password: hashedPassword,
     });
 
-    const token = this.encrypt(user);
+    const user = await userRepository.readByEmail(userModel.email!);
+
+    if (user) {
+      const token = this.encrypt(user.id!);
+
+      return token;
+    }
+
+    throw new InternalError();
+  }
+
+  encrypt(data: string): string {
+    const token = jwt.sign(data, process.env.HASH_SALT as string);
 
     return token;
   }
 
-  async guest(): Promise<string> {
-    const user = await userRepository.createUser({
-      link: randomUUID(),
-    });
+  decrypt(token: string): string {
+    try {
+      const decrypted = jwt.verify(
+        token,
+        process.env.HASH_SALT as string
+      ) as string;
 
-    const token = this.encrypt(user);
-
-    return token;
+      return decrypted;
+    } catch (error) {
+      throw new Unauthorized();
+    }
   }
 }

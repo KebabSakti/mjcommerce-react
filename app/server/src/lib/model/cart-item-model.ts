@@ -1,4 +1,5 @@
 import CartModel from "./cart-model";
+import ProductModel from "./product-model";
 
 export default interface CartItemModel {
   id?: string;
@@ -9,4 +10,5 @@ export default interface CartItemModel {
   created?: string;
   updated?: string;
   cart?: CartModel;
+  product?: ProductModel;
 }

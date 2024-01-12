@@ -17,7 +17,7 @@ export default function userMiddleware(
 
       if (payloads.length == 2) {
         const token = payloads[1];
-        const userId = userAuthController.decrypt(token);
+        const userId = userAuthController.validate(token);
         req.app.locals.id = userId;
 
         return next();

@@ -1,17 +1,10 @@
-import { AuthToken, SignInParams } from "../config/type";
+import { AuthToken } from "../config/type";
 import url from "../config/url";
 import HTTP from "../helper/http";
 
 export default class AuthRepository {
-  async guestToken(): Promise<AuthToken> {
-    const response = await HTTP.get(url["auth"]);
-    const data: AuthToken = await response.json();
-
-    return data;
-  }
-
-  async userToken(params: SignInParams): Promise<AuthToken> {
-    const response = await HTTP.post(url["auth"], params);
+  async access(token?: string | null): Promise<AuthToken> {
+    const response = await HTTP.post(url["auth"], { token: token });
     const data: AuthToken = await response.json();
 
     return data;
