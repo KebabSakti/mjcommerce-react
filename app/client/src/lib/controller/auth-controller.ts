@@ -8,6 +8,7 @@ export default class AuthController {
 
     if (token == null) {
       const result = await authRepository.access();
+      token = result.token;
       authRepository.saveToken(result.token);
     }
 

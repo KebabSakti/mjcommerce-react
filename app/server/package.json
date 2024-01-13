@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
+    "tsc": "tsc --build",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
   },
   "author": "",

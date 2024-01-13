@@ -27,12 +27,9 @@ export default class UserAuthController {
 
     if (user) {
       return user.id!;
-    } else {
-      const newToken = await this.access();
-      const newUserId = this.decrypt(newToken);
-
-      return newUserId;
     }
+
+    throw new Unauthorized();
   }
 
   async login(email: string, password: string): Promise<string> {
