@@ -1,6 +1,8 @@
+require("dotenv").config();
+
+import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
-import "dotenv/config";
 import express from "express";
 import http from "http";
 import { SocketIo } from "./lib/helper/socket-io";
@@ -40,7 +42,7 @@ app.get("/user/debug", async (req, res) => {
 
   const query = await prisma.user.findFirst({
     where: {
-      id: "bfa5d2f6-b2df-43d1-93bc-261583a3ab38",
+      id: userId,
     },
     include: {
       store: true,

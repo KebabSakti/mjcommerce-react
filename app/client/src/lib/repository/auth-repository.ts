@@ -3,8 +3,8 @@ import url from "../config/url";
 import HTTP from "../helper/http";
 
 export default class AuthRepository {
-  async access(token?: string | null): Promise<AuthToken> {
-    const response = await HTTP.post(url["auth"], { token: token });
+  async access(): Promise<AuthToken> {
+    const response = await HTTP.get(url["auth"]);
     const data: AuthToken = await response.json();
 
     return data;

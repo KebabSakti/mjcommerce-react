@@ -8,25 +8,15 @@ import UserRepository from "../repository/user-repository";
 const userRepository = new UserRepository();
 
 export default class UserAuthController {
-  async access(token?: string): Promise<string> {
-    if (token == null) {
-      const userId = randomUUID();
+  async access(): Promise<string> {
+    const userId = randomUUID();
 
-      await userRepository.create({
-        id: userId,
-        link: randomUUID(),
-      });
+    await userRepository.create({
+      id: userId,
+      link: randomUUID(),
+    });
 
-      const user = await userRepository.readById(userId);
-
-      if (user != null) {
-        const token = this.encrypt(user.id!);
-
-        return token;
-      }
-
-      throw new InternalError();
-    }
+    const token = this.encrypt(userId);
 
     return token;
   }
@@ -37,9 +27,12 @@ export default class UserAuthController {
 
     if (user) {
       return user.id!;
-    }
+    } else {
+      const newToken = await this.access();
+      const newUserId = this.decrypt(newToken);
 
-    throw new Unauthorized();
+      return newUserId;
+    }
   }
 
   async login(email: string, password: string): Promise<string> {

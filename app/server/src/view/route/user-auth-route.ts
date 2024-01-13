@@ -5,9 +5,9 @@ import { Failure } from "../../lib/helper/failure";
 const router = express.Router();
 const userAuthController = new UserAuthController();
 
-router.post("/access", async (req: Request, res: Response) => {
+router.get("/access", async (req: Request, res: Response) => {
   try {
-    const token = await userAuthController.access(req.body.token);
+    const token = await userAuthController.access();
     const userId = userAuthController.decrypt(token);
     req.app.locals.id = userId;
 

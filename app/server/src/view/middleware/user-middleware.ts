@@ -4,7 +4,7 @@ import { Failure, Unauthorized } from "../../lib/helper/failure";
 
 const userAuthController = new UserAuthController();
 
-export default function userMiddleware(
+export default async function userMiddleware(
   req: Request,
   res: Response,
   next: NextFunction
@@ -17,7 +17,7 @@ export default function userMiddleware(
 
       if (payloads.length == 2) {
         const token = payloads[1];
-        const userId = userAuthController.validate(token);
+        const userId = await userAuthController.validate(token);
         req.app.locals.id = userId;
 
         return next();
