@@ -1,6 +1,5 @@
 require("dotenv").config();
 
-import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import express from "express";
