@@ -28,3 +28,13 @@ export type SignInParams = {
 export type AuthToken = {
   token: string;
 };
+
+export type PaginationData = {
+  skip: number;
+  take: number;
+};
+
+export type RequestParameter = {
+  token: string;
+  data?: Object;
+};

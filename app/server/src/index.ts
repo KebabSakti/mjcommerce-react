@@ -1,6 +1,5 @@
 require("dotenv").config();
 
-import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import express from "express";
@@ -40,17 +39,27 @@ app.get("/user/debug", async (req, res) => {
   const prisma = new PrismaClient();
   const userId = req.app.locals.id;
 
-  await Promise.all(
-    [...Array(10)].map(async (_) => {
-      await prisma.banner.create({
-        data: {
-          name: faker.commerce.productName(),
-          picture: faker.image.urlLoremFlickr({ category: "fashion" }),
-          big: true,
-        },
-      });
-    })
-  );
+  const query = {
+    name: "kebab",
+    age: 20,
+  };
+
+  const url = new URL("http://192.168.10.32:1001/banner");
+  url.search = new URLSearchParams(query as any) as any;
+
+  console.log(url.href);
+
+  // await Promise.all(
+  //   [...Array(10)].map(async (_) => {
+  //     await prisma.banner.create({
+  //       data: {
+  //         name: faker.commerce.productName(),
+  //         picture: faker.image.urlLoremFlickr({ category: "fashion" }),
+  //         big: true,
+  //       },
+  //     });
+  //   })
+  // );
 
   // const query = await prisma.user.findFirst({
   //   where: {
@@ -147,7 +156,7 @@ app.get("/user/debug", async (req, res) => {
   //   })
   // );
 
-  res.json('OKE');
+  res.json("OKE");
 });
 
 //route not found 404

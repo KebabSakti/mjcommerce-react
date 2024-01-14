@@ -8,17 +8,21 @@ import UserRepository from "../repository/user-repository";
 const userRepository = new UserRepository();
 
 export default class UserAuthController {
-  async access(): Promise<string> {
-    const userId = randomUUID();
+  async access(token?: string | null): Promise<string> {
+    let newToken = token == "undefined" ? null : token;
 
-    await userRepository.create({
-      id: userId,
-      link: randomUUID(),
-    });
+    if (newToken == null) {
+      newToken = await this.generate();
+    } else {
+      const userId = this.decrypt(newToken);
+      const user = await userRepository.readById(userId);
 
-    const token = this.encrypt(userId);
+      if (user == null) {
+        newToken = await this.generate();
+      }
+    }
 
-    return token;
+    return newToken!;
   }
 
   async validate(token: string): Promise<string> {
@@ -30,6 +34,19 @@ export default class UserAuthController {
     }
 
     throw new Unauthorized();
+  }
+
+  async generate(): Promise<string> {
+    const userId = randomUUID();
+
+    await userRepository.create({
+      id: userId,
+      link: randomUUID(),
+    });
+
+    const token = this.encrypt(userId);
+
+    return token;
   }
 
   async login(email: string, password: string): Promise<string> {

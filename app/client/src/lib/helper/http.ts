@@ -1,14 +1,24 @@
 export default class HTTP {
+  private static urlParser(url: string, query?: Object): string {
+    const target = new URL(url);
+
+    if (query != null) {
+      target.search = new URLSearchParams(query as any) as any;
+    }
+
+    return target.href;
+  }
+
   static async get(
     url: string,
     token?: string,
-    option?: Request
+    query?: Object
   ): Promise<Response> {
-    const response = await fetch(url, {
-      ...option,
+    const targetUrl = this.urlParser(url, query);
+
+    const response = await fetch(targetUrl, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
       },
     });
 

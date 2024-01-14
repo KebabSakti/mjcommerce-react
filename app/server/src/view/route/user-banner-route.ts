@@ -9,6 +9,8 @@ router.get("/", async (req: Request, res: Response) => {
   try {
     const banners = await bannerController.getBanners();
 
+    console.log(req.query);
+
     res.json(banners);
   } catch (error: any) {
     Failure.handle(error, res);
