@@ -1,5 +1,7 @@
+import { Empty, HttpRequest } from "./../config/type";
+
 export default class HTTP {
-  private static urlParser(url: string, query?: Object): string {
+  static urlParser(url: string, query?: Object | Empty): string {
     const target = new URL(url);
 
     if (query != null) {
@@ -11,14 +13,14 @@ export default class HTTP {
 
   static async get(
     url: string,
-    token?: string,
-    query?: Object
+    request?: HttpRequest | Empty
   ): Promise<Response> {
-    const targetUrl = this.urlParser(url, query);
+    const targetUrl = this.urlParser(url, request?.query);
 
     const response = await fetch(targetUrl, {
+      method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${request?.token}`,
       },
     });
 
@@ -27,17 +29,16 @@ export default class HTTP {
 
   static async post(
     url: string,
-    data: Object,
-    token?: string,
-    option?: Request
+    request?: HttpRequest | Empty
   ): Promise<Response> {
-    const response = await fetch(url, {
-      ...option,
-      method: "post",
+    const targetUrl = this.urlParser(url, request?.query);
+
+    const response = await fetch(targetUrl, {
+      method: "POST",
       cache: "no-store",
-      body: JSON.stringify(data),
+      body: JSON.stringify(request?.data),
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${request?.token}`,
         "Content-Type": "application/json",
       },
     });
@@ -47,17 +48,16 @@ export default class HTTP {
 
   static async put(
     url: string,
-    data: Object,
-    token?: string,
-    option?: Request
+    request?: HttpRequest | Empty
   ): Promise<Response> {
-    const response = await fetch(url, {
-      ...option,
-      method: "put",
+    const targetUrl = this.urlParser(url, request?.query);
+
+    const response = await fetch(targetUrl, {
+      method: "PUT",
       cache: "no-store",
-      body: JSON.stringify(data),
+      body: JSON.stringify(request?.data),
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${request?.token}`,
         "Content-Type": "application/json",
       },
     });
@@ -67,17 +67,16 @@ export default class HTTP {
 
   static async delete(
     url: string,
-    data?: Object,
-    token?: string,
-    option?: Request
+    request?: HttpRequest | Empty
   ): Promise<Response> {
-    const response = await fetch(url, {
-      ...option,
-      method: "delete",
+    const targetUrl = this.urlParser(url, request?.query);
+
+    const response = await fetch(targetUrl, {
+      method: "DELETE",
       cache: "no-store",
-      body: JSON.stringify(data),
+      body: JSON.stringify(request?.data),
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${request?.token}`,
         "Content-Type": "application/json",
       },
     });
@@ -87,17 +86,16 @@ export default class HTTP {
 
   static async upload(
     url: string,
-    data: FormData,
-    token?: string,
-    option?: Request
+    request?: HttpRequest<FormData> | Empty
   ): Promise<Response> {
-    const response = await fetch(url, {
-      ...option,
-      method: "post",
+    const targetUrl = this.urlParser(url, request?.query);
+
+    const response = await fetch(targetUrl, {
+      method: "POST",
       cache: "no-store",
-      body: data,
+      body: request?.data,
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${request?.token}`,
         "Content-Type": "application/json",
       },
     });

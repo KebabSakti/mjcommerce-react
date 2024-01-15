@@ -4,8 +4,12 @@ import HTTP from "../helper/http";
 import BannerModel from "../model/banner-model";
 
 export default class BannerRepository {
-  async read(param: RequestParameter): Promise<BannerModel[]> {
-    const response = await HTTP.get(url["banner"], param.token, param.data);
+  async read(parameter?: RequestParameter): Promise<BannerModel[]> {
+    const response = await HTTP.get(url["banner"], {
+      token: parameter?.token,
+      query: { ...parameter?.paginate, ...parameter?.sorting },
+    });
+
     const data = await response.json();
     const banners = data.map((e: BannerModel) => e);
 

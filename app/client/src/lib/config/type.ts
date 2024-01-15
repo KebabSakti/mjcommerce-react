@@ -1,5 +1,9 @@
 import { ReactElement } from "react";
-import { Failure } from "../helper/failure";
+
+export enum SortingDirection {
+  DESC = "desc",
+  ASC = "asc",
+}
 
 export type PropData<T> = {
   data?: T;
@@ -16,8 +20,8 @@ export type StateType<T> = {
 };
 
 export type StateData<T> = {
-  data?: T | null | undefined;
-  error?: FailureData | null | undefined;
+  data?: T | Empty;
+  error?: FailureData | Empty;
 };
 
 export type SignInParams = {
@@ -34,7 +38,21 @@ export type PaginationData = {
   take: number;
 };
 
-export type RequestParameter = {
-  token: string;
-  data?: Object;
+export type SortingData = {
+  field: string;
+  direction: SortingDirection;
 };
+
+export type RequestParameter<T = Object> = {
+  payload?: T | Empty;
+  paginate?: PaginationData | Empty;
+  sorting?: SortingData | Empty;
+};
+
+export type HttpRequest<T extends Object = Object> = {
+  token?: string | Empty;
+  query?: Object | Empty;
+  data?: T | Empty;
+};
+
+export type Empty = null | undefined;

@@ -9,10 +9,9 @@ import { RootState } from "../redux/store";
 import AuthBar from "./auth-bar";
 import Footer from "./footer";
 import NavBar from "./nav-bar";
-import BannerRepository from "../../lib/repository/banner-repository";
+import RefreshButton from "./refresh-button";
 
 const authController = new AuthController();
-const bannerRepo = new BannerRepository();
 
 export default function Layout() {
   const auth = useAppSelector((state: RootState) => state.auth.value);
@@ -24,12 +23,7 @@ export default function Layout() {
 
   async function initAuth(): Promise<void> {
     try {
-      const token = await authController.getToken();
-
-      bannerRepo.read({ token, data: { skip: 0, take: 1 } }).then((res) => {
-        console.log(res);
-      });
-
+      const token = await authController.access();
       dispatch(authComplete(token));
     } catch (error) {
       dispatch(authError(Failure.handle(error)));
@@ -42,10 +36,8 @@ export default function Layout() {
         if (auth.error) {
           return (
             <>
-              <div className="min-h-screen flex justify-center items-center">
-                <div className="bg-surface p-4 rounded-lg shadow text-onSurface">
-                  {auth.error.message}
-                </div>
+              <div className="min-h-screen flex flex-col justify-center items-center text-onBackground">
+                <RefreshButton onClick={initAuth} />
               </div>
             </>
           );

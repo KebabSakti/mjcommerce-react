@@ -3,49 +3,13 @@ import { Carousel } from "@material-tailwind/react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
 import Currency from "../lib/helper/currency";
+import BannerComponent from "./component/banner-component";
 
 export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* BANNER */}
-      <div className="bg-surface p-4 flex items-center lg:py-4 lg:px-0">
-        <div className="flex flex-col gap-1 lg:flex-row lg:w-3/5 lg:mx-auto">
-          <Carousel autoplay loop className="h-44 lg:h-52 lg:flex-auto lg:w-64">
-            {[...Array(5)].map((_, i) => {
-              return (
-                <img
-                  key={i}
-                  src={`https://picsum.photos/1920/1080.webp?random=${i + 250}`}
-                  alt=""
-                  width={500}
-                  height={500}
-                  className="bg-gray-100 object-cover h-full w-full"
-                />
-              );
-            })}
-          </Carousel>
-          <div className="flex h-24 gap-1 lg:h-52 lg:flex-1 lg:flex-col">
-            <Link to="" className="flex-1 overflow-hidden">
-              <img
-                src={`https://picsum.photos/1920/1080.webp?random=99`}
-                alt=""
-                width={500}
-                height={500}
-                className="bg-gray-100 w-full h-full object-cover"
-              />
-            </Link>
-            <Link to="" className="flex-1 overflow-hidden">
-              <img
-                src={`https://picsum.photos/1920/1080.webp?random=100`}
-                alt=""
-                width={500}
-                height={500}
-                className="bg-gray-100 w-full h-full object-cover"
-              />
-            </Link>
-          </div>
-        </div>
-      </div>
+      <BannerComponent />
       {/* BANNER */}
 
       {/* KATEGORI */}
