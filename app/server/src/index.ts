@@ -10,6 +10,7 @@ import userAuthRoute from "./view/route/user-auth-route";
 import userBannerRoute from "./view/route/user-banner-route";
 import userCartRoute from "./view/route/user-cart-route";
 import userCategoryRoute from "./view/route/user-category-route";
+import { faker } from "@faker-js/faker";
 
 const app = express();
 const server = http.createServer(app);
@@ -39,27 +40,28 @@ app.get("/user/debug", async (req, res) => {
   const prisma = new PrismaClient();
   const userId = req.app.locals.id;
 
-  const query = {
-    name: "kebab",
-    age: 20,
-  };
+  // const query = {
+  //   name: "kebab",
+  //   age: 20,
+  // };
 
-  const url = new URL("http://192.168.10.32:1001/banner");
-  url.search = new URLSearchParams(query as any) as any;
+  // const url = new URL("http://192.168.10.32:1001/banner");
+  // url.search = new URLSearchParams(query as any) as any;
 
-  console.log(url.href);
+  // console.log(url.href);
 
-  // await Promise.all(
-  //   [...Array(10)].map(async (_) => {
-  //     await prisma.banner.create({
-  //       data: {
-  //         name: faker.commerce.productName(),
-  //         picture: faker.image.urlLoremFlickr({ category: "fashion" }),
-  //         big: true,
-  //       },
-  //     });
-  //   })
-  // );
+  await Promise.all(
+    [...Array(10)].map(async (_) => {
+      await prisma.banner.create({
+        data: {
+          name: faker.commerce.productName(),
+          picture: faker.image.urlLoremFlickr({ category: "fashion" }),
+          active: true,
+          big: true,
+        },
+      });
+    })
+  );
 
   // const query = await prisma.user.findFirst({
   //   where: {

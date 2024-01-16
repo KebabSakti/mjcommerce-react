@@ -30,7 +30,7 @@ export type SignInParams = {
 };
 
 export type AuthToken = {
-  token: string;
+  token?: string | Empty;
 };
 
 export type PaginationData = {
@@ -43,7 +43,14 @@ export type SortingData = {
   direction: SortingDirection;
 };
 
-export type RequestParameter<T = Object> = {
+export type ControllerData<T = Object> = {
+  payload?: T | Empty;
+  paginate?: PaginationData | Empty;
+  sorting?: SortingData | Empty;
+};
+
+export type RepositoryData<T = Object> = {
+  token?: string | Empty;
   payload?: T | Empty;
   paginate?: PaginationData | Empty;
   sorting?: SortingData | Empty;
