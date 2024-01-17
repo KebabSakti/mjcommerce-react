@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import { ControllerData } from "../../lib/config/type";
 import CategoryController from "../../lib/controller/category-controller";
 import { Failure } from "../../lib/helper/failure";
 
@@ -7,7 +8,8 @@ const categoryController = new CategoryController();
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const categories = await categoryController.getCategories();
+    const query = req.query.parsedQuery as ControllerData;
+    const categories = await categoryController.getCategories(query);
 
     res.json(categories);
   } catch (error: any) {

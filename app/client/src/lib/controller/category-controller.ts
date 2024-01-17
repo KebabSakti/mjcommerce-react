@@ -1,13 +1,13 @@
 import { ControllerData, Empty } from "../config/type";
-import BannerModel from "../model/banner-model";
+import CategoryModel from "../model/category-model";
 import AuthRepository from "../repository/auth-repository";
-import BannerRepository from "../repository/banner-repository";
+import CategoryRepository from "../repository/category-repository";
 
-const banner = new BannerRepository();
+const category = new CategoryRepository();
 const auth = new AuthRepository();
 
-export default class BannerController {
-  async read(paramater?: ControllerData | Empty): Promise<BannerModel[]> {
+export default class CategoryController {
+  async read(paramater?: ControllerData | Empty): Promise<CategoryModel[]> {
     const token = auth.getToken();
 
     const param = {
@@ -16,7 +16,7 @@ export default class BannerController {
       sorting: paramater?.sorting,
     };
 
-    const datas = await banner.read(param);
+    const datas = await category.read(param);
 
     return datas;
   }

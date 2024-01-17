@@ -1,4 +1,3 @@
-import { Spinner } from "@material-tailwind/react";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import AuthController from "../../lib/controller/auth-controller";
@@ -18,10 +17,10 @@ export default function Layout() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    initAuth();
+    init();
   }, []);
 
-  async function initAuth(): Promise<void> {
+  async function init(): Promise<void> {
     try {
       const token = await authController.access();
       dispatch(authComplete(token));
@@ -37,28 +36,18 @@ export default function Layout() {
           return (
             <>
               <div className="min-h-screen flex flex-col justify-center items-center text-onBackground">
-                <RefreshButton onClick={initAuth} />
+                <RefreshButton onClick={init} />
               </div>
-            </>
-          );
-        }
-
-        if (auth.data) {
-          return (
-            <>
-              <AuthBar />
-              <NavBar />
-              <Outlet />
-              <Footer />
             </>
           );
         }
 
         return (
           <>
-            <div className="min-h-screen flex justify-center items-center">
-              <Spinner className="h-10 w-10" color="teal" />
-            </div>
+            <AuthBar />
+            <NavBar />
+            <Outlet />
+            <Footer />
           </>
         );
       })()}

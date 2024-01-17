@@ -7,8 +7,6 @@ const userAuthController = new UserAuthController();
 
 router.post("/access", async (req: Request, res: Response) => {
   try {
-    console.log(req.body);
-
     const token = await userAuthController.access(req.body.token);
     const userId = userAuthController.decrypt(token);
     req.app.locals.id = userId;

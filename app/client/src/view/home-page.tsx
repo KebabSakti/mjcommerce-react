@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker";
-import { Carousel } from "@material-tailwind/react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
 import Currency from "../lib/helper/currency";
 import BannerComponent from "./component/banner-component";
+import CategoryComponent from "./component/category-component";
 
 export default function HomePage() {
   return (
@@ -34,28 +34,7 @@ export default function HomePage() {
             </svg>
           </Link>
         </div>
-
-        <div className="grid grid-rows-2 grid-flow-col gap-1 overflow-x-scroll justify-start snap-x">
-          {[...Array(50)].map((_, i) => {
-            return (
-              <Link
-                key={i}
-                to=""
-                className="bg-surface w-24 h-24 snap-start flex flex-col justify-center items-center md:w-28 md:h-28 lg:w-32 lg:h-32"
-              >
-                <LazyLoadImage
-                  src={`https://picsum.photos/40/40.webp?random=${i + 90}`}
-                  width={40}
-                  height={40}
-                  className="bg-gray-100"
-                />
-                <div className="text-onSurface text-xs font-semibold mt-2 line-clamp-2">
-                  {faker.commerce.department()}
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+        <CategoryComponent />
       </div>
       {/* KATEGORI */}
 

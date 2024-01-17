@@ -1,14 +1,17 @@
-import { PrismaClient } from "@prisma/client";
-import { PaginationData } from "../config/type";
+import { Empty, RepositoryData } from "../config/type";
+import { prisma } from "../helper/prisma";
 import BannerModel from "../model/banner-model";
 
-const prisma = new PrismaClient();
 
 export default class BannerRepository {
-  async read(paginate?: PaginationData | null): Promise<BannerModel[]> {
+  async read(parameter?: RepositoryData | Empty): Promise<BannerModel[]> {
     const result = await prisma.banner.findMany({
-      ...paginate,
       where: { active: true },
+      skip: parameter?.paginate?.skip,
+      take: parameter?.paginate?.take,
+      orderBy: {
+        [parameter?.sorting?.field ?? ""]: parameter?.sorting?.direction,
+      },
     });
 
     const banners = result.map((e) => e as any as BannerModel);

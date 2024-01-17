@@ -1,6 +1,6 @@
-export enum SortType {
-  ASC = "asc",
+export enum SortingDirection {
   DESC = "desc",
+  ASC = "asc",
 }
 
 export type PaginationData = {
@@ -8,9 +8,22 @@ export type PaginationData = {
   take: number;
 };
 
-export type QueryOption = {
-  extra?: Object;
-  relation?: boolean;
-  pagination?: PaginationData;
-  order?: { [key: string]: SortType }[];
+export type SortingData = {
+  field: string;
+  direction: SortingDirection;
 };
+
+export type ControllerData<T = Object> = {
+  payload?: T | Empty;
+  paginate?: PaginationData | Empty;
+  sorting?: SortingData | Empty;
+};
+
+export type RepositoryData<T = Object> = {
+  token?: string | Empty;
+  payload?: T | Empty;
+  paginate?: PaginationData | Empty;
+  sorting?: SortingData | Empty;
+};
+
+export type Empty = null | undefined;
