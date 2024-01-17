@@ -1,10 +1,10 @@
 require("dotenv").config();
 
 import { faker } from "@faker-js/faker";
-import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import express from "express";
 import http from "http";
+import { prisma } from "./lib/helper/prisma";
 import { SocketIo } from "./lib/helper/socket-io";
 import queryParser from "./view/middleware/query-parser";
 import userMiddleware from "./view/middleware/user-middleware";
@@ -12,7 +12,6 @@ import userAuthRoute from "./view/route/user-auth-route";
 import userBannerRoute from "./view/route/user-banner-route";
 import userCartRoute from "./view/route/user-cart-route";
 import userCategoryRoute from "./view/route/user-category-route";
-import { prisma } from "./lib/helper/prisma";
 
 const app = express();
 const server = http.createServer(app);
@@ -88,12 +87,13 @@ app.get("/user/debug", async (req, res) => {
   });
 
   await Promise.all(
-    [...Array(10)].map(async (_) => {
+    [...Array(20)].map(async (_) => {
       //category
       const category = await prisma.category.create({
         data: {
           name: faker.commerce.department(),
           picture: faker.image.urlLoremFlickr({ category: "food" }),
+          active: true,
         },
       });
 
