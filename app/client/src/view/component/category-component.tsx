@@ -37,7 +37,10 @@ export default function CategoryComponent() {
         // if (category.error) {
         //   return (
         //     <>
-        //       <RefreshButton onClick={init} />
+        //       <div className="bg-gray-100 h-full w-full flex flex-col gap-4 justify-center items-center text-onBackground">
+        //         <p className="text-center text-lg">{category.error.message}</p>
+        //         <RefreshButton onClick={init} />
+        //       </div>
         //     </>
         //   );
         // }

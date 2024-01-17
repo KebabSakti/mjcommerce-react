@@ -38,8 +38,13 @@ export default function BannerComponent() {
           if (banner.error) {
             return (
               <>
-                <div className="bg-gray-200 h-44 flex items-center justify-center w-screen overflow-hidden lg:h-52 lg:flex-auto lg:w-64">
-                  <RefreshButton onClick={init} />
+                <div className="h-44 w-full">
+                  <div className="bg-gray-100 h-full w-full flex flex-col gap-4 justify-center items-center text-onBackground">
+                    <p className="text-center text-lg">
+                      {banner.error.message}
+                    </p>
+                    <RefreshButton onClick={init} />
+                  </div>
                 </div>
               </>
             );
@@ -51,7 +56,7 @@ export default function BannerComponent() {
                 <Carousel
                   autoplay
                   loop
-                  className="h-44 lg:h-52 lg:flex-auto lg:w-64"
+                  className="h-44 lg:flex-auto lg:h-72 lg:w-72"
                 >
                   {banner.data?.map((e, i) => {
                     return (

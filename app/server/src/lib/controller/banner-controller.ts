@@ -1,4 +1,3 @@
-import { ControllerData, Empty } from "../config/type";
 import BannerModel from "../model/banner-model";
 import BannerRepository from "../repository/banner-repository";
 

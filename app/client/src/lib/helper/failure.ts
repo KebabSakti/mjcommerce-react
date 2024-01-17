@@ -6,7 +6,7 @@ class Failure extends Error {
   }
 
   static handle(error: any): FailureData {
-    console.log(error);
+    console.error(error);
 
     let code: number = 500;
     let message: string = "Terjadi kesalahan, mohon coba beberapa saat lagi";

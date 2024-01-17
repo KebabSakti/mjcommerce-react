@@ -3,7 +3,7 @@ import { prisma } from "../helper/prisma";
 import UserModel from "../model/user-model";
 
 export default class UserRepository {
-  async show(query: { [key: string]: string }): Promise<UserModel | Empty> {
+  async show(query: Object): Promise<UserModel | Empty> {
     const result = await prisma.user.findFirst({
       where: {
         ...query,
