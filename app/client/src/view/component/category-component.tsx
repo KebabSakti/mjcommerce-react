@@ -44,9 +44,12 @@ export default function CategoryComponent() {
         // }
 
         if (category.data?.length! > 0) {
+          const gridCount =
+            category.data?.length! <= 14 ? "grid-rows-2" : "grid-rows-1";
+
           return (
             <>
-              <div className="grid grid-rows-2 grid-flow-col gap-1 overflow-x-scroll justify-start snap-x">
+              <div className={`grid ${gridCount} grid-flow-col gap-1 overflow-x-scroll justify-start snap-x`}>
                 {category.data?.map((e, i) => {
                   return (
                     <Link
