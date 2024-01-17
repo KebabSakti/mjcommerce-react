@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-import { ControllerData } from "../../lib/config/type";
 import BannerController from "../../lib/controller/banner-controller";
 import { Failure } from "../../lib/helper/failure";
 
@@ -8,8 +7,7 @@ const bannerController = new BannerController();
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const query = req.query.parsedQuery as ControllerData;
-    const banners = await bannerController.getBanners(query);
+    const banners = await bannerController.getBanners();
 
     res.json(banners);
   } catch (error: any) {

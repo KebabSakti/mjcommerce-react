@@ -15,7 +15,7 @@ export default class UserAuthController {
       newToken = await this.generate();
     } else {
       const userId = this.decrypt(newToken);
-      const user = await userRepository.readById(userId);
+      const user = await userRepository.show({ id: userId });
 
       if (user == null) {
         newToken = await this.generate();
@@ -27,7 +27,7 @@ export default class UserAuthController {
 
   async validate(token: string): Promise<string> {
     const userId = this.decrypt(token);
-    const user = await userRepository.readById(userId);
+    const user = await userRepository.show({ id: userId });
 
     if (user) {
       return user.id!;
@@ -50,7 +50,7 @@ export default class UserAuthController {
   }
 
   async login(email: string, password: string): Promise<string> {
-    const user = await userRepository.readByEmail(email);
+    const user = await userRepository.show({ email: email });
 
     if (user) {
       const userValid = await bcrypt.compare(password, user.password!);
@@ -73,7 +73,7 @@ export default class UserAuthController {
       password: hashedPassword,
     });
 
-    const user = await userRepository.readByEmail(userModel.email!);
+    const user = await userRepository.show({ email: userModel.email! });
 
     if (user) {
       const token = this.encrypt(user.id!);

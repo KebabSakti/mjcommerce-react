@@ -1,45 +1,24 @@
-import { PrismaClient } from "@prisma/client";
-import { QueryOption } from "../config/type";
+import { Empty } from "../config/type";
+import { prisma } from "../helper/prisma";
 import UserModel from "../model/user-model";
-import Repository from "./repository";
 
-const prisma = new PrismaClient();
+export default class UserRepository {
+  async show(query: { [key: string]: string }): Promise<UserModel | Empty> {
+    const result = await prisma.user.findFirst({
+      where: {
+        ...query,
+        active: true,
+      },
+    });
 
-export default class UserRepository
-  implements Repository<UserModel, QueryOption>
-{
-  read(option?: QueryOption | undefined): Promise<UserModel[]> {
-    throw new Error("Method not implemented.");
-  }
+    const data = result as any as UserModel | Empty;
 
-  async readById(id: string): Promise<UserModel | null> {
-    const result = await prisma.user.findUnique({ where: { id: id } });
-    const user = result == null ? null : (result as any as UserModel);
-
-    return user;
-  }
-
-  async readByEmail(email: string): Promise<UserModel | null> {
-    const result = (await prisma.user.findFirst({
-      where: { email: email },
-    })) as any as UserModel;
-
-    const user = result == null ? null : (result as any as UserModel);
-
-    return user;
+    return data;
   }
 
   async create(data: UserModel): Promise<void> {
     await prisma.user.create({
       data: data,
     });
-  }
-
-  update(data: UserModel): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-
-  delete(data: UserModel): Promise<void> {
-    throw new Error("Method not implemented.");
   }
 }

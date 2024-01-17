@@ -5,8 +5,8 @@ import BannerRepository from "../repository/banner-repository";
 const bannerRepository = new BannerRepository();
 
 export default class BannerController {
-  async getBanners(parameter?: ControllerData | Empty): Promise<BannerModel[]> {
-    const banners = await bannerRepository.read(parameter);
+  async getBanners(): Promise<BannerModel[]> {
+    const banners = await bannerRepository.read();
 
     return banners;
   }
