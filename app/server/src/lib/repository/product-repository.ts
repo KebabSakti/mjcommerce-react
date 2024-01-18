@@ -1,15 +1,15 @@
-import { Empty, RepositoryData } from "../config/type";
+import { Empty, PaginationData, Sorting } from "../config/type";
 import { prisma } from "../helper/prisma";
 import ProductModel from "../model/product-model";
 
 export default class ProductRepository {
-  async read(parameter?: RepositoryData | Empty): Promise<ProductModel[]> {
+  async read(query: ProductQuery): Promise<ProductModel[]> {
     const result = await prisma.product.findMany({
-      where: { active: true },
-      skip: parameter?.paginate?.skip,
-      take: parameter?.paginate?.take,
+      where: { active: true, name: { search: "" } },
+      skip: query.paginate.skip,
+      take: query.paginate.take,
       orderBy: {
-        [parameter?.sorting?.field ?? ""]: parameter?.sorting?.direction,
+        [query.sort.field]: query.sort.direction,
       },
     });
 
@@ -18,3 +18,21 @@ export default class ProductRepository {
     return products;
   }
 }
+
+export enum ProductSort {
+  Created = "created",
+  Sell = "sell",
+  View = "view",
+  Rating = "rating",
+  Price = "price",
+}
+
+export type ProductFilter = {
+  name?: string | Empty;
+};
+
+export type ProductQuery = {
+  filter?: ProductFilter | Empty;
+  sort: Sorting<ProductSort>;
+  paginate: PaginationData;
+};

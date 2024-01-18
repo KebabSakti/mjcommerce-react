@@ -13,6 +13,11 @@ export type SortingData = {
   direction: SortingDirection;
 };
 
+export type Sorting<T extends string> = {
+  field: T;
+  direction: SortingDirection;
+};
+
 export type ControllerData<T = Object> = {
   payload?: T | Empty;
   paginate?: PaginationData | Empty;

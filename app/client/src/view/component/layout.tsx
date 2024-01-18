@@ -1,3 +1,4 @@
+import { CustomFlowbiteTheme, Flowbite } from "flowbite-react";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import AuthController from "../../lib/controller/auth-controller";
@@ -11,6 +12,25 @@ import NavBar from "./nav-bar";
 import RefreshButton from "./refresh-button";
 
 const authController = new AuthController();
+
+const customTheme: CustomFlowbiteTheme = {
+  carousel: {
+    scrollContainer: {
+      base: "flex h-full snap-mandatory overflow-y-hidden overflow-x-scroll scroll-smooth rounded-none",
+      snap: "snap-x",
+    },
+  },
+  modal: {
+    root: {
+      base: "fixed top-0 right-0 left-0 z-50 h-full overflow-y-auto overflow-x-hidden md:inset-0 md:h-full",
+    },
+    content: {
+      base: "relative h-full w-full p-4 md:h-auto flex flex-col justify-center",
+      inner:
+        "relative rounded-lg bg-white shadow dark:bg-gray-700 flex flex-col",
+    },
+  },
+};
 
 export default function Layout() {
   const auth = useAppSelector((state: RootState) => state.auth.value);
@@ -31,43 +51,45 @@ export default function Layout() {
 
   return (
     <>
-      <div className="bg-background">
-        {(() => {
-          if (auth.error) {
+      <Flowbite theme={{ theme: customTheme }}>
+        <div className="bg-background">
+          {(() => {
+            if (auth.error) {
+              return (
+                <>
+                  <div className="min-h-screen flex flex-col gap-4 justify-center items-center text-onBackground mx-20">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-32 h-32 text-red-500"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+                      />
+                    </svg>
+                    <p className="text-center text-lg">{auth.error.message}</p>
+                    <RefreshButton onClick={init} />
+                  </div>
+                </>
+              );
+            }
+
             return (
               <>
-                <div className="min-h-screen flex flex-col gap-4 justify-center items-center text-onBackground mx-20">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-32 h-32 text-red-500"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
-                    />
-                  </svg>
-                  <p className="text-center text-lg">{auth.error.message}</p>
-                  <RefreshButton onClick={init} />
-                </div>
+                <AuthBar />
+                <NavBar />
+                <Outlet />
+                <Footer />
               </>
             );
-          }
-
-          return (
-            <>
-              <AuthBar />
-              <NavBar />
-              <Outlet />
-              <Footer />
-            </>
-          );
-        })()}
-      </div>
+          })()}
+        </div>
+      </Flowbite>
     </>
   );
 }
