@@ -1,4 +1,4 @@
-import { Carousel } from "@material-tailwind/react";
+import { Carousel } from "flowbite-react";
 import { useEffect } from "react";
 import { ControllerData, SortingDirection } from "../../lib/config/type";
 import BannerController from "../../lib/controller/banner-controller";
@@ -32,56 +32,48 @@ export default function BannerComponent() {
   }
 
   return (
-    <div className="bg-surface p-4 flex items-center lg:py-4 lg:px-0">
-      <div className="flex flex-col gap-1 overflow-hidden lg:flex-row lg:w-3/5 lg:mx-auto">
-        {(() => {
-          if (banner.error) {
-            return (
-              <>
-                <div className="h-44 w-full">
-                  <div className="bg-gray-100 h-full w-full flex flex-col gap-4 justify-center items-center text-onBackground">
-                    <p className="text-center text-lg">
-                      {banner.error.message}
-                    </p>
-                    <RefreshButton onClick={init} />
-                  </div>
-                </div>
-              </>
-            );
-          }
-
-          if (banner.data?.length! > 0) {
-            return (
-              <>
-                <Carousel
-                  autoplay
-                  loop
-                  className="h-44 lg:flex-auto lg:h-72 lg:w-72"
-                >
-                  {banner.data?.map((e, i) => {
-                    return (
-                      <img
-                        key={i}
-                        src={e.picture}
-                        alt={e.name}
-                        width={500}
-                        height={500}
-                        className="bg-gray-100 object-cover h-full w-full"
-                      />
-                    );
-                  })}
-                </Carousel>
-              </>
-            );
-          }
-
+    <div className="bg-surface p-4 lg:py-4 lg:px-0">
+      {(() => {
+        if (banner.error) {
           return (
             <>
-              <div className="bg-gray-200 animate-pulse h-44 w-screen lg:h-52 lg:flex-auto lg:w-64" />
+              <div className="h-44 w-full">
+                <div className="bg-gray-100 h-full w-full flex flex-col gap-4 justify-center items-center text-onBackground">
+                  <p className="text-center text-lg">{banner.error.message}</p>
+                  <RefreshButton onClick={init} />
+                </div>
+              </div>
             </>
           );
-        })()}
-      </div>
+        }
+
+        if (banner.data?.length! > 0) {
+          return (
+            <>
+              <Carousel className="h-44 lg:h-52 lg:w-3/5 lg:mx-auto">
+                {banner.data?.map((e, i) => {
+                  return (
+                    <img
+                      key={i}
+                      src={e.picture}
+                      alt={e.name}
+                      width={500}
+                      height={500}
+                      className="bg-gray-100 object-cover h-full w-full"
+                    />
+                  );
+                })}
+              </Carousel>
+            </>
+          );
+        }
+
+        return (
+          <>
+            <div className="bg-gray-100 animate-pulse h-44 lg:h-52 lg:w-3/5 lg:mx-auto" />
+          </>
+        );
+      })()}
     </div>
   );
 }

@@ -4,7 +4,11 @@ const withMT = require("@material-tailwind/react/utils/withMT");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 export default withMT({
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "node_modules/flowbite-react/lib/esm/**/*.js",
+  ],
   theme: {
     extend: {
       fontFamily: {
@@ -24,5 +28,5 @@ export default withMT({
       },
     },
   },
-  plugins: [],
+  plugins: [require("flowbite/plugin")],
 });
