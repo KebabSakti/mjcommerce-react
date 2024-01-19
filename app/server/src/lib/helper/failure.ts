@@ -1,4 +1,5 @@
 import { Response } from "express";
+import { Empty } from "../config/type";
 
 class Failure extends Error {
   constructor(message?: string) {
@@ -33,10 +34,9 @@ class Unauthorized extends Failure {}
 class NotFound extends Failure {}
 
 class BadRequest extends Failure {
-  constructor(message: string) {
-    super(message);
+  constructor(message?: string) {
+    super(message ?? "Cek kembali input yang anda berikan");
   }
 }
 
 export { BadRequest, Failure, InternalError, NotFound, Unauthorized };
-

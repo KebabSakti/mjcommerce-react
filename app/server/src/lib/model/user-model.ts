@@ -1,3 +1,13 @@
+export enum UserShowField {
+  ID = "id",
+  EMAIL = "email",
+}
+
+export type UserShowParameter = {
+  field: UserShowField;
+  value: string;
+};
+
 export default interface UserModel {
   id?: string;
   email?: string;

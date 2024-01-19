@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
 import jwt from "jsonwebtoken";
 import { InternalError, Unauthorized } from "../helper/failure";
-import UserModel from "../model/user-model";
+import UserModel, { UserShowField } from "../model/user-model";
 import UserRepository from "../repository/user-repository";
 
 const userRepository = new UserRepository();
@@ -15,7 +15,11 @@ export default class UserAuthController {
       newToken = await this.generate();
     } else {
       const userId = this.decrypt(newToken);
-      const user = await userRepository.show({ id: userId });
+
+      const user = await userRepository.show({
+        field: UserShowField.ID,
+        value: userId,
+      });
 
       if (user == null) {
         newToken = await this.generate();
@@ -27,7 +31,11 @@ export default class UserAuthController {
 
   async validate(token: string): Promise<string> {
     const userId = this.decrypt(token);
-    const user = await userRepository.show({ id: userId });
+
+    const user = await userRepository.show({
+      field: UserShowField.ID,
+      value: userId,
+    });
 
     if (user) {
       return user.id!;
@@ -50,7 +58,10 @@ export default class UserAuthController {
   }
 
   async login(email: string, password: string): Promise<string> {
-    const user = await userRepository.show({ email: email });
+    const user = await userRepository.show({
+      field: UserShowField.EMAIL,
+      value: email,
+    });
 
     if (user) {
       const userValid = await bcrypt.compare(password, user.password!);
@@ -73,7 +84,10 @@ export default class UserAuthController {
       password: hashedPassword,
     });
 
-    const user = await userRepository.show({ email: userModel.email! });
+    const user = await userRepository.show({
+      field: UserShowField.EMAIL,
+      value: userModel.email!,
+    });
 
     if (user) {
       const token = this.encrypt(user.id!);

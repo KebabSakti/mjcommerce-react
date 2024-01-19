@@ -13,9 +13,14 @@ export type SortingData = {
   direction: SortingDirection;
 };
 
-export type Sorting<T extends string> = {
-  field: T;
+export type Sort<FieldName extends string> = {
+  field: FieldName;
   direction: SortingDirection;
+};
+
+export type Filter<FieldName extends string> = {
+  field: FieldName;
+  value: string[];
 };
 
 export type ControllerData<T = Object> = {

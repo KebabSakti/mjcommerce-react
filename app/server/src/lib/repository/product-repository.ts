@@ -1,38 +1,80 @@
-import { Empty, PaginationData, Sorting } from "../config/type";
+import { Empty } from "../config/type";
 import { prisma } from "../helper/prisma";
-import ProductModel from "../model/product-model";
+import {
+  ProductModel,
+  ProductReadParameter,
+  ProductUpdateField,
+  ProductUpdateParameter,
+} from "../model/product-model";
+import UserModel from "../model/user-model";
 
 export default class ProductRepository {
-  async read(query: ProductQuery): Promise<ProductModel[]> {
+  async read(param: ProductReadParameter): Promise<ProductModel[]> {
+    let condition: any = { where: { active: true } };
+
+    if (param.filter) {
+      if (param.filter.hasOwnProperty("storeId")) {
+        condition["where"] = {
+          ...condition.where,
+          storeId: param.filter.storeId,
+        };
+      }
+
+      if (param.filter.hasOwnProperty("categoryId")) {
+        condition["where"] = {
+          ...condition.where,
+          categoryId: param.filter.categoryId,
+        };
+      }
+
+      if (param.filter.hasOwnProperty("name")) {
+        condition["where"] = {
+          ...condition.where,
+          name: { contains: param.filter.name },
+        };
+      }
+    }
+
+    if (param.sort) {
+      condition = {
+        ...condition,
+        orderBy: {
+          [param.sort.field]: param.sort.direction,
+        },
+      };
+    }
+
     const result = await prisma.product.findMany({
-      where: { active: true, name: { search: "" } },
-      skip: query.paginate.skip,
-      take: query.paginate.take,
-      orderBy: {
-        [query.sort.field]: query.sort.direction,
-      },
+      ...condition,
+      skip: param.paginate.skip,
+      take: param.paginate.take,
     });
 
-    const products = result.map((e) => e as any as ProductModel);
+    const data = result.map((e) => e as any as ProductModel);
 
-    return products;
+    return data;
+  }
+
+  async show(id: string): Promise<ProductModel | Empty> {
+    const result = await prisma.product.findFirst({
+      where: { active: true, id: id },
+    });
+
+    const data = result as any as UserModel | Empty;
+
+    return data;
+  }
+
+  async update(id: string, param: ProductUpdateParameter): Promise<void> {
+    let data: any = { [param.field]: { increment: 1 } };
+
+    if (param.field == ProductUpdateField.RATING) {
+      data = { rating: param.value! };
+    }
+
+    await prisma.product.update({
+      where: { id: id },
+      data: data,
+    });
   }
 }
-
-export enum ProductSort {
-  Created = "created",
-  Sell = "sell",
-  View = "view",
-  Rating = "rating",
-  Price = "price",
-}
-
-export type ProductFilter = {
-  name?: string | Empty;
-};
-
-export type ProductQuery = {
-  filter?: ProductFilter | Empty;
-  sort: Sorting<ProductSort>;
-  paginate: PaginationData;
-};
