@@ -1,5 +1,5 @@
 import { CustomFlowbiteTheme, Flowbite } from "flowbite-react";
-import { Outlet } from "react-router-dom";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 import AuthBar from "./auth-bar";
 import Footer from "./footer";
 import NavBar from "./nav-bar";
@@ -25,13 +25,16 @@ const customTheme: CustomFlowbiteTheme = {
 
 export default function Layout() {
   return (
-    <Flowbite theme={{ theme: customTheme }}>
-      <div className="bg-background min-h-screen">
-        <AuthBar />
-        <NavBar />
-        <Outlet />
-        <Footer />
-      </div>
-    </Flowbite>
+    <>
+      <ScrollRestoration />
+      <Flowbite theme={{ theme: customTheme }}>
+        <div className="bg-background min-h-screen">
+          <AuthBar />
+          <NavBar />
+          <Outlet />
+          <Footer />
+        </div>
+      </Flowbite>
+    </>
   );
 }

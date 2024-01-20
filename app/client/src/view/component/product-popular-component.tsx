@@ -16,6 +16,7 @@ import {
   productPopularError,
 } from "../redux/product-popular-slice";
 import { RootState } from "../redux/store";
+import StringFormatter from "../../lib/helper/string-formatter";
 
 const productController = new ProductController();
 
@@ -81,7 +82,11 @@ export default function ProductPopularComponent() {
                 <>
                   {state.data!.map((e, i) => {
                     return (
-                      <Link key={i} to="" className="w-36 snap-start">
+                      <Link
+                        key={i}
+                        to={`/product/${StringFormatter.format(e.name!)}`}
+                        className="w-36 snap-start"
+                      >
                         <div className="h-36">
                           <LazyLoadImage
                             src={e.picture}

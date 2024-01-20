@@ -5,6 +5,8 @@ export default class BannerRepository {
   async read(): Promise<BannerModel[]> {
     const result = await prisma.banner.findMany({
       where: { active: true },
+      skip: 0,
+      take: 10,
       orderBy: {
         created: "desc",
       },

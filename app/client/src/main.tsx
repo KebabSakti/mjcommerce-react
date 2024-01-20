@@ -7,6 +7,8 @@ import Layout from "./view/component/layout";
 import ErrorPage from "./view/error-page";
 import HomePage from "./view/home-page";
 import { store } from "./view/redux/store";
+import ProductPage from "./view/product-page";
+import ProductDetailPage from "./view/product-detail-page";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +19,11 @@ const router = createBrowserRouter([
         path: "/",
         element: <HomePage />,
       },
+      {
+        path: "/product",
+        element: <ProductPage />,
+      },
+      { path: "/product/:id", element: <ProductDetailPage /> },
     ],
   },
 ]);

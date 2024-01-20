@@ -7,25 +7,11 @@ import ProductRecommendedComponent from "./component/product-recommended-compone
 export default function HomePage() {
   return (
     <>
-      {/* BANNER */}
       <BannerComponent />
-      {/* BANNER */}
-
-      {/* KATEGORI */}
       <CategoryComponent />
-      {/* KATEGORI */}
-
-      {/* PRODUK TERLARIS */}
       <ProductPopularComponent />
-      {/* PRODUK TERLARIS */}
-
-      {/* PRODUK TERBARU */}
       <ProductLatestComponent />
-      {/* PRODUK TERBARU */}
-
-      {/* PRODUK REKOMENDASI */}
       <ProductRecommendedComponent />
-      {/* PRODUK REKOMENDASI */}
     </>
   );
 }
