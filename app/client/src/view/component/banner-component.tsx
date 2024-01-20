@@ -1,6 +1,5 @@
 import { Carousel } from "flowbite-react";
 import { useEffect } from "react";
-import { ControllerData, SortingDirection } from "../../lib/config/type";
 import BannerController from "../../lib/controller/banner-controller";
 import { Failure } from "../../lib/helper/failure";
 import { bannerComplete, bannerError } from "../redux/banner-slice";
@@ -20,12 +19,8 @@ export default function BannerComponent() {
 
   async function init(): Promise<void> {
     try {
-      const param: ControllerData = {
-        sorting: { field: "created", direction: SortingDirection.DESC },
-      };
-
-      const datas = await bannerController.read(param);
-      dispatch(bannerComplete(datas));
+      const data = await bannerController.getBanner();
+      dispatch(bannerComplete(data));
     } catch (error) {
       dispatch(bannerError(Failure.handle(error)));
     }
@@ -70,7 +65,7 @@ export default function BannerComponent() {
 
         return (
           <>
-            <div className="bg-gray-100 animate-pulse h-44 lg:h-52 lg:w-3/5 lg:mx-auto" />
+            <div className="bg-gray-200 animate-pulse h-44 lg:h-52 lg:w-3/5 lg:mx-auto" />
           </>
         );
       })()}

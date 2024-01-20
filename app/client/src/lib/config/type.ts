@@ -62,4 +62,9 @@ export type HttpRequest<T extends Object = Object> = {
   data?: T | Empty;
 };
 
+export type Sort<FieldName extends string> = {
+  field: FieldName;
+  direction: SortingDirection;
+};
+
 export type Empty = null | undefined;

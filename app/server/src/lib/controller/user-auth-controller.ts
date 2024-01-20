@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import { randomUUID } from "crypto";
 import jwt from "jsonwebtoken";
 import { InternalError, Unauthorized } from "../helper/failure";
 import UserModel, { UserShowField } from "../model/user-model";
@@ -8,55 +7,6 @@ import UserRepository from "../repository/user-repository";
 const userRepository = new UserRepository();
 
 export default class UserAuthController {
-  async access(token?: string | null): Promise<string> {
-    let newToken = token == "undefined" ? null : token;
-
-    if (newToken == null) {
-      newToken = await this.generate();
-    } else {
-      const userId = this.decrypt(newToken);
-
-      const user = await userRepository.show({
-        field: UserShowField.ID,
-        value: userId,
-      });
-
-      if (user == null) {
-        newToken = await this.generate();
-      }
-    }
-
-    return newToken!;
-  }
-
-  async validate(token: string): Promise<string> {
-    const userId = this.decrypt(token);
-
-    const user = await userRepository.show({
-      field: UserShowField.ID,
-      value: userId,
-    });
-
-    if (user) {
-      return user.id!;
-    }
-
-    throw new Unauthorized();
-  }
-
-  async generate(): Promise<string> {
-    const userId = randomUUID();
-
-    await userRepository.create({
-      id: userId,
-      link: randomUUID(),
-    });
-
-    const token = this.encrypt(userId);
-
-    return token;
-  }
-
   async login(email: string, password: string): Promise<string> {
     const user = await userRepository.show({
       field: UserShowField.EMAIL,

@@ -1,7 +1,17 @@
 import { Empty, HttpRequest } from "./../config/type";
 
 export default class HTTP {
-  static urlParser(url: string, query?: Object | Empty): string {
+  private static headers(request?: HttpRequest | Empty): Object {
+    let headers: any = { "Content-Type": "application/json" };
+
+    if (request?.token) {
+      headers = { ...headers, Authorization: `Bearer ${request?.token}` };
+    }
+
+    return headers;
+  }
+
+  private static urlParser(url: string, query?: Object | Empty): string {
     const target = new URL(url);
 
     if (query != null) {
@@ -16,12 +26,11 @@ export default class HTTP {
     request?: HttpRequest | Empty
   ): Promise<Response> {
     const targetUrl = this.urlParser(url, request?.query);
+    const headers = this.headers(request);
 
     const response = await fetch(targetUrl, {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${request?.token}`,
-      },
+      ...headers,
     });
 
     return response;
@@ -32,15 +41,13 @@ export default class HTTP {
     request?: HttpRequest | Empty
   ): Promise<Response> {
     const targetUrl = this.urlParser(url, request?.query);
+    const headers = this.headers(request);
 
     const response = await fetch(targetUrl, {
       method: "POST",
       cache: "no-store",
       body: JSON.stringify(request?.data),
-      headers: {
-        Authorization: `Bearer ${request?.token}`,
-        "Content-Type": "application/json",
-      },
+      ...headers,
     });
 
     return response;
@@ -51,15 +58,13 @@ export default class HTTP {
     request?: HttpRequest | Empty
   ): Promise<Response> {
     const targetUrl = this.urlParser(url, request?.query);
+    const headers = this.headers(request);
 
     const response = await fetch(targetUrl, {
       method: "PUT",
       cache: "no-store",
       body: JSON.stringify(request?.data),
-      headers: {
-        Authorization: `Bearer ${request?.token}`,
-        "Content-Type": "application/json",
-      },
+      ...headers,
     });
 
     return response;
@@ -70,15 +75,13 @@ export default class HTTP {
     request?: HttpRequest | Empty
   ): Promise<Response> {
     const targetUrl = this.urlParser(url, request?.query);
+    const headers = this.headers(request);
 
     const response = await fetch(targetUrl, {
       method: "DELETE",
       cache: "no-store",
       body: JSON.stringify(request?.data),
-      headers: {
-        Authorization: `Bearer ${request?.token}`,
-        "Content-Type": "application/json",
-      },
+      ...headers,
     });
 
     return response;
@@ -89,15 +92,13 @@ export default class HTTP {
     request?: HttpRequest<FormData> | Empty
   ): Promise<Response> {
     const targetUrl = this.urlParser(url, request?.query);
+    const headers = this.headers(request);
 
     const response = await fetch(targetUrl, {
       method: "POST",
       cache: "no-store",
       body: request?.data,
-      headers: {
-        Authorization: `Bearer ${request?.token}`,
-        "Content-Type": "application/json",
-      },
+      ...headers,
     });
 
     return response;

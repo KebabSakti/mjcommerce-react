@@ -7,7 +7,7 @@ const bannerController = new BannerController();
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const banners = await bannerController.getBanners();
+    const banners = await bannerController.getBanner();
 
     res.json(banners);
   } catch (error: any) {

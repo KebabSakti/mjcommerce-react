@@ -1,5 +1,4 @@
-import { PaginationData, Sort } from "../config/type";
-import { Empty } from "./../config/type";
+import { Empty, PaginationData, Sort } from "../config/type";
 import ProductGallery from "./product-gallery";
 import ProductRating from "./product-rating";
 

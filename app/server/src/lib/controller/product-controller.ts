@@ -23,14 +23,22 @@ export default class ProductController {
     const result = await productRepository.show(id);
 
     if (result) {
-      //increment product view by 1
-      const param: ProductUpdateParameter = {
-        field: ProductUpdateField.VIEW,
-      };
-
-      await productRepository.update(id, param);
+      await this.incrementProductView(id);
     }
 
     return result;
+  }
+
+  async incrementProductView(id: string): Promise<void> {
+    await productRepository.update(id, {
+      field: ProductUpdateField.VIEW,
+    });
+  }
+
+  async setProductRate(id: string, value: number): Promise<void> {
+    await productRepository.update(id, {
+      field: ProductUpdateField.RATING,
+      value: value,
+    });
   }
 }
