@@ -16,7 +16,6 @@ import {
   productPopularError,
 } from "../redux/product-popular-slice";
 import { RootState } from "../redux/store";
-import StringFormatter from "../../lib/helper/string-formatter";
 
 const productController = new ProductController();
 
@@ -84,7 +83,7 @@ export default function ProductPopularComponent() {
                     return (
                       <Link
                         key={i}
-                        to={`/product/${StringFormatter.format(e.name!)}`}
+                        to={`/product/${e.id}`}
                         className="w-36 snap-start"
                       >
                         <div className="h-36">
