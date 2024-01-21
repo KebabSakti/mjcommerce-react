@@ -3,7 +3,6 @@ import {
   ProductModel,
   ProductReadParameter,
   ProductUpdateField,
-  ProductUpdateParameter,
 } from "../model/product-model";
 import ProductRepository from "../repository/product-repository";
 
@@ -22,10 +21,6 @@ export default class ProductController {
   async getProductDetail(id: string): Promise<ProductModel | Empty> {
     const result = await productRepository.show(id);
 
-    if (result) {
-      await this.incrementProductView(id);
-    }
-
     return result;
   }
 
@@ -40,5 +35,15 @@ export default class ProductController {
       field: ProductUpdateField.RATING,
       value: value,
     });
+  }
+
+  async viewProduct(id: string): Promise<ProductModel | Empty> {
+    const result = await this.getProductDetail(id);
+
+    if (result) {
+      await this.incrementProductView(id);
+    }
+
+    return result;
   }
 }

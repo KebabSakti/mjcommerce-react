@@ -32,7 +32,7 @@ export default function NavBar() {
         <input
           type="text"
           placeholder="Cari di sini"
-          className="bg-background rounded-lg h-10 px-4 mx-4 text-sm grow lg:mx-10"
+          className="bg-background h-10 px-4 mx-4 text-sm grow lg:mx-10"
         />
         <div className="flex gap-3">
           <Badge withBorder content="0">
