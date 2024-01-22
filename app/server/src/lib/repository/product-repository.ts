@@ -1,3 +1,4 @@
+import { tr } from "@faker-js/faker";
 import { Empty } from "../config/type";
 import { prisma } from "../helper/prisma";
 import {
@@ -58,6 +59,10 @@ export default class ProductRepository {
   async show(id: string): Promise<ProductModel | Empty> {
     const result = await prisma.product.findFirst({
       where: { active: true, id: id },
+      include: {
+        store: true,
+        category: true,
+      },
     });
 
     const data = result as any as UserModel | Empty;

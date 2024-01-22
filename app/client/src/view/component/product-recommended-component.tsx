@@ -5,10 +5,14 @@ import { Link } from "react-router-dom";
 import ProductController from "../../lib/controller/product-controller";
 import Currency from "../../lib/helper/currency";
 import { Failure } from "../../lib/helper/failure";
-import { ProductReadParameter } from "../../lib/model/product-model";
+import {
+  ProductReadParameter,
+  ProductSortingField,
+} from "../../lib/model/product-model";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { productComplete, productError } from "../redux/product-slice";
 import { RootState } from "../redux/store";
+import { SortingDirection } from "../../lib/config/type";
 
 const productController = new ProductController();
 
@@ -23,9 +27,13 @@ export default function ProductRecommendedComponent() {
   async function init(): Promise<void> {
     try {
       const param: ProductReadParameter = {
+        sort: {
+          field: ProductSortingField.PRIORITY,
+          direction: SortingDirection.ASC,
+        },
         paginate: {
           skip: 0,
-          take: 32,
+          take: 22,
         },
       };
 

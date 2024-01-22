@@ -1,10 +1,12 @@
 import { PaginationData, Sort } from "../config/type";
 import { Empty } from "./../config/type";
+import CategoryModel from "./category-model";
 import ProductGallery from "./product-gallery";
 import ProductRating from "./product-rating";
+import StoreModel from "./store-model";
 
 export enum ProductSortingField {
-  PRIORIOTY = "priority",
+  PRIORITY = "priority",
   PRICE = "price",
   SELL = "sell",
   VIEW = "view",
@@ -57,6 +59,8 @@ export interface ProductModel {
   active?: boolean;
   created?: string;
   updated?: string;
+  category?: CategoryModel;
+  store?: StoreModel;
   productGallery?: ProductGallery[];
   productRating?: ProductRating[];
 }

@@ -3,7 +3,7 @@ import ProductGallery from "./product-gallery";
 import ProductRating from "./product-rating";
 
 export enum ProductSortingField {
-  PRIORIOTY = "priority",
+  PRIORITY = "priority",
   PRICE = "price",
   SELL = "sell",
   VIEW = "view",
