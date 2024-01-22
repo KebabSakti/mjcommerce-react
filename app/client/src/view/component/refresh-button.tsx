@@ -2,7 +2,7 @@ export default function RefreshButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="bg-primary text-onPrimary p-1 rounded flex justify-center items-center gap-1 text-sm"
+      className="bg-primary text-onPrimary p-2 rounded flex justify-center items-center gap-1 w-max"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -10,7 +10,7 @@ export default function RefreshButton({ onClick }: { onClick: () => void }) {
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className="w-4 h-4 text-onPrimary"
+        className="w-5 h-5 text-onPrimary"
       >
         <path
           strokeLinecap="round"

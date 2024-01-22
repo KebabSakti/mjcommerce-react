@@ -1,4 +1,11 @@
 import { Empty, HttpRequest } from "./../config/type";
+import {
+  BadRequest,
+  Failure,
+  InternalError,
+  NotFound,
+  Unauthorized,
+} from "./failure";
 
 export default class HTTP {
   private static headers(request?: HttpRequest | Empty): Object {
@@ -21,6 +28,25 @@ export default class HTTP {
     return target.href;
   }
 
+  private static async failure(response: Response): Promise<Failure> {
+    const message = await response.json();
+    let error: InternalError = new InternalError(message);
+
+    if (response.status == 401) {
+      error = new Unauthorized(message);
+    }
+
+    if (response.status == 404) {
+      error = new NotFound(message);
+    }
+
+    if (response.status == 400) {
+      error = new BadRequest(message);
+    }
+
+    return error;
+  }
+
   static async get(
     url: string,
     request?: HttpRequest | Empty
@@ -33,7 +59,9 @@ export default class HTTP {
       ...headers,
     });
 
-    console.log(response.json().value);
+    if (response.ok == false) {
+      throw await this.failure(response);
+    }
 
     return response;
   }
@@ -52,6 +80,10 @@ export default class HTTP {
       ...headers,
     });
 
+    if (response.ok == false) {
+      throw await this.failure(response);
+    }
+
     return response;
   }
 
@@ -68,6 +100,10 @@ export default class HTTP {
       body: JSON.stringify(request?.data),
       ...headers,
     });
+
+    if (response.ok == false) {
+      throw await this.failure(response);
+    }
 
     return response;
   }
@@ -86,6 +122,10 @@ export default class HTTP {
       ...headers,
     });
 
+    if (response.ok == false) {
+      throw await this.failure(response);
+    }
+
     return response;
   }
 
@@ -102,6 +142,10 @@ export default class HTTP {
       body: request?.data,
       ...headers,
     });
+
+    if (response.ok == false) {
+      throw await this.failure(response);
+    }
 
     return response;
   }

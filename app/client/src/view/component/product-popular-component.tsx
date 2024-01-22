@@ -32,6 +32,8 @@ export default function ProductPopularComponent() {
 
   async function init(): Promise<void> {
     try {
+      dispatch(productPopularComplete(null));
+
       const param: ProductReadParameter = {
         paginate: {
           skip: 0,

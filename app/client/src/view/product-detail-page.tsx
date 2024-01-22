@@ -53,7 +53,7 @@ export default function ProductDetailPage() {
               <span className="text-xs text-gray-400">
                 per {faker.science.unit.name}
               </span>
-              <span className="font-bold text-primary text-xl">
+              <span className="font-bold text-2xl">
                 {Currency.format(
                   faker.commerce.price({ min: 10000, max: 100000 })
                 )}

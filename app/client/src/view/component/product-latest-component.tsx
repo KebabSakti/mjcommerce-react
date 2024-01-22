@@ -12,9 +12,7 @@ import {
 } from "../../lib/model/product-model";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { loadError } from "../redux/layout-slice";
-import {
-  productLatestComplete
-} from "../redux/product-latest-slice";
+import { productLatestComplete } from "../redux/product-latest-slice";
 import { RootState } from "../redux/store";
 
 const productController = new ProductController();
@@ -29,6 +27,8 @@ export default function ProductLatestComponent() {
 
   async function init(): Promise<void> {
     try {
+      dispatch(productLatestComplete(null));
+
       const param: ProductReadParameter = {
         paginate: {
           skip: 0,

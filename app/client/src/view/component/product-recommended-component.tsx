@@ -27,6 +27,8 @@ export default function ProductRecommendedComponent() {
 
   async function init(): Promise<void> {
     try {
+      dispatch(productComplete(null));
+
       const param: ProductReadParameter = {
         sort: {
           field: ProductSortingField.PRIORITY,

@@ -96,34 +96,47 @@ model Store {
 }
 
 model Product {
-  id             String          @id @default(uuid())
+  id             String           @id @default(uuid())
   storeId        String
   categoryId     String
-  priority       Int             @default(0)
+  priority       Int              @default(0)
   name           String
-  description    String          @db.Text
+  description    String           @db.Text
   picture        String
-  stok           Int             @default(0)
-  min            Int?
-  max            Int?
-  price          Decimal         @db.Decimal(19, 4)
-  wholesalePrice Decimal?        @db.Decimal(19, 4)
-  wholesaleMin   Int?
-  unit           String
-  weight         Float           @default(0)
-  sell           Int             @default(0)
-  view           Int             @default(0)
-  rating         Float           @default(0)
-  active         Boolean         @default(true)
-  created        DateTime        @default(now())
-  updated        DateTime        @default(now())
-  category       Category        @relation(fields: [categoryId], references: [id])
-  store          Store           @relation(fields: [storeId], references: [id])
+  sell           Int              @default(0)
+  view           Int              @default(0)
+  rating         Float            @default(0)
+  active         Boolean          @default(true)
+  created        DateTime         @default(now())
+  updated        DateTime         @default(now())
+  category       Category         @relation(fields: [categoryId], references: [id])
+  store          Store            @relation(fields: [storeId], references: [id])
   productRating  ProductRating[]
   cartItem       CartItem[]
   productGalery  ProductGalery[]
+  productVariant ProductVariant[]
 
   @@index([storeId, categoryId, name, active])
+}
+
+model ProductVariant {
+  id             String     @id @default(uuid())
+  productId      String
+  name           String
+  stok           Int        @default(0)
+  min            Int?
+  max            Int?
+  price          Decimal    @db.Decimal(19, 4)
+  wholesalePrice Decimal?   @db.Decimal(19, 4)
+  wholesaleMin   Int?
+  unit           String?
+  weight         Float      @default(0)
+  created        DateTime   @default(now())
+  updated        DateTime   @default(now())
+  product        Product    @relation(fields: [productId], references: [id])
+  cartItem       CartItem[]
+
+  @@index([productId])
 }
 
 model ProductGalery {
@@ -132,7 +145,7 @@ model ProductGalery {
   picture   String
   created   DateTime @default(now())
   updated   DateTime @default(now())
-  Product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 
   @@index([productId])
 }
@@ -164,17 +177,19 @@ model Cart {
 }
 
 model CartItem {
-  id        String   @id @default(uuid())
-  cartId    String
-  productId String
-  qty       Int
-  total     Decimal  @db.Decimal(19, 4)
-  created   DateTime @default(now())
-  updated   DateTime @default(now())
-  cart      Cart     @relation(fields: [cartId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
+  id               String         @id @default(uuid())
+  cartId           String
+  productId        String
+  productVariantId String
+  qty              Int
+  total            Decimal        @db.Decimal(19, 4)
+  created          DateTime       @default(now())
+  updated          DateTime       @default(now())
+  cart             Cart           @relation(fields: [cartId], references: [id])
+  product          Product        @relation(fields: [productId], references: [id])
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
 
-  @@index([cartId, productId])
+  @@index([cartId, productVariantId, productId])
 }
 
 model Payment {
