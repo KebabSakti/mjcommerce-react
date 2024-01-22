@@ -33,6 +33,8 @@ export default class HTTP {
       ...headers,
     });
 
+    console.log(response.json().value);
+
     return response;
   }
 

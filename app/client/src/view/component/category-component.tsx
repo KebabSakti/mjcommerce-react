@@ -3,8 +3,9 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
 import CategoryController from "../../lib/controller/category-controller";
 import { Failure } from "../../lib/helper/failure";
-import { categoryComplete, categoryError } from "../redux/category-slice";
+import { categoryComplete } from "../redux/category-slice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { loadError } from "../redux/layout-slice";
 import { RootState } from "../redux/store";
 
 const categoryController = new CategoryController();
@@ -19,10 +20,11 @@ export default function CategoryComponent() {
 
   async function init(): Promise<void> {
     try {
+      dispatch(categoryComplete(null));
       const data = await categoryController.read();
       dispatch(categoryComplete(data));
     } catch (error) {
-      dispatch(categoryError(Failure.handle(error)));
+      dispatch(loadError(Failure.handle(error)));
     }
   }
 

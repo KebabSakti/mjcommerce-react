@@ -2,10 +2,10 @@ import { Carousel } from "flowbite-react";
 import { useEffect } from "react";
 import BannerController from "../../lib/controller/banner-controller";
 import { Failure } from "../../lib/helper/failure";
-import { bannerComplete, bannerError } from "../redux/banner-slice";
+import { bannerComplete } from "../redux/banner-slice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { loadError } from "../redux/layout-slice";
 import { RootState } from "../redux/store";
-import RefreshButton from "./refresh-button";
 
 const bannerController = new BannerController();
 
@@ -19,29 +19,17 @@ export default function BannerComponent() {
 
   async function init(): Promise<void> {
     try {
+      dispatch(bannerComplete(null));
       const data = await bannerController.getBanner();
       dispatch(bannerComplete(data));
     } catch (error) {
-      dispatch(bannerError(Failure.handle(error)));
+      dispatch(loadError(Failure.handle(error)));
     }
   }
 
   return (
     <div className="bg-surface p-4 lg:py-4 lg:px-0">
       {(() => {
-        if (banner.error) {
-          return (
-            <>
-              <div className="h-44 w-full">
-                <div className="bg-gray-100 h-full w-full flex flex-col gap-4 justify-center items-center text-onBackground">
-                  <p className="text-center text-lg">{banner.error.message}</p>
-                  <RefreshButton onClick={init} />
-                </div>
-              </div>
-            </>
-          );
-        }
-
         if (banner.data?.length! > 0) {
           return (
             <>

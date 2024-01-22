@@ -11,9 +11,9 @@ import {
   ProductSortingField,
 } from "../../lib/model/product-model";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { loadError } from "../redux/layout-slice";
 import {
-  productLatestComplete,
-  productLatestError,
+  productLatestComplete
 } from "../redux/product-latest-slice";
 import { RootState } from "../redux/store";
 
@@ -44,7 +44,7 @@ export default function ProductLatestComponent() {
 
       dispatch(productLatestComplete(data));
     } catch (error) {
-      dispatch(productLatestError(Failure.handle(error)));
+      dispatch(loadError(Failure.handle(error)));
     }
   }
 

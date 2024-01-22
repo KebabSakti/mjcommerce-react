@@ -88,7 +88,7 @@ CREATE TABLE `Product` (
     `id` VARCHAR(191) NOT NULL,
     `storeId` VARCHAR(191) NOT NULL,
     `categoryId` VARCHAR(191) NOT NULL,
-    `pritority` INTEGER NOT NULL DEFAULT 0,
+    `priority` INTEGER NOT NULL DEFAULT 0,
     `name` VARCHAR(191) NOT NULL,
     `description` TEXT NOT NULL,
     `picture` VARCHAR(191) NOT NULL,

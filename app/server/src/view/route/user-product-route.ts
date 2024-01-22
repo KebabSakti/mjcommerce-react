@@ -9,6 +9,8 @@ const productController = new ProductController();
 
 router.get("/", async (req: Request, res: Response) => {
   try {
+    throw new BadRequest("Error cuyyyyy");
+    
     const schema = Joi.object({
       skip: Joi.number().required(),
       take: Joi.number().required(),

@@ -3,6 +3,7 @@ import { Outlet, ScrollRestoration } from "react-router-dom";
 import AuthBar from "./auth-bar";
 import Footer from "./footer";
 import NavBar from "./nav-bar";
+import ErrorBoundary from "./error-boundary";
 
 const customTheme: CustomFlowbiteTheme = {
   carousel: {
@@ -28,12 +29,14 @@ export default function Layout() {
     <>
       <ScrollRestoration />
       <Flowbite theme={{ theme: customTheme }}>
-        <div className="bg-background min-h-screen">
-          <AuthBar />
-          <NavBar />
-          <Outlet />
-          <Footer />
-        </div>
+        <ErrorBoundary>
+          <div className="bg-background min-h-screen">
+            <AuthBar />
+            <NavBar />
+            <Outlet />
+            <Footer />
+          </div>
+        </ErrorBoundary>
       </Flowbite>
     </>
   );

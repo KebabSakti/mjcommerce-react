@@ -11,9 +11,9 @@ import {
   ProductSortingField,
 } from "../../lib/model/product-model";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { loadError } from "../redux/layout-slice";
 import {
-  productPopularComplete,
-  productPopularError,
+  productPopularComplete
 } from "../redux/product-popular-slice";
 import { RootState } from "../redux/store";
 
@@ -47,7 +47,7 @@ export default function ProductPopularComponent() {
 
       dispatch(productPopularComplete(data));
     } catch (error) {
-      dispatch(productPopularError(Failure.handle(error)));
+      dispatch(loadError(Failure.handle(error)));
     }
   }
 

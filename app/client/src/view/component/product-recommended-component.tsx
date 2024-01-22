@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { useEffect } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
+import { SortingDirection } from "../../lib/config/type";
 import ProductController from "../../lib/controller/product-controller";
 import Currency from "../../lib/helper/currency";
 import { Failure } from "../../lib/helper/failure";
@@ -10,9 +11,9 @@ import {
   ProductSortingField,
 } from "../../lib/model/product-model";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { productComplete, productError } from "../redux/product-slice";
+import { loadError } from "../redux/layout-slice";
+import { productComplete } from "../redux/product-slice";
 import { RootState } from "../redux/store";
-import { SortingDirection } from "../../lib/config/type";
 
 const productController = new ProductController();
 
@@ -40,7 +41,7 @@ export default function ProductRecommendedComponent() {
       const data = await productController.getFilteredProduct(param);
       dispatch(productComplete(data));
     } catch (error) {
-      dispatch(productError(Failure.handle(error)));
+      dispatch(loadError(Failure.handle(error)));
     }
   }
 

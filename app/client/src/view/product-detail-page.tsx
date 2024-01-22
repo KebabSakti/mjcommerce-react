@@ -142,7 +142,10 @@ export default function ProductDetailPage() {
                 </svg>
                 <span className="text-onPrimary">Masukkan Keranjang</span>
               </button>
-              <button className="flex gap-2 bg-secondary py-2 px-4">
+              <button
+                className="flex gap-2 bg-secondary py-2 px-4"
+                onClick={() => {}}
+              >
                 <span className="text-onSecondary">Beli Sekarang</span>
               </button>
             </div>
@@ -163,7 +166,7 @@ export default function ProductDetailPage() {
             <div className="flex gap-2">
               <Link
                 to=""
-                className="flex gap-1 items-center bg-orange-500 px-2 py-1 w-max"
+                className="flex gap-1 items-center bg-primary px-2 py-1 w-max"
               >
                 <span className="text-onPrimary text-sm">Kunjungi Toko</span>
                 <svg
@@ -183,7 +186,7 @@ export default function ProductDetailPage() {
               </Link>
               <Link
                 to=""
-                className="flex gap-1 items-center bg-light-blue-500 px-2 py-1 w-max"
+                className="flex gap-1 items-center bg-secondary px-2 py-1 w-max"
               >
                 <span className="text-onSecondary text-sm">Chat</span>
                 <svg
