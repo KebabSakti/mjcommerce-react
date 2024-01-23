@@ -76,7 +76,7 @@ export default function ProductRecommendedComponent() {
                             per {faker.science.unit().name}
                           </div>
                           <div className="font-semibold">
-                            {Currency.format(e.price!)}
+                            {Currency.format(e.productVariant![0].price!)}
                           </div>
                         </div>
                       </div>

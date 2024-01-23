@@ -78,7 +78,7 @@ export default function ProductLatestComponent() {
                 <>
                   {state.data!.map((e, i) => {
                     return (
-                      <Link key={i} to="" className="w-36 snap-start">
+                      <Link key={i} to="" className="w-36 snap-start md:w-44">
                         <div className="h-36">
                           <LazyLoadImage
                             src={e.picture}
@@ -95,7 +95,7 @@ export default function ProductLatestComponent() {
                               per {faker.science.unit().name}
                             </div>
                             <div className="font-semibold">
-                              {Currency.format(e.price!)}
+                              {Currency.format(e.productVariant![0].price!)}
                             </div>
                           </div>
                         </div>

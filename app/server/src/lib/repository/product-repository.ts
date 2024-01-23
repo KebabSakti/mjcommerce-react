@@ -47,6 +47,9 @@ export default class ProductRepository {
 
     const result = await prisma.product.findMany({
       ...condition,
+      include: {
+        productVariant: true,
+      },
       skip: param.paginate.skip,
       take: param.paginate.take,
     });

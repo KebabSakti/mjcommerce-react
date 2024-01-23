@@ -1,3 +1,4 @@
+import { ProductVariant } from "@prisma/client";
 import { PaginationData, Sort } from "../config/type";
 import { Empty } from "./../config/type";
 import CategoryModel from "./category-model";
@@ -63,4 +64,5 @@ export interface ProductModel {
   store?: StoreModel;
   productGallery?: ProductGallery[];
   productRating?: ProductRating[];
+  productVariant?: ProductVariant[];
 }

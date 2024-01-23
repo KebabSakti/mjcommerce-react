@@ -110,25 +110,36 @@ app.get("/user/debug", async (req, res) => {
               name: faker.commerce.productName(),
               description: faker.lorem.lines(1),
               picture: faker.image.urlLoremFlickr({ category: "food" }),
-              stok: faker.number.int({ max: 100 }),
-              price: faker.commerce.price({
-                min: 1000,
-                max: 1000000,
-                dec: 0,
-              }),
-              wholesalePrice: faker.commerce.price({
-                min: 1000,
-                max: 1000000,
-                dec: 0,
-              }),
-              wholesaleMin: faker.number.int({ min: 3, max: 10 }),
-              unit: faker.science.unit.name,
-              weight: faker.number.int({ min: 1000, max: 5000 }),
               sell: faker.number.int({ max: 999 }),
               view: faker.number.int({ max: 999 }),
               rating: faker.number.float({ max: 5 }),
             },
           });
+
+          await Promise.all(
+            [...Array(10)].map(async (_) => {
+              await prisma.productVariant.create({
+                data: {
+                  productId: product.id,
+                  name: faker.commerce.productName(),
+                  stok: faker.number.int({ max: 100 }),
+                  price: faker.commerce.price({
+                    min: 1000,
+                    max: 1000000,
+                    dec: 0,
+                  }),
+                  wholesalePrice: faker.commerce.price({
+                    min: 1000,
+                    max: 1000000,
+                    dec: 0,
+                  }),
+                  wholesaleMin: faker.number.int({ min: 3, max: 10 }),
+                  unit: faker.science.unit.name,
+                  weight: faker.number.int({ min: 1000, max: 5000 }),
+                },
+              });
+            })
+          );
         })
       );
     })

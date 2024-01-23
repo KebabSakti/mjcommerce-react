@@ -12,9 +12,7 @@ import {
 } from "../../lib/model/product-model";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { loadError } from "../redux/layout-slice";
-import {
-  productPopularComplete
-} from "../redux/product-popular-slice";
+import { productPopularComplete } from "../redux/product-popular-slice";
 import { RootState } from "../redux/store";
 
 const productController = new ProductController();
@@ -86,7 +84,7 @@ export default function ProductPopularComponent() {
                       <Link
                         key={i}
                         to={`/product/${e.id}`}
-                        className="w-36 snap-start"
+                        className="w-36 snap-start md:w-44"
                       >
                         <div className="h-36">
                           <LazyLoadImage
@@ -104,7 +102,7 @@ export default function ProductPopularComponent() {
                               per {faker.science.unit().name}
                             </div>
                             <div className="font-semibold">
-                              {Currency.format(e.price!)}
+                              {Currency.format(e.productVariant![0].price!)}
                             </div>
                           </div>
                         </div>

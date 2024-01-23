@@ -92,14 +92,6 @@ CREATE TABLE `Product` (
     `name` VARCHAR(191) NOT NULL,
     `description` TEXT NOT NULL,
     `picture` VARCHAR(191) NOT NULL,
-    `stok` INTEGER NOT NULL DEFAULT 0,
-    `min` INTEGER NULL,
-    `max` INTEGER NULL,
-    `price` DECIMAL(19, 4) NOT NULL,
-    `wholesalePrice` DECIMAL(19, 4) NULL,
-    `wholesaleMin` INTEGER NULL,
-    `unit` VARCHAR(191) NOT NULL,
-    `weight` DOUBLE NOT NULL DEFAULT 0,
     `sell` INTEGER NOT NULL DEFAULT 0,
     `view` INTEGER NOT NULL DEFAULT 0,
     `rating` DOUBLE NOT NULL DEFAULT 0,
@@ -108,6 +100,26 @@ CREATE TABLE `Product` (
     `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     INDEX `Product_storeId_categoryId_name_active_idx`(`storeId`, `categoryId`, `name`, `active`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `ProductVariant` (
+    `id` VARCHAR(191) NOT NULL,
+    `productId` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `stok` INTEGER NOT NULL DEFAULT 0,
+    `min` INTEGER NULL,
+    `max` INTEGER NULL,
+    `price` DECIMAL(19, 4) NOT NULL,
+    `wholesalePrice` DECIMAL(19, 4) NULL,
+    `wholesaleMin` INTEGER NULL,
+    `unit` VARCHAR(191) NULL,
+    `weight` DOUBLE NOT NULL DEFAULT 0,
+    `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    INDEX `ProductVariant_productId_idx`(`productId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -156,12 +168,13 @@ CREATE TABLE `CartItem` (
     `id` VARCHAR(191) NOT NULL,
     `cartId` VARCHAR(191) NOT NULL,
     `productId` VARCHAR(191) NOT NULL,
+    `productVariantId` VARCHAR(191) NOT NULL,
     `qty` INTEGER NOT NULL,
     `total` DECIMAL(19, 4) NOT NULL,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    INDEX `CartItem_cartId_productId_idx`(`cartId`, `productId`),
+    INDEX `CartItem_cartId_productVariantId_productId_idx`(`cartId`, `productVariantId`, `productId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -277,6 +290,9 @@ ALTER TABLE `Product` ADD CONSTRAINT `Product_categoryId_fkey` FOREIGN KEY (`cat
 ALTER TABLE `Product` ADD CONSTRAINT `Product_storeId_fkey` FOREIGN KEY (`storeId`) REFERENCES `Store`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `ProductVariant` ADD CONSTRAINT `ProductVariant_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `ProductGalery` ADD CONSTRAINT `ProductGalery_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -293,6 +309,9 @@ ALTER TABLE `CartItem` ADD CONSTRAINT `CartItem_cartId_fkey` FOREIGN KEY (`cartI
 
 -- AddForeignKey
 ALTER TABLE `CartItem` ADD CONSTRAINT `CartItem_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `CartItem` ADD CONSTRAINT `CartItem_productVariantId_fkey` FOREIGN KEY (`productVariantId`) REFERENCES `ProductVariant`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `OrderItem` ADD CONSTRAINT `OrderItem_orderId_fkey` FOREIGN KEY (`orderId`) REFERENCES `Order`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
