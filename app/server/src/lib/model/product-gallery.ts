@@ -1,4 +1,4 @@
-export default interface ProductGallery {
+export default interface ProductGalery {
   id?: string;
   productId?: string;
   picture?: string;

@@ -53,8 +53,8 @@ export default function ProductPopularComponent() {
 
   return (
     <>
-      <div className="bg-surface mx-4 mt-4 lg:w-3/5 lg:mx-auto">
-        <div className="p-4 flex justify-between">
+      <div className="mx-4 mt-4 lg:w-3/5 lg:mx-auto">
+        <div className="bg-surface mb-1 p-4 flex justify-between">
           <div className="text-onSurface font-semibold">TERLARIS</div>
           <Link to="" className="text-primary text-sm flex">
             <span>Lihat Semua</span>
@@ -74,7 +74,7 @@ export default function ProductPopularComponent() {
             </svg>
           </Link>
         </div>
-        <div className="grid grid-rows-1 grid-flow-col gap-2 overflow-x-scroll justify-start snap-x">
+        <div className="grid grid-rows-1 grid-flow-col gap-1 overflow-x-scroll justify-start snap-x">
           {(() => {
             if (state.data?.length! > 0) {
               return (
@@ -84,26 +84,19 @@ export default function ProductPopularComponent() {
                       <Link
                         key={i}
                         to={`/product/${e.id}`}
-                        className="w-36 snap-start md:w-44"
+                        className="bg-surface h-64 w-40 flex flex-col text-onSurface snap-start"
                       >
-                        <div className="h-36">
+                        <div className="bg-gray-100 grow">
                           <LazyLoadImage
                             src={e.picture}
                             alt={e.name}
-                            height={200}
-                            width={200}
-                            className="bg-gray-100 object-cover h-full"
+                            className="h-full w-full object-cover"
                           />
                         </div>
-                        <div className="p-2 h-28 text-onSurface flex flex-col justify-between">
+                        <div className="p-2 flex flex-col justify-between h-2/6">
                           <div className="text-sm line-clamp-2">{e.name}</div>
-                          <div>
-                            <div className="text-xs">
-                              per {faker.science.unit().name}
-                            </div>
-                            <div className="font-semibold">
-                              {Currency.format(e.productVariant![0].price!)}
-                            </div>
+                          <div className="font-semibold">
+                            {Currency.format(e.productVariant![0].price!)}
                           </div>
                         </div>
                       </Link>
@@ -118,7 +111,7 @@ export default function ProductPopularComponent() {
                 {[...Array(10)].map((_, i) => (
                   <div
                     key={i}
-                    className="bg-gray-200 h-64 w-36 animate-pulse snap-start"
+                    className="bg-gray-200 h-64 w-40 animate-pulse snap-start"
                   ></div>
                 ))}
               </>

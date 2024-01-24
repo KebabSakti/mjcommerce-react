@@ -36,4 +36,10 @@ export type RepositoryData<T = Object> = {
   sorting?: SortingData | Empty;
 };
 
+export type ReadParameter<TFilter, TSorting extends string> = {
+  paginate?: PaginationData | Empty;
+  filter?: TFilter | Empty;
+  sort?: Sort<TSorting> | Empty;
+};
+
 export type Empty = null | undefined;

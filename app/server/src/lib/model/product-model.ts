@@ -1,8 +1,7 @@
-import { ProductVariant } from "@prisma/client";
+import { ProductGalery, ProductVariant } from "@prisma/client";
 import { PaginationData, Sort } from "../config/type";
 import { Empty } from "./../config/type";
 import CategoryModel from "./category-model";
-import ProductGallery from "./product-gallery";
 import ProductRating from "./product-rating";
 import StoreModel from "./store-model";
 
@@ -62,7 +61,7 @@ export interface ProductModel {
   updated?: string;
   category?: CategoryModel;
   store?: StoreModel;
-  productGallery?: ProductGallery[];
+  productGalery?: ProductGalery[];
   productRating?: ProductRating[];
   productVariant?: ProductVariant[];
 }

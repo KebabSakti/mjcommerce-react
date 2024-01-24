@@ -3,6 +3,7 @@ import authReducer from "./auth-slice";
 import bannerReducer from "./banner-slice";
 import categoryReducer from "./category-slice";
 import layoutReducer from "./layout-slice";
+import productDetailReducer from "./product-detail-slice";
 import productLatestReducer from "./product-latest-slice";
 import productPopularReducer from "./product-popular-slice";
 import productReducer from "./product-slice";
@@ -16,6 +17,7 @@ const store = configureStore({
     product: productReducer,
     productPopular: productPopularReducer,
     productLatest: productLatestReducer,
+    productDetail: productDetailReducer,
   },
 });
 

@@ -1,6 +1,6 @@
 import { Empty, PaginationData, Sort } from "../config/type";
 import CategoryModel from "./category-model";
-import ProductGallery from "./product-gallery";
+import ProductGalery from "./product-gallery";
 import ProductRating from "./product-rating";
 import ProductVariant from "./product-variant";
 import StoreModel from "./store-model";
@@ -61,7 +61,7 @@ export interface ProductModel {
   updated?: string;
   category?: CategoryModel;
   store?: StoreModel;
-  productGallery?: ProductGallery[];
+  productGalery?: ProductGalery[];
   productRating?: ProductRating[];
   productVariant?: ProductVariant[];
 }

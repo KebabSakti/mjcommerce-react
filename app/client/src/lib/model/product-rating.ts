@@ -1,3 +1,5 @@
+import UserModel from "./user-model";
+
 export default interface ProductRating {
   id?: string;
   userId?: string;
@@ -7,4 +9,5 @@ export default interface ProductRating {
   comment?: string;
   created?: string;
   updated?: string;
+  user?: UserModel;
 }

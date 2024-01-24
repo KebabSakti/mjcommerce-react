@@ -1,4 +1,3 @@
-import { tr } from "@faker-js/faker";
 import { Empty } from "../config/type";
 import { prisma } from "../helper/prisma";
 import {
@@ -7,7 +6,6 @@ import {
   ProductUpdateField,
   ProductUpdateParameter,
 } from "../model/product-model";
-import UserModel from "../model/user-model";
 
 export default class ProductRepository {
   async read(param: ProductReadParameter): Promise<ProductModel[]> {
@@ -65,10 +63,27 @@ export default class ProductRepository {
       include: {
         store: true,
         category: true,
+        productGalery: true,
+        productVariant: true,
+        productRating: {
+          select: {
+            rating: true,
+            comment: true,
+            productName: true,
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+          orderBy: {
+            rating: "desc",
+          },
+        },
       },
     });
 
-    const data = result as any as UserModel | Empty;
+    const data = result as any as ProductModel | Empty;
 
     return data;
   }

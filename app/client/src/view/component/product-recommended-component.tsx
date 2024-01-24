@@ -36,7 +36,7 @@ export default function ProductRecommendedComponent() {
         },
         paginate: {
           skip: 0,
-          take: 22,
+          take: 100,
         },
       };
 
