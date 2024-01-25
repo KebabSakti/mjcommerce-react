@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { StateData, StateType } from "../../lib/config/type";
-import BannerModel from "../../lib/model/banner-model";
+import { BannerModel } from "../../../../lib/model/banner-model";
 
 const initialState: StateType<StateData<BannerModel[]>> = {
   value: {

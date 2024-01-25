@@ -1,5 +1,5 @@
 import { prisma } from "../helper/prisma";
-import CategoryModel from "../model/category-model";
+import { CategoryModel } from './../../../../lib/model/category-model';
 
 export default class CategoryRepository {
   async read(): Promise<CategoryModel[]> {

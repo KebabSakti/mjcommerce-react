@@ -1,5 +1,5 @@
 import { prisma } from "../helper/prisma";
-import BannerModel from "../model/banner-model";
+import {BannerModel} from "../../../../lib/model/banner-model";
 
 export default class BannerRepository {
   async read(): Promise<BannerModel[]> {

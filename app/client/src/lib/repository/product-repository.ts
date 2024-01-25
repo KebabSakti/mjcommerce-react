@@ -1,7 +1,10 @@
 import { Empty, HttpRequest } from "../config/type";
 import url from "../config/url";
 import HTTP from "../helper/http";
-import { ProductModel, ProductReadParameter } from "../model/product-model";
+import {
+  ProductModel,
+  ProductReadParameter,
+} from "./../../../../lib/model/product-model";
 
 export default class ProductRepository {
   async read(param: ProductReadParameter): Promise<ProductModel[]> {

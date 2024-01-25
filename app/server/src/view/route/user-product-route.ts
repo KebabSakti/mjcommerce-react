@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import Joi from "joi";
 import ProductController from "../../lib/controller/product-controller";
 import { BadRequest, Failure } from "../../lib/helper/failure";
-import { ProductReadParameter } from "../../lib/model/product-model";
+import { ProductReadParameter } from "./../../../../client/src/lib/model/product-model";
 
 const router = express.Router();
 const productController = new ProductController();

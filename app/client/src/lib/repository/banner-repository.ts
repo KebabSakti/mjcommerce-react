@@ -1,6 +1,6 @@
 import url from "../config/url";
 import HTTP from "../helper/http";
-import BannerModel from "../model/banner-model";
+import {BannerModel} from "../../../../lib/model/banner-model";
 
 export default class BannerRepository {
   async read(): Promise<BannerModel[]> {

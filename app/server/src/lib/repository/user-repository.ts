@@ -1,9 +1,10 @@
 import { Empty } from "../config/type";
 import { prisma } from "../helper/prisma";
-import UserModel, {
+import {
+  UserModel,
   UserShowField,
   UserShowParameter,
-} from "../model/user-model";
+} from "../../../../lib/model/user-model";
 
 export default class UserRepository {
   async show(param: UserShowParameter): Promise<UserModel | Empty> {

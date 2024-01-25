@@ -1,9 +1,8 @@
-export default interface BannerModel {
+export class CategoryModel {
   id?: string;
   name?: string;
-  description?: string;
   picture?: string;
-  big?: boolean;
+  description?: string;
   active?: boolean;
   created?: string;
   updated?: string;

@@ -8,7 +8,7 @@ export type UserShowParameter = {
   value: string;
 };
 
-export default interface UserModel {
+export interface UserModel {
   id?: string;
   email?: string;
   password?: string;

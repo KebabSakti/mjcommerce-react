@@ -1,11 +1,11 @@
-import { Empty } from "../config/type";
-import { prisma } from "../helper/prisma";
 import {
   ProductModel,
   ProductReadParameter,
-  ProductUpdateField,
   ProductUpdateParameter,
-} from "../model/product-model";
+  ProductUpdateField,
+} from "../../../../lib/model/product-model";
+import { Empty } from "../config/type";
+import { prisma } from "../helper/prisma";
 
 export default class ProductRepository {
   async read(param: ProductReadParameter): Promise<ProductModel[]> {

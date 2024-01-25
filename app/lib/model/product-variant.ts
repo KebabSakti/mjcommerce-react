@@ -1,6 +1,6 @@
 import { ProductModel } from "./product-model";
 
-export default interface ProductVariant {
+export interface ProductVariant {
   id?: string;
   productId?: string;
   name?: string;

@@ -1,7 +1,10 @@
 import { Empty } from "../config/type";
-import { ProductModel, ProductReadParameter } from "../model/product-model";
 import ProductRating from "../model/product-rating";
 import ProductRepository from "../repository/product-repository";
+import {
+  ProductModel,
+  ProductReadParameter,
+} from "./../../../../lib/model/product-model";
 
 const productRepository = new ProductRepository();
 

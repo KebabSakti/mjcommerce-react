@@ -1,4 +1,4 @@
-import CategoryModel from "../model/category-model";
+import { CategoryModel } from './../../../../lib/model/category-model';
 import CategoryRepository from "../repository/category-repository";
 
 const category = new CategoryRepository();

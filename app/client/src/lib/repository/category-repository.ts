@@ -1,6 +1,6 @@
 import url from "../config/url";
 import HTTP from "../helper/http";
-import CategoryModel from "../model/category-model";
+import { CategoryModel } from './../../../../lib/model/category-model';
 
 export default class CategoryRepository {
   async read(): Promise<CategoryModel[]> {

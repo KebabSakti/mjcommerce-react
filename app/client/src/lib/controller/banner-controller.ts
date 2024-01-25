@@ -1,4 +1,4 @@
-import BannerModel from "../model/banner-model";
+import {BannerModel} from "../../../../lib/model/banner-model";
 import BannerRepository from "../repository/banner-repository";
 
 const banner = new BannerRepository();

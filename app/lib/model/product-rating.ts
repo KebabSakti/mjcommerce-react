@@ -1,6 +1,6 @@
-import UserModel from "./user-model";
+import {UserModel} from "./user-model";
 
-export default interface ProductRating {
+export interface ProductRating {
   id?: string;
   userId?: string;
   productId?: string;

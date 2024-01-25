@@ -1,11 +1,8 @@
 require("dotenv").config();
 
-import { faker } from "@faker-js/faker";
 import cors from "cors";
-import { randomUUID } from "crypto";
 import express from "express";
 import http from "http";
-import { prisma } from "./lib/helper/prisma";
 import { SocketIo } from "./lib/helper/socket-io";
 import userMiddleware from "./view/middleware/user-middleware";
 import userBannerRoute from "./view/route/user-banner-route";
@@ -36,7 +33,7 @@ app.use("/user/category", userCategoryRoute);
 app.use("/user/product", userProductRoute);
 
 app.get("/user/debug", async (req, res) => {
-  const userId = randomUUID();
+  // const userId = randomUUID();
 
   // const query = {
   //   name: "kebab",
@@ -189,27 +186,27 @@ app.get("/user/debug", async (req, res) => {
   //   },
   // });
 
-  const products = await prisma.product.findMany({
-    include: { productVariant: true },
-  });
+  // const products = await prisma.product.findMany({
+  //   include: { productVariant: true },
+  // });
 
-  await Promise.all(
-    products.map(async (e) => {
-      await Promise.all(
-        [...Array(10)].map(async () => {
-          await prisma.productRating.create({
-            data: {
-              productId: e.id,
-              userId: '73929587-4053-446e-ac20-31a79c07a86d',
-              productName: e.productVariant![0].name,
-              rating: faker.number.float({ min: 1, max: 5 }),
-              comment: faker.lorem.paragraph(),
-            },
-          });
-        })
-      );
-    })
-  );
+  // await Promise.all(
+  //   products.map(async (e) => {
+  //     await Promise.all(
+  //       [...Array(10)].map(async () => {
+  //         await prisma.productRating.create({
+  //           data: {
+  //             productId: e.id,
+  //             userId: '73929587-4053-446e-ac20-31a79c07a86d',
+  //             productName: e.productVariant![0].name,
+  //             rating: faker.number.float({ min: 1, max: 5 }),
+  //             comment: faker.lorem.paragraph(),
+  //           },
+  //         });
+  //       })
+  //     );
+  //   })
+  // );
 
   res.end();
 });

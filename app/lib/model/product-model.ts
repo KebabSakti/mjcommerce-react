@@ -1,9 +1,10 @@
-import { ProductGalery, ProductVariant } from "@prisma/client";
 import { PaginationData, Sort } from "../config/type";
 import { Empty } from "./../config/type";
-import CategoryModel from "./category-model";
-import ProductRating from "./product-rating";
-import StoreModel from "./store-model";
+import { CategoryModel } from "./category-model";
+import { ProductGalery } from "./product-gallery";
+import { ProductRating } from "./product-rating";
+import { ProductVariant } from "./product-variant";
+import { StoreModel } from "./store-model";
 
 export enum ProductSortingField {
   PRIORITY = "priority",

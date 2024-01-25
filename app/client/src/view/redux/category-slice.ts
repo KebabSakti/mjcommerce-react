@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { StateData, StateType } from "../../lib/config/type";
-import CategoryModel from "../../lib/model/category-model";
+import { CategoryModel } from './../../../../lib/model/category-model';
 
 const initialState: StateType<StateData<CategoryModel[]>> = {
   value: {

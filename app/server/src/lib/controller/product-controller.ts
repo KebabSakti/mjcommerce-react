@@ -1,9 +1,9 @@
-import { Empty } from "../config/type";
 import {
   ProductModel,
   ProductReadParameter,
   ProductUpdateField,
-} from "../model/product-model";
+} from "../../../../lib/model/product-model";
+import { Empty } from "../config/type";
 import ProductRepository from "../repository/product-repository";
 
 const productRepository = new ProductRepository();

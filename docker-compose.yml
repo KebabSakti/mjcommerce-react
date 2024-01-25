@@ -3,6 +3,7 @@ version: "3"
 networks:
   majujaya:
 
+
 services:
   server:
     image: node:20-alpine
@@ -10,6 +11,7 @@ services:
     restart: on-failure
     volumes:
       - ./app/server:/var/www/html/server
+      - ./app/lib:/var/www/html/lib
     working_dir: /var/www/html/server
     depends_on:
       - adminer
@@ -17,7 +19,7 @@ services:
       - client
     ports:
       - 1001:1001
-    command: ["sh", "-c", "npm run dev"]
+    command: [ "sh", "-c", "npm run dev" ]
     networks:
       - majujaya
 
@@ -27,10 +29,11 @@ services:
     restart: on-failure
     volumes:
       - ./app/client:/var/www/html/client
+      - ./app/lib:/var/www/html/lib
     working_dir: /var/www/html/client
     ports:
       - 1010:5173
-    command: ["sh", "-c", "npm run dev"]
+    command: [ "sh", "-c", "npm run dev" ]
     networks:
       - majujaya
 
@@ -39,6 +42,7 @@ services:
     container_name: node-majujaya
     volumes:
       - ./app/server:/var/www/html/server
+      - ./app/lib:/var/www/html/lib
     working_dir: /var/www/html/server
     networks:
       - majujaya
@@ -48,6 +52,7 @@ services:
     container_name: node-majujaya
     volumes:
       - ./app/client:/var/www/html/client
+      - ./app/lib:/var/www/html/lib
     working_dir: /var/www/html/client
     networks:
       - majujaya

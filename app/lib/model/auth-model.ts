@@ -1,4 +1,4 @@
-export default interface AuthModel {
+export interface AuthModel {
   id: string;
   token: string;
   level: string;

@@ -1,7 +1,7 @@
-import CartModel from "./cart-model";
-import ProductModel from "./product-model";
+import { CartModel } from "./cart-model";
+import { ProductModel } from "./product-model";
 
-export default interface CartItemModel {
+export interface CartItemModel {
   id?: string;
   cartId?: string;
   productId?: string;

@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { UserModel, UserShowField } from "../../../../lib/model/user-model";
 import { InternalError, Unauthorized } from "../helper/failure";
-import UserModel, { UserShowField } from "../model/user-model";
 import UserRepository from "../repository/user-repository";
 
 const userRepository = new UserRepository();
