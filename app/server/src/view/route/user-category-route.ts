@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
-import CategoryController from "../../lib/controller/category-controller";
+import UserCategoryController from "../../lib/controller/user-category-controller";
 import { Failure } from "../../lib/helper/failure";
 
 const router = express.Router();
-const categoryController = new CategoryController();
+const categoryController = new UserCategoryController();
 
 router.get("/", async (req: Request, res: Response) => {
   try {

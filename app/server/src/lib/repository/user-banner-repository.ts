@@ -1,7 +1,7 @@
 import { prisma } from "../helper/prisma";
-import {BannerModel} from "../../../../lib/model/banner-model";
+import { BannerModel } from "../../../../lib/model/banner-model";
 
-export default class BannerRepository {
+export default class UserBannerRepository {
   async read(): Promise<BannerModel[]> {
     const result = await prisma.banner.findMany({
       where: { active: true },

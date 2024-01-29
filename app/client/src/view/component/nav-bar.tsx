@@ -1,6 +1,12 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { CounterContext } from "../provider";
 
 export default function NavBar() {
+  const context: any = useContext(CounterContext);
+
+  console.log("NAVBAR REBUILD");
+
   return (
     <div className="bg-primary">
       <div className="mx-4 h-16 flex justify-between items-center lg:mx-auto lg:w-3/5">
@@ -36,7 +42,7 @@ export default function NavBar() {
         <div className="flex gap-3">
           <Link to="" className="relative">
             <div className="h-5 w-5 flex justify-center items-center rounded-full bg-red-500 text-white text-[10px] font-bold outline outline-2 outline-white absolute -right-2 -top-2">
-              2
+              {context.counter}
             </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"

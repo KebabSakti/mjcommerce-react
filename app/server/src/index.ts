@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 require("dotenv").config();
 
 import cors from "cors";
@@ -8,6 +9,8 @@ import userMiddleware from "./view/middleware/user-middleware";
 import userBannerRoute from "./view/route/user-banner-route";
 import userCategoryRoute from "./view/route/user-category-route";
 import userProductRoute from "./view/route/user-product-route";
+import userProductRatingRoute from "./view/route/user-product-rating-route";
+import { prisma } from "./lib/helper/prisma";
 
 const app = express();
 const server = http.createServer(app);
@@ -31,6 +34,7 @@ app.use("/user", userMiddleware);
 app.use("/user/banner", userBannerRoute);
 app.use("/user/category", userCategoryRoute);
 app.use("/user/product", userProductRoute);
+app.use("/user/product-rating", userProductRatingRoute);
 
 app.get("/user/debug", async (req, res) => {
   // const userId = randomUUID();
@@ -186,27 +190,27 @@ app.get("/user/debug", async (req, res) => {
   //   },
   // });
 
-  // const products = await prisma.product.findMany({
-  //   include: { productVariant: true },
-  // });
+  const products = await prisma.product.findMany({
+    include: { productVariant: true },
+  });
 
-  // await Promise.all(
-  //   products.map(async (e) => {
-  //     await Promise.all(
-  //       [...Array(10)].map(async () => {
-  //         await prisma.productRating.create({
-  //           data: {
-  //             productId: e.id,
-  //             userId: '73929587-4053-446e-ac20-31a79c07a86d',
-  //             productName: e.productVariant![0].name,
-  //             rating: faker.number.float({ min: 1, max: 5 }),
-  //             comment: faker.lorem.paragraph(),
-  //           },
-  //         });
-  //       })
-  //     );
-  //   })
-  // );
+  await Promise.all(
+    products.map(async (e) => {
+      await Promise.all(
+        [...Array(100)].map(async () => {
+          await prisma.productRating.create({
+            data: {
+              productId: e.id,
+              userId: "73929587-4053-446e-ac20-31a79c07a86d",
+              productName: e.productVariant![0].name,
+              rating: faker.number.float({ min: 1, max: 5 }),
+              comment: faker.lorem.paragraph(),
+            },
+          });
+        })
+      );
+    })
+  );
 
   res.end();
 });

@@ -1,11 +1,12 @@
 import { faker } from "@faker-js/faker";
-import { Carousel, Pagination, Rating, Spinner } from "flowbite-react";
+import { Carousel, Rating, Spinner } from "flowbite-react";
 import { useEffect } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useParams } from "react-router-dom";
 import ProductController from "../lib/controller/product-controller";
 import Currency from "../lib/helper/currency";
 import { Failure } from "../lib/helper/failure";
+import ProductRatingComponent from "./component/product-rating-component";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { loadError } from "./redux/layout-slice";
 import { productDetailLoad } from "./redux/product-detail-slice";
@@ -241,67 +242,7 @@ export default function ProductDetailPage() {
             <div className="text-xl font-semibold">Deskripsi</div>
             <div>{product.description}</div>
           </div>
-          <div className="bg-surface p-4 flex flex-col gap-2 text-onSurface">
-            <div className="flex justify-between items-center">
-              <div className="text-xl font-semibold">Penilaian</div>
-              <button>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0-3.75-3.75M17.25 21 21 17.25"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div className="flex flex-col gap-0 divide-y">
-              {product.productRating!.map((e, i) => {
-                return (
-                  <div key={i} className="flex gap-4 py-6">
-                    <div className="w-14 shrink-0">
-                      <div className="h-12 w-12 rounded-full overflow-hidden">
-                        <img
-                          src={`https://picsum.photos/500/500?random=${i}`}
-                          alt=""
-                          className="object-cover"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <div className="font-semibold">{e.user?.name}</div>
-                      <Rating size="xs">
-                        {[...Array(5)].map((_, i) => (
-                          <Rating.Star
-                            key={i}
-                            filled={Math.floor(e.rating!) > i}
-                          />
-                        ))}
-                      </Rating>
-                      <div className="text-gray-400 text-xs">
-                        Varian : {e.productName}
-                      </div>
-                      <div className="text-xs md:text-base">{e.comment}</div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="flex justify-center">
-              <Pagination
-                layout="navigation"
-                currentPage={1}
-                totalPages={100}
-                onPageChange={() => {}}
-              />
-            </div>
-          </div>
+          <ProductRatingComponent productId={product.id!} />
         </div>
       </>
     );

@@ -1,9 +1,9 @@
 import { BannerModel } from "../../../../lib/model/banner-model";
-import BannerRepository from "../repository/banner-repository";
+import UserBannerRepository from "../repository/user-banner-repository";
 
-const bannerRepository = new BannerRepository();
+const bannerRepository = new UserBannerRepository();
 
-export default class BannerController {
+export default class UserBannerController {
   async getBanner(): Promise<BannerModel[]> {
     const banners = await bannerRepository.read();
 

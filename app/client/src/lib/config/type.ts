@@ -5,6 +5,11 @@ export enum SortingDirection {
   ASC = "asc",
 }
 
+export enum ReducerAction {
+  LOAD = 'LOAD',
+  ERROR = 'ERROR',
+}
+
 export type PropData<T> = {
   data?: T;
   children?: ReactElement;
@@ -65,6 +70,23 @@ export type HttpRequest<T extends Object = Object> = {
 export type Sort<FieldName extends string> = {
   field: FieldName;
   direction: SortingDirection;
+};
+
+export type AppState<T> = {
+  data?: T | Empty;
+  error?: FailureData | Empty;
+};
+
+export type AppAction<T> = {
+  type: string;
+  payload?: T | Empty;
+  error?: FailureData | Empty;
+};
+
+export type ReducerParameter<T> = {
+  type?: ReducerAction | Empty;
+  payload?: T | Empty;
+  error?: FailureData | Empty;
 };
 
 export type Empty = null | undefined;

@@ -1,45 +1,63 @@
 import {
   ProductModel,
-  ProductReadParameter,
-  ProductUpdateParameter,
   ProductUpdateField,
+  ProductUpdateParameter,
 } from "../../../../lib/model/product-model";
 import { Empty } from "../config/type";
 import { prisma } from "../helper/prisma";
 
-export default class ProductRepository {
-  async read(param: ProductReadParameter): Promise<ProductModel[]> {
+export default class UserProductRepository {
+  async read(param: Record<string, any>): Promise<ProductModel[]> {
+    const sortingField = [
+      "priority",
+      "sell",
+      "price",
+      "view",
+      "rating",
+      "created",
+    ];
+
     let condition: any = { where: { active: true } };
 
-    if (param.filter) {
-      if (param.filter.hasOwnProperty("storeId")) {
-        condition["where"] = {
-          ...condition.where,
-          storeId: param.filter.storeId,
-        };
-      }
+    if (param.hasOwnProperty("storeId")) {
+      condition["where"] = {
+        ...condition.where,
+        storeId: param.storeId,
+      };
+    }
 
-      if (param.filter.hasOwnProperty("categoryId")) {
-        condition["where"] = {
-          ...condition.where,
-          categoryId: param.filter.categoryId,
-        };
-      }
+    if (param.hasOwnProperty("categoryId")) {
+      condition["where"] = {
+        ...condition.where,
+        categoryId: param.categoryId,
+      };
+    }
 
-      if (param.filter.hasOwnProperty("name")) {
-        condition["where"] = {
-          ...condition.where,
-          name: { contains: param.filter.name },
+    if (param.hasOwnProperty("name")) {
+      condition["where"] = {
+        ...condition.where,
+        name: { contains: param.name },
+      };
+    }
+
+    if (param.hasOwnProperty("sort") && param.hasOwnProperty("direction")) {
+      const index = sortingField.indexOf(param.sort);
+
+      if (index >= 0) {
+        condition = {
+          ...condition,
+          orderBy: {
+            [sortingField[index]]: param.direction,
+          },
         };
       }
     }
 
-    if (param.sort) {
+    if (param.hasOwnProperty("skip") && param.hasOwnProperty("take")) {
       condition = {
         ...condition,
-        orderBy: {
-          [param.sort.field]: param.sort.direction,
-        },
+        skip: parseInt(param.skip),
+        take: parseInt(param.take),
       };
     }
 
@@ -48,8 +66,6 @@ export default class ProductRepository {
       include: {
         productVariant: true,
       },
-      skip: param.paginate.skip,
-      take: param.paginate.take,
     });
 
     const data = result.map((e) => e as any as ProductModel);

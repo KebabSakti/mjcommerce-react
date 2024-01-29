@@ -6,6 +6,7 @@ import layoutReducer from "./layout-slice";
 import productDetailReducer from "./product-detail-slice";
 import productLatestReducer from "./product-latest-slice";
 import productPopularReducer from "./product-popular-slice";
+import productRatingReducer from "./product-rating-slice";
 import productReducer from "./product-slice";
 
 const store = configureStore({
@@ -18,6 +19,7 @@ const store = configureStore({
     productPopular: productPopularReducer,
     productLatest: productLatestReducer,
     productDetail: productDetailReducer,
+    productRating: productRatingReducer,
   },
 });
 

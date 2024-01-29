@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
-import BannerController from "../../lib/controller/banner-controller";
+import UserBannerController from "../../lib/controller/user-banner-controller";
 import { Failure } from "../../lib/helper/failure";
 
 const router = express.Router();
-const bannerController = new BannerController();
+const bannerController = new UserBannerController();
 
 router.get("/", async (req: Request, res: Response) => {
   try {

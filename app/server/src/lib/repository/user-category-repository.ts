@@ -1,7 +1,7 @@
 import { prisma } from "../helper/prisma";
-import { CategoryModel } from './../../../../lib/model/category-model';
+import { CategoryModel } from "../../../../lib/model/category-model";
 
-export default class CategoryRepository {
+export default class UserCategoryRepository {
   async read(): Promise<CategoryModel[]> {
     const result = await prisma.category.findMany({
       where: { active: true },

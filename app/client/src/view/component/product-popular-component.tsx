@@ -1,15 +1,11 @@
-import { faker } from "@faker-js/faker";
 import { useEffect } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
+import { ProductReadParameter, ProductSortingField } from "../../../../lib/model/product-model";
 import { SortingDirection } from "../../lib/config/type";
 import ProductController from "../../lib/controller/product-controller";
 import Currency from "../../lib/helper/currency";
 import { Failure } from "../../lib/helper/failure";
-import {
-  ProductReadParameter,
-  ProductSortingField,
-} from "../../lib/model/product-model";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { loadError } from "../redux/layout-slice";
 import { productPopularComplete } from "../redux/product-popular-slice";

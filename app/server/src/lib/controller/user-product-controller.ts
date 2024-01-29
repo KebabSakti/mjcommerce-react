@@ -1,16 +1,15 @@
 import {
   ProductModel,
-  ProductReadParameter,
-  ProductUpdateField,
+  ProductUpdateField
 } from "../../../../lib/model/product-model";
 import { Empty } from "../config/type";
-import ProductRepository from "../repository/product-repository";
+import UserProductRepository from "../repository/user-product-repository";
 
-const productRepository = new ProductRepository();
+const productRepository = new UserProductRepository();
 
-export default class ProductController {
+export default class UserProductController {
   async getFilteredProduct(
-    param: ProductReadParameter
+    param: Record<string, any>
   ): Promise<ProductModel[]> {
     const result = await productRepository.read(param);
     const data = result.map((e) => e as any as ProductModel);

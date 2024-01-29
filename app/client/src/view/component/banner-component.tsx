@@ -10,7 +10,7 @@ import { RootState } from "../redux/store";
 const bannerController = new BannerController();
 
 export default function BannerComponent() {
-  const banner = useAppSelector((state: RootState) => state.banner.value);
+  const state = useAppSelector((state: RootState) => state.banner.value);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -30,11 +30,11 @@ export default function BannerComponent() {
   return (
     <div className="bg-surface p-4 lg:py-4 lg:px-0">
       {(() => {
-        if (banner.data?.length! > 0) {
+        if (state.data?.length! > 0) {
           return (
             <>
               <Carousel className="h-44 lg:h-52 lg:w-3/5 lg:mx-auto">
-                {banner.data?.map((e, i) => {
+                {state.data?.map((e, i) => {
                   return (
                     <img
                       key={i}

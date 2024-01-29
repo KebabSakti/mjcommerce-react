@@ -9,6 +9,7 @@ import HomePage from "./view/home-page";
 import ProductDetailPage from "./view/product-detail-page";
 import ProductPage from "./view/product-page";
 import { store } from "./view/redux/store";
+import DebugPage from "./view/debug-page";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
         element: <ProductPage />,
       },
       { path: "/product/:id", element: <ProductDetailPage /> },
+      { path: "/debug", element: <DebugPage /> },
     ],
   },
 ]);
