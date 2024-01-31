@@ -1,4 +1,4 @@
-import { Empty, Result } from "../config/type";
+import { Result } from "../config/type";
 import { toModel } from "../helper/common";
 import { prisma } from "../helper/prisma";
 import { ProductModel } from "./../../../../lib/model/product-model";
@@ -63,8 +63,8 @@ export default class UserProductRepository {
 
       const records = await tx.product.count({
         ...condition,
-        skip: undefined,
-        take: undefined,
+        // skip: undefined,
+        // take: undefined,
       });
 
       const query = await tx.product.findMany({
@@ -97,21 +97,6 @@ export default class UserProductRepository {
           category: true,
           productGalery: true,
           productVariant: true,
-          productRating: {
-            select: {
-              rating: true,
-              comment: true,
-              productName: true,
-              user: {
-                select: {
-                  name: true,
-                },
-              },
-            },
-            orderBy: {
-              rating: "desc",
-            },
-          },
         },
       });
 

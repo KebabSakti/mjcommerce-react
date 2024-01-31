@@ -23,7 +23,7 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     init();
-  }, []);
+  }, [id]);
 
   async function init(): Promise<void> {
     try {

@@ -1,6 +1,10 @@
-import { Empty } from "../../../../lib/config/type";
 import { ProductRating } from "../../../../lib/model/product-rating";
-import { ReducerAction, ReducerParameter } from "../config/type";
+import {
+  DebounceFunction,
+  Empty,
+  ReducerAction,
+  ReducerParameter,
+} from "../config/type";
 import { InternalError } from "./failure";
 
 export async function delay(value: number): Promise<void> {
@@ -63,4 +67,19 @@ export function calculateRating(rating: ProductRating[]): number {
   const result = totalRating / totalUser;
 
   return result;
+}
+
+export function debounce(
+  func: DebounceFunction,
+  delay: number
+): DebounceFunction {
+  let timeoutId: ReturnType<typeof setTimeout>;
+
+  return function (...args: any[]): void {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
 }

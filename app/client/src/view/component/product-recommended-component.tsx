@@ -7,6 +7,7 @@ import { ReducerAction, Result } from "../../lib/config/type";
 import { createReducer, currency } from "../../lib/helper/common";
 import { Failure } from "../../lib/helper/failure";
 import ProductRepository from "../../lib/repository/product-repository";
+import ProductItem from "./product-item";
 
 const productRepository = new ProductRepository();
 
@@ -27,7 +28,7 @@ export default function ProductRecommendedComponent() {
 
       const data = await productRepository.read({
         page: 1,
-        limit: 20,
+        limit: 50,
         sort: "priority",
         direction: "desc",
       });
@@ -53,28 +54,30 @@ export default function ProductRecommendedComponent() {
               <>
                 {state.payload?.data?.map((e, i) => {
                   return (
-                    <Link key={i} to="" className="bg-surface">
-                      <div className="h-36 w-full overflow-hidden">
-                        <LazyLoadImage
-                          src={e.picture}
-                          alt=""
-                          height={200}
-                          width={200}
-                          className="bg-gray-100 object-cover h-full w-full"
-                        />
-                      </div>
-                      <div className="p-2 h-28 text-onSurface flex flex-col justify-between">
-                        <div className="text-sm line-clamp-2">{e.name}</div>
-                        <div>
-                          <div className="text-xs">
-                            per {faker.science.unit().name}
-                          </div>
-                          <div className="font-semibold">
-                            {currency(e.productVariant![0].price!)}
+                    <ProductItem key={i} productId={e.id!}>
+                      <div className="bg-surface">
+                        <div className="h-36 w-full overflow-hidden">
+                          <LazyLoadImage
+                            src={e.picture}
+                            alt=""
+                            height={200}
+                            width={200}
+                            className="bg-gray-100 object-cover h-full w-full"
+                          />
+                        </div>
+                        <div className="p-2 h-28 text-onSurface flex flex-col justify-between">
+                          <div className="text-sm line-clamp-2">{e.name}</div>
+                          <div>
+                            <div className="text-xs">
+                              per {faker.science.unit().name}
+                            </div>
+                            <div className="font-semibold">
+                              {currency(e.productVariant![0].price!)}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </Link>
+                    </ProductItem>
                   );
                 })}
               </>

@@ -6,6 +6,7 @@ import { ReducerAction, Result } from "../../lib/config/type";
 import { createReducer, currency } from "../../lib/helper/common";
 import { Failure } from "../../lib/helper/failure";
 import ProductRepository from "../../lib/repository/product-repository";
+import ProductItem from "./product-item";
 
 const productRepository = new ProductRepository();
 
@@ -70,25 +71,23 @@ export default function ProductLatestComponent() {
                 <>
                   {state.payload?.data?.map((e, i) => {
                     return (
-                      <Link
-                        key={i}
-                        to={`/product/${e.id}`}
-                        className="bg-surface h-64 w-40 flex flex-col text-onSurface snap-start"
-                      >
-                        <div className="bg-gray-100 grow">
-                          <LazyLoadImage
-                            src={e.picture}
-                            alt={e.name}
-                            className="h-full w-full object-cover"
-                          />
-                        </div>
-                        <div className="p-2 flex flex-col justify-between h-2/6">
-                          <div className="text-sm line-clamp-2">{e.name}</div>
-                          <div className="font-semibold">
-                            {currency(e.productVariant![0].price!)}
+                      <ProductItem key={i} productId={e.id!}>
+                        <div className="bg-surface h-64 w-40 flex flex-col text-onSurface snap-start">
+                          <div className="bg-gray-100 grow">
+                            <LazyLoadImage
+                              src={e.picture}
+                              alt={e.name}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          <div className="p-2 flex flex-col justify-between h-2/6">
+                            <div className="text-sm line-clamp-2">{e.name}</div>
+                            <div className="font-semibold">
+                              {currency(e.productVariant![0].price!)}
+                            </div>
                           </div>
                         </div>
-                      </Link>
+                      </ProductItem>
                     );
                   })}
                 </>

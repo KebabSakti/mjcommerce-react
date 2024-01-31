@@ -1,6 +1,11 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { CounterContext } from "../provider";
+import { faker } from "@faker-js/faker";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { currency } from "../../lib/helper/common";
+import ProductItem from "./product-item";
+import SearchBar from "./search-bar";
 
 export default function NavBar() {
   const context: any = useContext(CounterContext);
@@ -10,7 +15,7 @@ export default function NavBar() {
   return (
     <div className="bg-primary">
       <div className="mx-4 h-16 flex justify-between items-center lg:mx-auto lg:w-3/5">
-        <Link to='/' className="flex items-center">
+        <Link to="/" className="flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -34,11 +39,7 @@ export default function NavBar() {
             MAJU JAYA
           </span>
         </Link>
-        <input
-          type="text"
-          placeholder="Cari di sini"
-          className="bg-background h-10 px-4 mx-4 text-sm grow lg:mx-10"
-        />
+        <SearchBar />
         <div className="flex gap-3">
           <Link to="" className="relative">
             <div className="h-5 w-5 flex justify-center items-center rounded-full bg-red-500 text-white text-[10px] font-bold outline outline-2 outline-white absolute -right-2 -top-2">

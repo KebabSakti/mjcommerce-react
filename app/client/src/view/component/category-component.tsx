@@ -38,7 +38,7 @@ export default function CategoryComponent() {
       <div className="mx-4 mt-4 lg:w-3/5 lg:mx-auto">
         <div className="bg-surface mb-1 p-4 flex justify-between">
           <div className="text-onSurface font-semibold">KATEGORI</div>
-          <Link to="" className="text-primary text-sm flex">
+          {/* <Link to="/category" className="text-primary text-sm flex">
             <span>Lihat Semua</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +54,7 @@ export default function CategoryComponent() {
                 d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
               />
             </svg>
-          </Link>
+          </Link> */}
         </div>
         {(() => {
           if (state.payload?.data?.length! > 0) {

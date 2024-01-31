@@ -4,12 +4,12 @@ import { Provider } from "react-redux";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./index.css";
 import Layout from "./view/component/layout";
+import DebugPage from "./view/debug-page";
 import ErrorPage from "./view/error-page";
 import HomePage from "./view/home-page";
 import ProductDetailPage from "./view/product-detail-page";
 import ProductPage from "./view/product-page";
 import { store } from "./view/redux/store";
-import DebugPage from "./view/debug-page";
 
 const router = createBrowserRouter([
   {

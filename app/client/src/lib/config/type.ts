@@ -41,3 +41,5 @@ export type Result<T> = {
   data?: T | Empty;
   paginate?: Paginate | Empty;
 };
+
+export type DebounceFunction = (...args: any[]) => void;
