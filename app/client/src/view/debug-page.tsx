@@ -1,10 +1,9 @@
 import { useContext } from "react";
-import { useLocation } from "react-router-dom";
-import parseQueryString from "../lib/helper/parse-querystring";
 import { CounterContext } from "./provider";
+import { useSearchParams } from "react-router-dom";
 
 export default function DebugPage() {
-  const location = useLocation();
+  let [searchParams, setSearchParams] = useSearchParams();
   const context: any = useContext(CounterContext);
 
   function increment() {
@@ -15,7 +14,7 @@ export default function DebugPage() {
     context.setCounter(context.counter - 1);
   }
 
-  console.log(parseQueryString(location.search));
+  console.log(searchParams.get('page'));
 
   return (
     <>

@@ -1,15 +1,28 @@
-import { ProductRating } from "../../../../lib/model/product-rating";
+import { Request, Response } from "express";
+import Joi from "joi";
+import { BadRequest, Failure } from "../helper/failure";
 import UserProductRatingRepository from "../repository/user-product-rating-repository";
 
 const productRatingRepository = new UserProductRatingRepository();
 
 export default class UserProductRatingController {
-  async getRating(
-    productId: string,
-    param: Record<string, any>
-  ): Promise<ProductRating[]> {
-    const data = await productRatingRepository.read(productId, param);
+  async index(req: Request, res: Response) {
+    try {
+      const schema = Joi.object({
+        productId: Joi.string().required(),
+      }).unknown();
 
-    return data;
+      const { error } = schema.validate(req.query);
+
+      if (error) {
+        throw new BadRequest(error.message);
+      }
+
+      const result = await productRatingRepository.read(req.query);
+
+      res.json(result);
+    } catch (error: any) {
+      Failure.handle(error, res);
+    }
   }
 }

@@ -2,7 +2,7 @@ import { useEffect, useReducer } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
 import { CategoryModel } from "../../../../lib/model/category-model";
-import { ReducerAction } from "../../lib/config/type";
+import { ReducerAction, Result } from "../../lib/config/type";
 import { createReducer } from "../../lib/helper/common";
 import { Failure } from "../../lib/helper/failure";
 import CategoryRepository from "../../lib/repository/category-repository";
@@ -10,9 +10,9 @@ import CategoryRepository from "../../lib/repository/category-repository";
 const categoryRepository = new CategoryRepository();
 
 export default function CategoryComponent() {
-  const [state, dispatch] = useReducer(createReducer<CategoryModel[]>, {
+  const [state, dispatch] = useReducer(createReducer<Result<CategoryModel[]>>, {
     type: null,
-    payload: [],
+    payload: null,
     error: null,
   });
 
@@ -57,13 +57,13 @@ export default function CategoryComponent() {
           </Link>
         </div>
         {(() => {
-          if (state.payload?.length! > 0) {
+          if (state.payload?.data?.length! > 0) {
             return (
               <>
                 <div
                   className={`grid grid-rows-2 grid-flow-col gap-1 overflow-x-scroll justify-start snap-x`}
                 >
-                  {state.payload?.map((e, i) => {
+                  {state.payload?.data?.map((e, i) => {
                     return (
                       <Link
                         key={i}

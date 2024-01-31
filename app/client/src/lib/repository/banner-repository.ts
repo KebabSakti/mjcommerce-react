@@ -1,19 +1,19 @@
+import { Result } from "../../../../lib/config/type";
 import { BannerModel } from "../../../../lib/model/banner-model";
-import url from "../config/url";
+import { url } from "../config/url";
+import { urlParser } from "../helper/common";
 import { Failure } from "../helper/failure";
-import { urlParser } from "../helper/url-parser";
 
 export default class BannerRepository {
-  async read(): Promise<BannerModel[]> {
-    const queryUrl = urlParser(url["banner"]);
+  async read(): Promise<Result<BannerModel[]>> {
+    const queryUrl = urlParser(url.banner);
     const response = await fetch(queryUrl);
 
     if (!response.ok) {
       throw Failure.network(response);
     }
 
-    const json = await response.json();
-    const data = json.map((e: BannerModel) => e);
+    const data = await response.json();
 
     return data;
   }

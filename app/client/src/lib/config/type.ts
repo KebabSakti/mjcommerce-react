@@ -1,13 +1,10 @@
 import { ReactElement } from "react";
 
-export enum SortingDirection {
-  DESC = "desc",
-  ASC = "asc",
-}
+export type Empty = null | undefined;
 
 export enum ReducerAction {
-  LOAD = 'LOAD',
-  ERROR = 'ERROR',
+  LOAD = "LOAD",
+  ERROR = "ERROR",
 }
 
 export type PropData<T> = {
@@ -29,64 +26,18 @@ export type StateData<T> = {
   error?: FailureData | Empty;
 };
 
-export type SignInParams = {
-  email: string;
-  password: string;
-};
-
-export type AuthToken = {
-  token?: string | Empty;
-};
-
-export type PaginationData = {
-  skip: number;
-  take: number;
-};
-
-export type SortingData = {
-  field: string;
-  direction: SortingDirection;
-};
-
-export type ControllerData<T = Object> = {
-  payload?: T | Empty;
-  paginate?: PaginationData | Empty;
-  sorting?: SortingData | Empty;
-};
-
-export type RepositoryData<T = Object> = {
-  token?: string | Empty;
-  payload?: T | Empty;
-  paginate?: PaginationData | Empty;
-  sorting?: SortingData | Empty;
-};
-
-export type HttpRequest<T extends Object = Object> = {
-  token?: string | Empty;
-  query?: Object | Empty;
-  data?: T | Empty;
-};
-
-export type Sort<FieldName extends string> = {
-  field: FieldName;
-  direction: SortingDirection;
-};
-
-export type AppState<T> = {
-  data?: T | Empty;
-  error?: FailureData | Empty;
-};
-
-export type AppAction<T> = {
-  type: string;
-  payload?: T | Empty;
-  error?: FailureData | Empty;
-};
-
 export type ReducerParameter<T> = {
   type?: ReducerAction | Empty;
   payload?: T | Empty;
   error?: FailureData | Empty;
 };
 
-export type Empty = null | undefined;
+export type Paginate = {
+  page: number;
+  limit: number;
+};
+
+export type Result<T> = {
+  data?: T | Empty;
+  paginate?: Paginate | Empty;
+};

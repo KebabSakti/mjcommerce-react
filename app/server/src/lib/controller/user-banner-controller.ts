@@ -9,9 +9,7 @@ export default class UserBannerController {
     try {
       const result = await bannerRepository.read();
 
-      res
-        .header({ Pagination: JSON.stringify(result.paginate) })
-        .json(result.data);
+      res.json(result);
     } catch (error: any) {
       Failure.handle(error, res);
     }

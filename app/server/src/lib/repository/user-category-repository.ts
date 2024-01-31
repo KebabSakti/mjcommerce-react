@@ -1,28 +1,20 @@
+import { CategoryModel } from "../../../../lib/model/category-model";
+import { Result } from "../config/type";
 import { prisma } from "../helper/prisma";
 
 export default class UserCategoryRepository {
-  async read(): Promise<Record<string, any>> {
-    const result = await prisma.$transaction(async (tx) => {
-      const records = await tx.category.count({
-        where: { active: true },
-      });
-
-      const query = await tx.category.findMany({
-        where: { active: true },
-        orderBy: {
-          name: "asc",
-        },
-      });
-
-      return {
-        paginate: {
-          page: 1,
-          total: records,
-        },
-        data: query,
-      };
+  async read(): Promise<Result<CategoryModel[]>> {
+    const result = await prisma.category.findMany({
+      where: { active: true },
+      orderBy: {
+        name: "asc",
+      },
     });
 
-    return result;
+    const data = {
+      data: result as any,
+    };
+
+    return data;
   }
 }

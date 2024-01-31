@@ -1,30 +1,22 @@
+import { Result } from "../config/type";
 import { prisma } from "../helper/prisma";
+import { BannerModel } from "./../../../../lib/model/banner-model";
 
 export default class UserBannerRepository {
-  async read(): Promise<Record<string, any>> {
-    const result = await prisma.$transaction(async (tx) => {
-      const records = await tx.banner.count({
-        where: { active: true },
-      });
-
-      const query = await tx.banner.findMany({
-        where: { active: true },
-        skip: 0,
-        take: 10,
-        orderBy: {
-          created: "desc",
-        },
-      });
-
-      return {
-        paginate: {
-          page: 1,
-          total: records,
-        },
-        data: query,
-      };
+  async read(): Promise<Result<BannerModel[]>> {
+    const result = await prisma.banner.findMany({
+      where: { active: true },
+      skip: 0,
+      take: 10,
+      orderBy: {
+        created: "desc",
+      },
     });
 
-    return result;
+    const data = {
+      data: result as any,
+    };
+
+    return data;
   }
 }

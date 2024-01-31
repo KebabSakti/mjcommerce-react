@@ -1,12 +1,12 @@
 import { Rating, Spinner } from "flowbite-react";
 import { useEffect, useReducer, useState } from "react";
 import { ProductRating } from "../../../../lib/model/product-rating";
-import { ReducerAction } from "../../lib/config/type";
-import ProductRatingController from "../../lib/controller/product-rating-controller";
+import { ReducerAction, Result } from "../../lib/config/type";
 import { createReducer } from "../../lib/helper/common";
 import { Failure } from "../../lib/helper/failure";
+import ProductRatingRepository from "../../lib/repository/product-rating-repository";
 
-const productRatingController = new ProductRatingController();
+const productRatingRepository = new ProductRatingRepository();
 
 export default function ProductRatingComponent({
   productId,
@@ -15,18 +15,17 @@ export default function ProductRatingComponent({
 }) {
   const [query, setQuery] = useState({
     page: 1,
+    limit: 10,
     sort: "rating",
     direction: "desc",
+    productId: productId,
   });
 
-  const [ratingState, dispatchRating] = useReducer(
-    createReducer<ProductRating[]>,
-    {
-      type: null,
-      payload: [],
-      error: null,
-    }
-  );
+  const [state, dispatch] = useReducer(createReducer<Result<ProductRating[]>>, {
+    type: null,
+    payload: null,
+    error: null,
+  });
 
   useEffect(() => {
     init();
@@ -34,11 +33,11 @@ export default function ProductRatingComponent({
 
   async function init(): Promise<void> {
     try {
-      dispatchRating({ type: ReducerAction.LOAD, payload: null });
-      const data = await productRatingController.getRating(productId, query);
-      dispatchRating({ type: ReducerAction.LOAD, payload: data });
+      // dispatch({ type: ReducerAction.LOAD, payload: null });
+      const data = await productRatingRepository.read(query);
+      dispatch({ type: ReducerAction.LOAD, payload: data });
     } catch (error) {
-      dispatchRating({
+      dispatch({
         type: ReducerAction.ERROR,
         error: Failure.handle(error),
       });
@@ -78,11 +77,11 @@ export default function ProductRatingComponent({
           </button>
         </div>
         {(() => {
-          if (ratingState.payload?.length! > 0) {
+          if (state.payload?.data?.length! > 0) {
             return (
               <>
                 <div className="flex flex-col gap-0 divide-y">
-                  {ratingState.payload?.map((e, i) => {
+                  {state.payload?.data?.map((e, i) => {
                     return (
                       <div key={i} className="flex gap-4 py-6">
                         <div className="w-14 shrink-0">
@@ -116,8 +115,18 @@ export default function ProductRatingComponent({
                   })}
                 </div>
                 <div className="flex justify-center gap-1">
-                  <button className="p-2 rounded bg-secondary text-onSecondary" onClick={prev}>PREV</button>
-                  <button className="p-2 rounded bg-primary text-onPrimary" onClick={next}>NEXT</button>
+                  <button
+                    className="p-2 rounded bg-secondary text-onSecondary"
+                    onClick={prev}
+                  >
+                    PREV
+                  </button>
+                  <button
+                    className="p-2 rounded bg-primary text-onPrimary"
+                    onClick={next}
+                  >
+                    NEXT
+                  </button>
                 </div>
               </>
             );

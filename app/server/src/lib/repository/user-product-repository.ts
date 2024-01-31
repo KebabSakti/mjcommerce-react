@@ -1,9 +1,10 @@
-import { Empty } from "../../../../lib/config/type";
+import { Empty, Result } from "../config/type";
+import { toModel } from "../helper/common";
 import { prisma } from "../helper/prisma";
 import { ProductModel } from "./../../../../lib/model/product-model";
 
 export default class UserProductRepository {
-  async read(param: Record<string, any>): Promise<Record<string, any>> {
+  async read(param: Record<string, any>): Promise<Result<ProductModel[]>> {
     const result = await prisma.$transaction(async (tx) => {
       const sortingField = [
         "priority",
@@ -73,12 +74,12 @@ export default class UserProductRepository {
         },
       });
 
-      const data = {
+      const data: Result<ProductModel[]> = {
         paginate: {
           page: param.page,
           total: records,
         },
-        data: query,
+        data: query.map((e) => toModel<ProductModel>(e)),
       };
 
       return data;
@@ -87,9 +88,9 @@ export default class UserProductRepository {
     return result;
   }
 
-  async show(id: string): Promise<ProductModel | Empty> {
+  async show(id: string): Promise<Result<ProductModel>> {
     const result = await prisma.$transaction(async (tx) => {
-      const query = tx.product.findFirst({
+      const query = await tx.product.findFirst({
         where: { active: true, id: id },
         include: {
           store: true,
@@ -119,7 +120,9 @@ export default class UserProductRepository {
         data: { view: { increment: 1 } },
       });
 
-      const data = query as any as ProductModel | Empty;
+      const data = {
+        data: query as any,
+      };
 
       return data;
     });

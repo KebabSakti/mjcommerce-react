@@ -1,5 +1,6 @@
 import { Carousel } from "flowbite-react";
 import { useEffect, useReducer } from "react";
+import { Result } from "../../../../lib/config/type";
 import { BannerModel } from "../../../../lib/model/banner-model";
 import { ReducerAction } from "../../lib/config/type";
 import { createReducer } from "../../lib/helper/common";
@@ -9,9 +10,9 @@ import BannerRepository from "../../lib/repository/banner-repository";
 const bannerRepository = new BannerRepository();
 
 export default function BannerComponent() {
-  const [state, dispatch] = useReducer(createReducer<BannerModel[]>, {
+  const [state, dispatch] = useReducer(createReducer<Result<BannerModel[]>>, {
     type: null,
-    payload: [],
+    payload: null,
     error: null,
   });
 
@@ -35,11 +36,11 @@ export default function BannerComponent() {
   return (
     <div className="bg-surface p-4 lg:py-4 lg:px-0">
       {(() => {
-        if (state.payload?.length! > 0) {
+        if (state.payload?.data?.length! > 0) {
           return (
             <>
               <Carousel className="h-44 lg:h-52 lg:w-3/5 lg:mx-auto">
-                {state.payload?.map((e, i) => {
+                {state.payload?.data!.map((e, i) => {
                   return (
                     <img
                       key={i}

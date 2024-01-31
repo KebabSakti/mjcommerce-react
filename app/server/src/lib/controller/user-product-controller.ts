@@ -21,9 +21,7 @@ export default class UserProductController {
 
       const result = await productRepository.read(req.query);
 
-      res
-        .header({ Pagination: JSON.stringify(result.paginate) })
-        .json(result.data);
+      res.json(result);
     } catch (error: any) {
       Failure.handle(error, res);
     }

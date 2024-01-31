@@ -1,23 +1,25 @@
 import { faker } from "@faker-js/faker";
 import { Carousel, Rating, Spinner } from "flowbite-react";
-import { useEffect } from "react";
+import { useEffect, useReducer } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useParams } from "react-router-dom";
-import ProductController from "../lib/controller/product-controller";
-import Currency from "../lib/helper/currency";
+import { ProductModel } from "../../../lib/model/product-model";
+import { ReducerAction, Result } from "../lib/config/type";
+import { createReducer, currency } from "../lib/helper/common";
 import { Failure } from "../lib/helper/failure";
+import ProductRepository from "../lib/repository/product-repository";
 import ProductRatingComponent from "./component/product-rating-component";
-import { useAppDispatch, useAppSelector } from "./redux/hooks";
-import { loadError } from "./redux/layout-slice";
-import { productDetailLoad } from "./redux/product-detail-slice";
-import { RootState } from "./redux/store";
 
-const productController = new ProductController();
+const productRepository = new ProductRepository();
 
 export default function ProductDetailPage() {
   const { id } = useParams();
-  const state = useAppSelector((state: RootState) => state.productDetail.value);
-  const dispatch = useAppDispatch();
+
+  const [state, dispatch] = useReducer(createReducer<Result<ProductModel>>, {
+    type: null,
+    payload: null,
+    error: null,
+  });
 
   useEffect(() => {
     init();
@@ -25,17 +27,20 @@ export default function ProductDetailPage() {
 
   async function init(): Promise<void> {
     try {
-      dispatch(productDetailLoad(null));
-      const data = await productController.getProductDetail(id!);
-      dispatch(productDetailLoad(data));
+      dispatch({ type: ReducerAction.LOAD, payload: null });
+      const data = await productRepository.show(id!);
+      dispatch({ type: ReducerAction.LOAD, payload: data });
     } catch (error) {
-      dispatch(loadError(Failure.handle(error)));
+      dispatch({
+        type: ReducerAction.ERROR,
+        error: Failure.handle(error),
+      });
     }
   }
 
-  if (state.data != null) {
-    const product = state.data;
-    const gallery = state.data?.productGalery;
+  if (state.payload != null) {
+    const product = state.payload?.data!;
+    const gallery = state.payload?.data?.productGalery;
 
     return (
       <>
@@ -87,14 +92,12 @@ export default function ProductDetailPage() {
                   per {faker.science.unit.name}
                 </span>
                 <span className="font-bold text-2xl">
-                  {Currency.format(product.productVariant![0].price!)}
+                  {currency(product.productVariant![0].price!)}
                 </span>
                 <span className="text-xs font-bold underline">
                   Beli 5++ harga{" "}
                   <span className="text-red-500">
-                    {Currency.format(
-                      faker.commerce.price({ min: 500, max: 10000 })
-                    )}
+                    {currency(faker.commerce.price({ min: 500, max: 10000 }))}
                   </span>
                 </span>
               </div>

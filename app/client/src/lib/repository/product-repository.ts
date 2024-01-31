@@ -1,34 +1,32 @@
-import { Empty } from "../config/type";
-import url from "../config/url";
+import { Result } from "../config/type";
+import { url } from "../config/url";
+import { urlParser } from "../helper/common";
 import { Failure } from "../helper/failure";
-import { urlParser } from "../helper/url-parser";
 import { ProductModel } from "./../../../../lib/model/product-model";
 
 export default class ProductRepository {
-  async read(param: Record<string, any>): Promise<ProductModel[]> {
-    const queryUrl = urlParser(url["product"], param);
+  async read(param: Record<string, any>): Promise<Result<ProductModel[]>> {
+    const queryUrl = urlParser(url.product, param);
     const response = await fetch(queryUrl);
 
     if (!response.ok) {
       throw Failure.network(response);
     }
 
-    const json = await response.json();
-    const data = json.map((e: ProductModel) => e);
+    const data = await response.json();
 
     return data;
   }
 
-  async show(id: string): Promise<ProductModel | Empty> {
-    const queryUrl = urlParser(`${url["product"]}/${id}`);
+  async show(id: string): Promise<Result<ProductModel>> {
+    const queryUrl = urlParser(`${url.product}/${id}`);
     const response = await fetch(queryUrl);
 
     if (!response.ok) {
       throw Failure.network(response);
     }
 
-    const json = await response.json();
-    const data = json as ProductModel | Empty;
+    const data = await response.json();
 
     return data;
   }

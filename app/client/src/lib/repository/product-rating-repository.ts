@@ -1,18 +1,19 @@
 import { ProductRating } from "../../../../lib/model/product-rating";
-import url from "../config/url";
-import HTTP from "../helper/http";
+import { Result } from "../config/type";
+import { url } from "../config/url";
+import { urlParser } from "../helper/common";
+import { Failure } from "../helper/failure";
 
 export default class ProductRatingRepository {
-  async read(
-    productId: string,
-    param: Record<string, any>
-  ): Promise<ProductRating[]> {
-    const response = await HTTP.get(url["productRating"], {
-      query: { ...param, productId: productId },
-    });
+  async read(param: Record<string, any>): Promise<Result<ProductRating[]>> {
+    const queryUrl = urlParser(url.productRating, param);
+    const response = await fetch(queryUrl);
 
-    const json = await response.json();
-    const data = json.map((e: ProductRating) => e);
+    if (!response.ok) {
+      throw Failure.network(response);
+    }
+
+    const data = await response.json();
 
     return data;
   }

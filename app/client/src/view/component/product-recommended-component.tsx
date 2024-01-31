@@ -3,18 +3,17 @@ import { useEffect, useReducer } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
 import { ProductModel } from "../../../../lib/model/product-model";
-import { ReducerAction } from "../../lib/config/type";
-import { createReducer } from "../../lib/helper/common";
-import Currency from "../../lib/helper/currency";
+import { ReducerAction, Result } from "../../lib/config/type";
+import { createReducer, currency } from "../../lib/helper/common";
 import { Failure } from "../../lib/helper/failure";
 import ProductRepository from "../../lib/repository/product-repository";
 
 const productRepository = new ProductRepository();
 
 export default function ProductRecommendedComponent() {
-  const [state, dispatch] = useReducer(createReducer<ProductModel[]>, {
+  const [state, dispatch] = useReducer(createReducer<Result<ProductModel[]>>, {
     type: null,
-    payload: [],
+    payload: null,
     error: null,
   });
 
@@ -49,10 +48,10 @@ export default function ProductRecommendedComponent() {
       </div>
       <div className="mt-2 mx-4 grid grid-cols-2 gap-2 md:grid-cols-5 lg:grid-cols-6 lg:w-3/5 lg:mx-auto">
         {(() => {
-          if (state.payload?.length! > 0) {
+          if (state.payload?.data?.length! > 0) {
             return (
               <>
-                {state.payload!.map((e, i) => {
+                {state.payload?.data?.map((e, i) => {
                   return (
                     <Link key={i} to="" className="bg-surface">
                       <div className="h-36 w-full overflow-hidden">
@@ -71,7 +70,7 @@ export default function ProductRecommendedComponent() {
                             per {faker.science.unit().name}
                           </div>
                           <div className="font-semibold">
-                            {Currency.format(e.productVariant![0].price!)}
+                            {currency(e.productVariant![0].price!)}
                           </div>
                         </div>
                       </div>

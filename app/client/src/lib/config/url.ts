@@ -1,9 +1,9 @@
-import env from "./env";
+const base = "http://192.168.10.32:1001";
 
-export default {
-  auth: `${env["BASE_URL"]}/auth/user/access`,
-  banner: `${env["BASE_URL"]}/user/banner`,
-  category: `${env["BASE_URL"]}/user/category`,
-  product: `${env["BASE_URL"]}/user/product`,
-  productRating: `${env["BASE_URL"]}/user/product-rating`,
+export const url = {
+  auth: `${base}/auth/user/access`,
+  banner: `${base}/user/banner`,
+  category: `${base}/user/category`,
+  product: `${base}/user/product`,
+  productRating: `${base}/user/product-rating`,
 };
