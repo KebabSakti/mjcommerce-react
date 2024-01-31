@@ -29,6 +29,25 @@ class Failure extends Error {
 
     return failureData;
   }
+
+  static async network(response: Response): Promise<Failure> {
+    const message = await response.json();
+    let error: InternalError = new InternalError(message);
+
+    if (response.status == 401) {
+      error = new Unauthorized(message);
+    }
+
+    if (response.status == 404) {
+      error = new NotFound(message);
+    }
+
+    if (response.status == 400) {
+      error = new BadRequest(message);
+    }
+
+    return error;
+  }
 }
 
 class InternalError extends Failure {}

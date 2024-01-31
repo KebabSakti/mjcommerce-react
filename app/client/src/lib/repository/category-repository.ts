@@ -1,10 +1,17 @@
 import url from "../config/url";
-import HTTP from "../helper/http";
-import { CategoryModel } from './../../../../lib/model/category-model';
+import { Failure } from "../helper/failure";
+import { urlParser } from "../helper/url-parser";
+import { CategoryModel } from "./../../../../lib/model/category-model";
 
 export default class CategoryRepository {
   async read(): Promise<CategoryModel[]> {
-    const response = await HTTP.get(url["category"]);
+    const queryUrl = urlParser(url["category"]);
+    const response = await fetch(queryUrl);
+
+    if (!response.ok) {
+      throw Failure.network(response);
+    }
+
     const json = await response.json();
     const data = json.map((e: CategoryModel) => e);
 

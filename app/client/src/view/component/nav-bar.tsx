@@ -10,7 +10,7 @@ export default function NavBar() {
   return (
     <div className="bg-primary">
       <div className="mx-4 h-16 flex justify-between items-center lg:mx-auto lg:w-3/5">
-        <div className="flex items-center">
+        <Link to='/' className="flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -33,7 +33,7 @@ export default function NavBar() {
           <span className="text-onPrimary font-bold text-2xl hidden lg:block">
             MAJU JAYA
           </span>
-        </div>
+        </Link>
         <input
           type="text"
           placeholder="Cari di sini"

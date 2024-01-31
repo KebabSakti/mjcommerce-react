@@ -1,25 +1,22 @@
 import { faker } from "@faker-js/faker";
-import { useEffect } from "react";
+import { useEffect, useReducer } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
-import {
-  ProductReadParameter,
-  ProductSortingField,
-} from "../../../../lib/model/product-model";
-import { SortingDirection } from "../../lib/config/type";
-import ProductController from "../../lib/controller/product-controller";
+import { ProductModel } from "../../../../lib/model/product-model";
+import { ReducerAction } from "../../lib/config/type";
+import { createReducer } from "../../lib/helper/common";
 import Currency from "../../lib/helper/currency";
 import { Failure } from "../../lib/helper/failure";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { loadError } from "../redux/layout-slice";
-import { productComplete } from "../redux/product-slice";
-import { RootState } from "../redux/store";
+import ProductRepository from "../../lib/repository/product-repository";
 
-const productController = new ProductController();
+const productRepository = new ProductRepository();
 
 export default function ProductRecommendedComponent() {
-  const state = useAppSelector((state: RootState) => state.product.value);
-  const dispatch = useAppDispatch();
+  const [state, dispatch] = useReducer(createReducer<ProductModel[]>, {
+    type: null,
+    payload: [],
+    error: null,
+  });
 
   useEffect(() => {
     init();
@@ -27,23 +24,21 @@ export default function ProductRecommendedComponent() {
 
   async function init(): Promise<void> {
     try {
-      dispatch(productComplete(null));
+      dispatch({ type: ReducerAction.LOAD, payload: null });
 
-      const param: ProductReadParameter = {
-        sort: {
-          field: ProductSortingField.PRIORITY,
-          direction: SortingDirection.ASC,
-        },
-        paginate: {
-          skip: 0,
-          take: 100,
-        },
-      };
+      const data = await productRepository.read({
+        page: 1,
+        limit: 20,
+        sort: "priority",
+        direction: "desc",
+      });
 
-      const data = await productController.getFilteredProduct(param);
-      dispatch(productComplete(data));
+      dispatch({ type: ReducerAction.LOAD, payload: data });
     } catch (error) {
-      dispatch(loadError(Failure.handle(error)));
+      dispatch({
+        type: ReducerAction.ERROR,
+        error: Failure.handle(error),
+      });
     }
   }
 
@@ -54,10 +49,10 @@ export default function ProductRecommendedComponent() {
       </div>
       <div className="mt-2 mx-4 grid grid-cols-2 gap-2 md:grid-cols-5 lg:grid-cols-6 lg:w-3/5 lg:mx-auto">
         {(() => {
-          if (state.data?.length! > 0) {
+          if (state.payload?.length! > 0) {
             return (
               <>
-                {state.data!.map((e, i) => {
+                {state.payload!.map((e, i) => {
                   return (
                     <Link key={i} to="" className="bg-surface">
                       <div className="h-36 w-full overflow-hidden">

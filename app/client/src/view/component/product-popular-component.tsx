@@ -1,24 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, useReducer } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
-import { ProductReadParameter, ProductSortingField } from "../../../../lib/model/product-model";
-import { SortingDirection } from "../../lib/config/type";
-import ProductController from "../../lib/controller/product-controller";
+import { ProductModel } from "../../../../lib/model/product-model";
+import { ReducerAction } from "../../lib/config/type";
+import { createReducer } from "../../lib/helper/common";
 import Currency from "../../lib/helper/currency";
 import { Failure } from "../../lib/helper/failure";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { loadError } from "../redux/layout-slice";
-import { productPopularComplete } from "../redux/product-popular-slice";
-import { RootState } from "../redux/store";
+import ProductRepository from "../../lib/repository/product-repository";
 
-const productController = new ProductController();
+const productRepository = new ProductRepository();
 
 export default function ProductPopularComponent() {
-  const state = useAppSelector(
-    (state: RootState) => state.productPopular.value
-  );
-
-  const dispatch = useAppDispatch();
+  const [state, dispatch] = useReducer(createReducer<ProductModel[]>, {
+    type: null,
+    payload: [],
+    error: null,
+  });
 
   useEffect(() => {
     init();
@@ -26,24 +23,21 @@ export default function ProductPopularComponent() {
 
   async function init(): Promise<void> {
     try {
-      dispatch(productPopularComplete(null));
+      dispatch({ type: ReducerAction.LOAD, payload: null });
 
-      const param: ProductReadParameter = {
-        paginate: {
-          skip: 0,
-          take: 10,
-        },
-        sort: {
-          field: ProductSortingField.SELL,
-          direction: SortingDirection.DESC,
-        },
-      };
+      const data = await productRepository.read({
+        page: 1,
+        limit: 10,
+        sort: "sell",
+        direction: "desc",
+      });
 
-      const data = await productController.getFilteredProduct(param);
-
-      dispatch(productPopularComplete(data));
+      dispatch({ type: ReducerAction.LOAD, payload: data });
     } catch (error) {
-      dispatch(loadError(Failure.handle(error)));
+      dispatch({
+        type: ReducerAction.ERROR,
+        error: Failure.handle(error),
+      });
     }
   }
 
@@ -72,10 +66,10 @@ export default function ProductPopularComponent() {
         </div>
         <div className="grid grid-rows-1 grid-flow-col gap-1 overflow-x-scroll justify-start snap-x">
           {(() => {
-            if (state.data?.length! > 0) {
+            if (state.payload?.length! > 0) {
               return (
                 <>
-                  {state.data!.map((e, i) => {
+                  {state.payload!.map((e, i) => {
                     return (
                       <Link
                         key={i}

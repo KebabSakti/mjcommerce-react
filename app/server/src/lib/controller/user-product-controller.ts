@@ -1,48 +1,41 @@
-import {
-  ProductModel,
-  ProductUpdateField
-} from "../../../../lib/model/product-model";
-import { Empty } from "../config/type";
+import { Request, Response } from "express";
+import Joi from "joi";
+import { BadRequest, Failure } from "../helper/failure";
 import UserProductRepository from "../repository/user-product-repository";
 
 const productRepository = new UserProductRepository();
 
 export default class UserProductController {
-  async getFilteredProduct(
-    param: Record<string, any>
-  ): Promise<ProductModel[]> {
-    const result = await productRepository.read(param);
-    const data = result.map((e) => e as any as ProductModel);
+  async index(req: Request, res: Response) {
+    try {
+      const schema = Joi.object({
+        page: Joi.string().required(),
+        limit: Joi.string().required(),
+      }).unknown(true);
 
-    return data;
-  }
+      const { error } = schema.validate(req.query);
 
-  async getProductDetail(id: string): Promise<ProductModel | Empty> {
-    const result = await productRepository.show(id);
+      if (error) {
+        throw new BadRequest();
+      }
 
-    return result;
-  }
+      const result = await productRepository.read(req.query);
 
-  async incrementProductView(id: string): Promise<void> {
-    await productRepository.update(id, {
-      field: ProductUpdateField.VIEW,
-    });
-  }
-
-  async setProductRate(id: string, value: number): Promise<void> {
-    await productRepository.update(id, {
-      field: ProductUpdateField.RATING,
-      value: value,
-    });
-  }
-
-  async viewProduct(id: string): Promise<ProductModel | Empty> {
-    const result = await this.getProductDetail(id);
-
-    if (result) {
-      await this.incrementProductView(id);
+      res
+        .header({ Pagination: JSON.stringify(result.paginate) })
+        .json(result.data);
+    } catch (error: any) {
+      Failure.handle(error, res);
     }
+  }
 
-    return result;
+  async show(req: Request, res: Response) {
+    try {
+      const result = await productRepository.show(req.params.id);
+
+      res.json(result);
+    } catch (error: any) {
+      Failure.handle(error, res);
+    }
   }
 }

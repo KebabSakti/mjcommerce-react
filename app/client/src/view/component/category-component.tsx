@@ -1,18 +1,20 @@
-import { useEffect } from "react";
+import { useEffect, useReducer } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
-import CategoryController from "../../lib/controller/category-controller";
+import { CategoryModel } from "../../../../lib/model/category-model";
+import { ReducerAction } from "../../lib/config/type";
+import { createReducer } from "../../lib/helper/common";
 import { Failure } from "../../lib/helper/failure";
-import { categoryComplete } from "../redux/category-slice";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { loadError } from "../redux/layout-slice";
-import { RootState } from "../redux/store";
+import CategoryRepository from "../../lib/repository/category-repository";
 
-const categoryController = new CategoryController();
+const categoryRepository = new CategoryRepository();
 
 export default function CategoryComponent() {
-  const category = useAppSelector((state: RootState) => state.category.value);
-  const dispatch = useAppDispatch();
+  const [state, dispatch] = useReducer(createReducer<CategoryModel[]>, {
+    type: null,
+    payload: [],
+    error: null,
+  });
 
   useEffect(() => {
     init();
@@ -20,11 +22,14 @@ export default function CategoryComponent() {
 
   async function init(): Promise<void> {
     try {
-      dispatch(categoryComplete(null));
-      const data = await categoryController.read();
-      dispatch(categoryComplete(data));
+      dispatch({ type: ReducerAction.LOAD, payload: null });
+      const data = await categoryRepository.read();
+      dispatch({ type: ReducerAction.LOAD, payload: data });
     } catch (error) {
-      dispatch(loadError(Failure.handle(error)));
+      dispatch({
+        type: ReducerAction.ERROR,
+        error: Failure.handle(error),
+      });
     }
   }
 
@@ -52,13 +57,13 @@ export default function CategoryComponent() {
           </Link>
         </div>
         {(() => {
-          if (category.data?.length! > 0) {
+          if (state.payload?.length! > 0) {
             return (
               <>
                 <div
                   className={`grid grid-rows-2 grid-flow-col gap-1 overflow-x-scroll justify-start snap-x`}
                 >
-                  {category.data?.map((e, i) => {
+                  {state.payload?.map((e, i) => {
                     return (
                       <Link
                         key={i}

@@ -10,7 +10,7 @@ const productRepository = new ProductRepository();
 
 export default class ProductController {
   async getFilteredProduct(
-    param: ProductReadParameter
+    param: Record<string,any>
   ): Promise<ProductModel[]> {
     const data = await productRepository.read(param);
 

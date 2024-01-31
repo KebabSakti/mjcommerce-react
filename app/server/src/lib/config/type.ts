@@ -42,4 +42,9 @@ export type ReadParameter<TFilter, TSorting extends string> = {
   sort?: Sort<TSorting> | Empty;
 };
 
+export type Result<T> = {
+  data?: T | Empty;
+  extra?: Record<string, any> | Empty;
+};
+
 export type Empty = null | undefined;
