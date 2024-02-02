@@ -60,14 +60,12 @@ export default function CategoryComponent() {
           if (state.payload?.data?.length! > 0) {
             return (
               <>
-                <div
-                  className={`grid grid-rows-2 grid-flow-col gap-1 overflow-x-scroll justify-start snap-x`}
-                >
+                <div className="grid grid-rows-2 grid-flow-col gap-1 overflow-x-scroll justify-start snap-x no-scrollbar">
                   {state.payload?.data?.map((e, i) => {
                     return (
                       <Link
                         key={i}
-                        to=""
+                        to={`/product?categoryId=${e.id}&page=1&limit=100`}
                         className="bg-surface snap-start flex flex-col justify-center items-center w-24 h-24 md:w-40 md:h-40 lg:w-44 lg:h-44"
                       >
                         <LazyLoadImage

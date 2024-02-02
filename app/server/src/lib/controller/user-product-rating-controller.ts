@@ -10,6 +10,8 @@ export default class UserProductRatingController {
     try {
       const schema = Joi.object({
         productId: Joi.string().required(),
+        page: Joi.number().required(),
+        limit: Joi.number().required(),
       }).unknown();
 
       const { error } = schema.validate(req.query);

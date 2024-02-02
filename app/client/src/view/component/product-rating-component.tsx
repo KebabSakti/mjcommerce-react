@@ -44,8 +44,17 @@ export default function ProductRatingComponent({
     }
   }
 
+  function sort() {
+    const direction = query.direction === "desc" ? "asc" : "desc";
+    setQuery({ ...query, page: 1, direction: direction });
+  }
+
   function next() {
-    setQuery({ ...query, page: query.page + 1 });
+    const max = query.page * query.limit + query.limit;
+
+    if (max < state.payload?.paginate?.total!) {
+      setQuery({ ...query, page: query.page + 1 });
+    }
   }
 
   function prev() {
@@ -59,21 +68,38 @@ export default function ProductRatingComponent({
       <div className="bg-surface p-4 flex flex-col gap-2 text-onSurface">
         <div className="flex justify-between items-center">
           <div className="text-xl font-semibold">Penilaian</div>
-          <button>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0-3.75-3.75M17.25 21 21 17.25"
-              />
-            </svg>
+          <button onClick={sort}>
+            {query.direction === "desc" ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0-3.75-3.75M17.25 21 21 17.25"
+                />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12"
+                />
+              </svg>
+            )}
           </button>
         </div>
         {(() => {

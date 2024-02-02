@@ -4,6 +4,7 @@ import GlobalPage from "../global-page";
 import AuthBar from "./auth-bar";
 import ErrorBoundary from "./error-boundary";
 import Footer from "./footer";
+import { useEffect } from "react";
 
 const customTheme: CustomFlowbiteTheme = {
   carousel: {
@@ -25,6 +26,18 @@ const customTheme: CustomFlowbiteTheme = {
 };
 
 export default function Layout() {
+  const handleScroll = () => {
+    const position = window.scrollY;
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <>
       <ScrollRestoration />
@@ -35,6 +48,27 @@ export default function Layout() {
             <GlobalPage />
             <Footer />
           </div>
+          <button
+            onClick={() => {
+              window.scrollTo(0, 0);
+            }}
+            className="bg-secondary h-12 w-12 rounded-full flex justify-center items-center drop-shadow-lg fixed right-2 bottom-4 lg:right-[20.4%]"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6 stroke-onSecondary"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m4.5 15.75 7.5-7.5 7.5 7.5"
+              />
+            </svg>
+          </button>
         </ErrorBoundary>
       </Flowbite>
     </>

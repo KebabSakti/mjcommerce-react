@@ -64,7 +64,7 @@ export default function ProductLatestComponent() {
             </svg>
           </Link>
         </div>
-        <div className="grid grid-rows-1 grid-flow-col gap-1 overflow-x-scroll justify-start snap-x">
+        <div className="grid grid-rows-1 grid-flow-col gap-1 overflow-x-scroll justify-start snap-x no-scrollbar">
           {(() => {
             if (state.payload?.data?.length! > 0) {
               return (

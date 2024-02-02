@@ -9,7 +9,7 @@ export default class UserProductRepository {
       const sortingField = [
         "priority",
         "sell",
-        "price",
+        // "price",
         "view",
         "rating",
         "created",

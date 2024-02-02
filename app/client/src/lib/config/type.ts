@@ -34,7 +34,7 @@ export type ReducerParameter<T> = {
 
 export type Paginate = {
   page: number;
-  limit: number;
+  total: number;
 };
 
 export type Result<T> = {
