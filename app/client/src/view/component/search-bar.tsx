@@ -1,11 +1,11 @@
 import { useEffect, useReducer, useRef, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { Link } from "react-router-dom";
 import { ProductModel } from "../../../../lib/model/product-model";
 import { ReducerAction, Result } from "../../lib/config/type";
 import { createReducer, currency, debounce } from "../../lib/helper/common";
 import { Failure } from "../../lib/helper/failure";
 import ProductRepository from "../../lib/repository/product-repository";
-import ProductItem from "./product-item";
 
 const productRepository = new ProductRepository();
 
@@ -95,7 +95,7 @@ export default function SearchBar() {
                             const product = state.payload?.data![i]!;
 
                             return (
-                              <ProductItem key={i} productId={product.id!}>
+                              <Link key={i} to={`/product/${product.id}`}>
                                 <div className="flex items-center gap-3 text-sm text-onBackground">
                                   <div className="w-8 h-8">
                                     <LazyLoadImage
@@ -107,14 +107,10 @@ export default function SearchBar() {
                                     <div className="font-semibold line-clamp-1">
                                       {product?.name}
                                     </div>
-                                    <div>
-                                      {currency(
-                                        product?.productVariant![0].price!
-                                      )}
-                                    </div>
+                                    <div>{currency(product?.price!)}</div>
                                   </div>
                                 </div>
-                              </ProductItem>
+                              </Link>
                             );
                           })}
                         </div>

@@ -1,25 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { StateData, StateType } from "../../lib/config/type";
 
-const initialState: StateType<StateData<string>> = {
+const initialState: StateType<StateData<number>> = {
   value: {
-    data: null,
+    data: 0,
     error: null,
   },
 };
 
 export const slice = createSlice({
-  name: "auth",
+  name: "counter",
   initialState,
   reducers: {
-    authError: (state, action) => {
-      state.value = { ...state.value, error: action.payload };
-    },
-    authComplete: (state, action) => {
+    setCounter: (state, action) => {
       state.value = { ...state.value, error: null, data: action.payload };
     },
   },
 });
 
-export const { authError, authComplete } = slice.actions;
+export const { setCounter } = slice.actions;
 export default slice.reducer;

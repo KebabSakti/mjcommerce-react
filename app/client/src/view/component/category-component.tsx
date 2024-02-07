@@ -65,7 +65,7 @@ export default function CategoryComponent() {
                     return (
                       <Link
                         key={i}
-                        to={`/product?categoryId=${e.id}&page=1&limit=100`}
+                        to={`/product?categoryId=${e.id}&page=1&limit=60`}
                         className="bg-surface snap-start flex flex-col justify-center items-center w-24 h-24 md:w-40 md:h-40 lg:w-44 lg:h-44"
                       >
                         <LazyLoadImage
@@ -88,7 +88,7 @@ export default function CategoryComponent() {
           return (
             <>
               <div className="grid grid-rows-2 grid-flow-col gap-1 overflow-x-scroll justify-start snap-x">
-                {[...Array(10)].map((_, i) => {
+                {[...Array(16)].map((_, i) => {
                   return (
                     <div
                       key={i}

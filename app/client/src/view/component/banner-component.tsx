@@ -1,8 +1,7 @@
 import { Carousel } from "flowbite-react";
 import { useEffect, useReducer } from "react";
-import { Result } from "../../../../lib/config/type";
 import { BannerModel } from "../../../../lib/model/banner-model";
-import { ReducerAction } from "../../lib/config/type";
+import { ReducerAction, Result } from "../../lib/config/type";
 import { createReducer } from "../../lib/helper/common";
 import { Failure } from "../../lib/helper/failure";
 import BannerRepository from "../../lib/repository/banner-repository";

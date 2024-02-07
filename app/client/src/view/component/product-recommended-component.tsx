@@ -1,10 +1,8 @@
-import { faker } from "@faker-js/faker";
 import { useEffect, useReducer } from "react";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
 import { ProductModel } from "../../../../lib/model/product-model";
 import { ReducerAction, Result } from "../../lib/config/type";
-import { createReducer, currency } from "../../lib/helper/common";
+import { createReducer } from "../../lib/helper/common";
 import { Failure } from "../../lib/helper/failure";
 import ProductRepository from "../../lib/repository/product-repository";
 import ProductItem from "./product-item";
@@ -54,30 +52,9 @@ export default function ProductRecommendedComponent() {
               <>
                 {state.payload?.data?.map((e, i) => {
                   return (
-                    <ProductItem key={i} productId={e.id!}>
-                      <div className="bg-surface">
-                        <div className="h-36 w-full overflow-hidden">
-                          <LazyLoadImage
-                            src={e.picture}
-                            alt=""
-                            height={200}
-                            width={200}
-                            className="bg-gray-100 object-cover h-full w-full"
-                          />
-                        </div>
-                        <div className="p-2 h-28 text-onSurface flex flex-col justify-between">
-                          <div className="text-sm line-clamp-2">{e.name}</div>
-                          <div>
-                            <div className="text-xs">
-                              per {faker.science.unit().name}
-                            </div>
-                            <div className="font-semibold">
-                              {currency(e.productVariant![0].price!)}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </ProductItem>
+                    <div key={i} className="h-60">
+                      <ProductItem product={e} />
+                    </div>
                   );
                 })}
               </>
@@ -87,14 +64,14 @@ export default function ProductRecommendedComponent() {
           return (
             <>
               {[...Array(12)].map((_, i) => (
-                <div key={i} className="bg-gray-200 animate-pulse h-64"></div>
+                <div key={i} className="bg-gray-200 animate-pulse h-60"></div>
               ))}
             </>
           );
         })()}
       </div>
       <Link
-        to=""
+        to="/product?page=1&limit=60&sort=priority&direction=desc"
         className="bg-surface h-10 mt-2 mx-4 text-onSurface flex justify-center items-center border border-primary mb-2 lg:w-1/3 lg:mx-auto"
       >
         Lihat Lainnya

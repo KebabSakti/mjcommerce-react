@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { Carousel, Rating, Spinner } from "flowbite-react";
-import { useEffect, useReducer } from "react";
+import { useContext, useEffect, useReducer } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useParams } from "react-router-dom";
 import { ProductModel } from "../../../lib/model/product-model";
@@ -9,10 +9,17 @@ import { createReducer, currency } from "../lib/helper/common";
 import { Failure } from "../lib/helper/failure";
 import ProductRepository from "../lib/repository/product-repository";
 import ProductRatingComponent from "./component/product-rating-component";
+import { CounterContext } from "./provider";
+import { useAppDispatch, useAppSelector } from "./redux/hooks";
+import { setCounter } from "./redux/counter-slice";
 
 const productRepository = new ProductRepository();
 
 export default function ProductDetailPage() {
+  const context: any = useContext(CounterContext);
+  const count = useAppSelector((state) => state.counter.value);
+  const dispatcher = useAppDispatch();
+
   const { id } = useParams();
 
   const [state, dispatch] = useReducer(createReducer<Result<ProductModel>>, {
@@ -92,14 +99,23 @@ export default function ProductDetailPage() {
                   per {faker.science.unit.name}
                 </span>
                 <span className="font-bold text-2xl">
-                  {currency(product.productVariant![0].price!)}
+                  {currency(product.price!)}
                 </span>
-                <span className="text-xs font-bold underline">
-                  Beli 5++ harga{" "}
-                  <span className="text-red-500">
-                    {currency(faker.commerce.price({ min: 500, max: 10000 }))}
-                  </span>
-                </span>
+                {(() => {
+                  if (
+                    product.productVariant![0].wholesaleMin != null ||
+                    product.productVariant![0].wholesalePrice! != null
+                  ) {
+                    return (
+                      <span className="text-xs font-bold underline">
+                        Beli {product.productVariant![0].wholesaleMin}++ harga{" "}
+                        <span className="text-red-500">
+                          {currency(product.productVariant![0].wholesalePrice!)}
+                        </span>
+                      </span>
+                    );
+                  }
+                })()}
               </div>
               <div className="flex mt-6">
                 <span className="w-20 shrink-0">Varian</span>
@@ -119,7 +135,12 @@ export default function ProductDetailPage() {
               <div className="flex mt-6">
                 <span className="w-20 shrink-0">Kuantitas</span>
                 <div className="flex outline outline-1 outline-primary">
-                  <button className="p-2">
+                  <button
+                    className="p-2"
+                    onClick={() => {
+                      dispatcher(setCounter(count.data! - 1));
+                    }}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -140,7 +161,12 @@ export default function ProductDetailPage() {
                     value={1}
                     onChange={() => {}}
                   />
-                  <button className="p-2">
+                  <button
+                    className="p-2"
+                    onClick={() => {
+                      context.setCounter(context.counter + 1);
+                    }}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import UserAuthController from "../../lib/controller/user-auth-controller";
-import { Failure } from "../../lib/helper/failure";
+import { Failure, Unauthorized } from "../../lib/helper/failure";
+import UserAuthRepository from "../../lib/repository/user-auth-repository";
 
-const userAuthController = new UserAuthController();
+const userAuthRepository = new UserAuthRepository();
 
 export default async function userMiddleware(
   req: Request,
@@ -17,12 +17,14 @@ export default async function userMiddleware(
 
       if (payloads.length == 2) {
         const token = payloads[1];
-        const userId = userAuthController.decrypt(token);
-        req.app.locals.id = userId;
+        const userId = await userAuthRepository.validate(token);
+        req.app.locals.userId = userId;
+
+        return next();
       }
     }
 
-    return next();
+    throw new Unauthorized();
   } catch (error: any) {
     Failure.handle(error, res);
   }

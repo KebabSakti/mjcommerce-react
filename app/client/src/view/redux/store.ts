@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth-slice";
 import bannerReducer from "./banner-slice";
 import categoryReducer from "./category-slice";
+import counterReducer from "./counter-slice";
 import layoutReducer from "./layout-slice";
 import productDetailReducer from "./product-detail-slice";
 import productLatestReducer from "./product-latest-slice";
@@ -20,6 +21,7 @@ const store = configureStore({
     productLatest: productLatestReducer,
     productDetail: productDetailReducer,
     productRating: productRatingReducer,
+    counter: counterReducer,
   },
 });
 

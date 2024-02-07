@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import NavBar from "./component/nav-bar";
 import { CounterContext } from "./provider";
+import DBC from "./component/dbc";
 
 export default function GlobalPage() {
   const [counter, setCounter] = useState(0);
@@ -9,10 +10,9 @@ export default function GlobalPage() {
   return (
     <>
       <CounterContext.Provider value={{ counter, setCounter }}>
-        <>
-          <NavBar />
-          <Outlet />
-        </>
+        <NavBar />
+        <Outlet />
+        <DBC />
       </CounterContext.Provider>
     </>
   );

@@ -5,6 +5,7 @@ export interface CartItemModel {
   id?: string;
   cartId?: string;
   productId?: string;
+  productVariantId?: string;
   qty?: number;
   total?: number;
   created?: string;

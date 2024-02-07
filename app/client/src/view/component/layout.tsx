@@ -1,10 +1,9 @@
 import { CustomFlowbiteTheme, Flowbite } from "flowbite-react";
-import { ScrollRestoration } from "react-router-dom";
-import GlobalPage from "../global-page";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 import AuthBar from "./auth-bar";
 import ErrorBoundary from "./error-boundary";
 import Footer from "./footer";
-import { useEffect } from "react";
+import NavBar from "./nav-bar";
 
 const customTheme: CustomFlowbiteTheme = {
   carousel: {
@@ -26,18 +25,6 @@ const customTheme: CustomFlowbiteTheme = {
 };
 
 export default function Layout() {
-  const handleScroll = () => {
-    const position = window.scrollY;
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
   return (
     <>
       <ScrollRestoration />
@@ -45,7 +32,8 @@ export default function Layout() {
         <ErrorBoundary>
           <div className="bg-background min-h-screen">
             <AuthBar />
-            <GlobalPage />
+            <NavBar />
+            <Outlet />
             <Footer />
           </div>
           <button

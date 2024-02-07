@@ -9,7 +9,7 @@ export default class UserProductRepository {
       const sortingField = [
         "priority",
         "sell",
-        // "price",
+        "price",
         "view",
         "rating",
         "created",
@@ -63,15 +63,12 @@ export default class UserProductRepository {
 
       const records = await tx.product.count({
         ...condition,
-        // skip: undefined,
-        // take: undefined,
+        skip: undefined,
+        take: undefined,
       });
 
       const query = await tx.product.findMany({
         ...condition,
-        include: {
-          productVariant: true,
-        },
       });
 
       const data: Result<ProductModel[]> = {

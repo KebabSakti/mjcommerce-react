@@ -103,6 +103,7 @@ model Product {
   name           String
   description    String           @db.Text
   picture        String
+  price          Decimal          @db.Decimal(19, 4)
   sell           Int              @default(0)
   view           Int              @default(0)
   rating         Float            @default(0)

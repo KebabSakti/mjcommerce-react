@@ -10,6 +10,7 @@ import HomePage from "./view/home-page";
 import ProductDetailPage from "./view/product-detail-page";
 import ProductPage from "./view/product-page";
 import { store } from "./view/redux/store";
+import { AuthProvider } from "./view/context/auth-context";
 
 const router = createBrowserRouter([
   {
@@ -32,8 +33,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+    <AuthProvider>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </AuthProvider>
   </React.StrictMode>
 );

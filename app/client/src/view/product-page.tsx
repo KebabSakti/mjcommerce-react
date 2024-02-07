@@ -1,11 +1,9 @@
-import { faker } from "@faker-js/faker";
 import { useEffect, useReducer } from "react";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useSearchParams } from "react-router-dom";
 import { CategoryModel } from "../../../lib/model/category-model";
 import { ProductModel } from "../../../lib/model/product-model";
 import { ReducerAction, Result } from "../lib/config/type";
-import { createReducer, currency } from "../lib/helper/common";
+import { createReducer } from "../lib/helper/common";
 import { Failure } from "../lib/helper/failure";
 import CategoryRepository from "../lib/repository/category-repository";
 import ProductRepository from "../lib/repository/product-repository";
@@ -17,6 +15,9 @@ const categoryRepository = new CategoryRepository();
 export default function ProductPage() {
   let [searchParams, setSearchParams] = useSearchParams();
   const query = Object.fromEntries([...searchParams]);
+  const page = parseInt(query.page);
+  const limit = parseInt(query.limit);
+  const max = page * (limit * 2);
 
   const [product, dispatchProduct] = useReducer(
     createReducer<Result<ProductModel[]>>,
@@ -38,7 +39,7 @@ export default function ProductPage() {
 
   function selectCategory(id: string) {
     if (id != query.categoryId) {
-      setSearchParams({ ...query, categoryId: id });
+      setSearchParams({ ...query, categoryId: id, page: "1" });
     }
   }
 
@@ -55,6 +56,18 @@ export default function ProductPage() {
     delete query.sort;
     delete query.direction;
     setSearchParams(query);
+  }
+
+  function next() {
+    if (max < product.payload?.paginate?.total!) {
+      setSearchParams({ ...query, page: (page + 1) as any });
+    }
+  }
+
+  function prev() {
+    if (page > 1) {
+      setSearchParams({ ...query, page: (page - 1) as any });
+    }
   }
 
   async function fetchCategory(): Promise<void> {
@@ -175,6 +188,69 @@ export default function ProductPage() {
                 </button>
               );
             })()}
+
+            {(() => {
+              const active =
+                query.sort == "priority"
+                  ? "bg-secondary text-onSecondary font-semibold"
+                  : "border border-secondary text-onSurface";
+
+              return (
+                <button
+                  onClick={() => {
+                    sort({
+                      sort: "priority",
+                      direction: "desc",
+                    });
+                  }}
+                  className={`py-2 px-4 whitespace-nowrap snap-start ${active}`}
+                >
+                  Rekomendasi
+                </button>
+              );
+            })()}
+
+            {(() => {
+              const active =
+                query.sort == "price" && query.direction == "asc"
+                  ? "bg-secondary text-onSecondary font-semibold"
+                  : "border border-secondary text-onSurface";
+
+              return (
+                <button
+                  onClick={() => {
+                    sort({
+                      sort: "price",
+                      direction: "asc",
+                    });
+                  }}
+                  className={`py-2 px-4 whitespace-nowrap snap-start ${active}`}
+                >
+                  Harga Terendah
+                </button>
+              );
+            })()}
+
+            {(() => {
+              const active =
+                query.sort == "price" && query.direction == "desc"
+                  ? "bg-secondary text-onSecondary font-semibold"
+                  : "border border-secondary text-onSurface";
+
+              return (
+                <button
+                  onClick={() => {
+                    sort({
+                      sort: "price",
+                      direction: "desc",
+                    });
+                  }}
+                  className={`py-2 px-4 whitespace-nowrap snap-start ${active}`}
+                >
+                  Harga Tertinggi
+                </button>
+              );
+            })()}
           </div>
         </div>
         <div className="flex gap-2 overflow-scroll snap-x no-scrollbar">
@@ -227,7 +303,7 @@ export default function ProductPage() {
                   return (
                     <div
                       key={i}
-                      className="bg-gray-200 animate-pulse w-20 rounded-full shrink-0"
+                      className="bg-gray-200 animate-pulse w-20 shrink-0"
                     />
                   );
                 })}
@@ -242,30 +318,9 @@ export default function ProductPage() {
                 <>
                   {product.payload?.data?.map((e, i) => {
                     return (
-                      <ProductItem key={i} productId={e.id!}>
-                        <div className="bg-surface">
-                          <div className="h-36 w-full overflow-hidden">
-                            <LazyLoadImage
-                              src={e.picture}
-                              alt=""
-                              height={200}
-                              width={200}
-                              className="bg-gray-100 object-cover h-full w-full"
-                            />
-                          </div>
-                          <div className="p-2 h-28 text-onSurface flex flex-col justify-between">
-                            <div className="text-sm line-clamp-2">{e.name}</div>
-                            <div>
-                              <div className="text-xs">
-                                per {faker.science.unit().name}
-                              </div>
-                              <div className="font-semibold">
-                                {currency(e.productVariant![0].price!)}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </ProductItem>
+                      <div key={i} className="h-60">
+                        <ProductItem product={e} />
+                      </div>
                     );
                   })}
                 </>
@@ -275,12 +330,33 @@ export default function ProductPage() {
             return (
               <>
                 {[...Array(12)].map((_, i) => (
-                  <div key={i} className="bg-gray-200 animate-pulse h-64"></div>
+                  <div key={i} className="bg-gray-200 animate-pulse h-60"></div>
                 ))}
               </>
             );
           })()}
         </div>
+
+        {(() => {
+          if (max < product.payload?.paginate?.total!) {
+            return (
+              <div className="flex justify-center gap-1 mt-2">
+                <button
+                  className="p-2 rounded bg-secondary text-onSecondary"
+                  onClick={prev}
+                >
+                  PREV
+                </button>
+                <button
+                  className="p-2 rounded bg-primary text-onPrimary"
+                  onClick={next}
+                >
+                  NEXT
+                </button>
+              </div>
+            );
+          }
+        })()}
       </div>
     </>
   );

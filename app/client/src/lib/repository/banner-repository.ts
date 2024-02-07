@@ -1,5 +1,5 @@
-import { Result } from "../../../../lib/config/type";
 import { BannerModel } from "../../../../lib/model/banner-model";
+import { Result } from "../config/type";
 import { url } from "../config/url";
 import { urlParser } from "../helper/common";
 import { Failure } from "../helper/failure";

@@ -1,9 +1,8 @@
 import { useEffect, useReducer } from "react";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
 import { ProductModel } from "../../../../lib/model/product-model";
 import { ReducerAction, Result } from "../../lib/config/type";
-import { createReducer, currency } from "../../lib/helper/common";
+import { createReducer } from "../../lib/helper/common";
 import { Failure } from "../../lib/helper/failure";
 import ProductRepository from "../../lib/repository/product-repository";
 import ProductItem from "./product-item";
@@ -46,7 +45,10 @@ export default function ProductPopularComponent() {
       <div className="mx-4 mt-4 lg:w-3/5 lg:mx-auto">
         <div className="bg-surface mb-1 p-4 flex justify-between">
           <div className="text-onSurface font-semibold">TERLARIS</div>
-          <Link to="" className="text-primary text-sm flex">
+          <Link
+            to="/product?page=1&limit=60&sort=sell&direction=desc"
+            className="text-primary text-sm flex"
+          >
             <span>Lihat Semua</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -71,23 +73,9 @@ export default function ProductPopularComponent() {
                 <>
                   {state.payload?.data?.map((e, i) => {
                     return (
-                      <ProductItem key={i} productId={e.id!}>
-                        <div className="bg-surface h-64 w-40 flex flex-col text-onSurface snap-start">
-                          <div className="bg-gray-100 grow">
-                            <LazyLoadImage
-                              src={e.picture}
-                              alt={e.name}
-                              className="h-full w-full object-cover"
-                            />
-                          </div>
-                          <div className="p-2 flex flex-col justify-between h-2/6">
-                            <div className="text-sm line-clamp-2">{e.name}</div>
-                            <div className="font-semibold">
-                              {currency(e.productVariant![0].price!)}
-                            </div>
-                          </div>
-                        </div>
-                      </ProductItem>
+                      <div key={i} className="h-60 w-40 shrink-0">
+                        <ProductItem product={e} />
+                      </div>
                     );
                   })}
                 </>
