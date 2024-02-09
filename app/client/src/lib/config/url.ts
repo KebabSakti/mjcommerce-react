@@ -6,4 +6,5 @@ export const url = {
   product: `${base}/user/product`,
   productRating: `${base}/user/product-rating`,
   login: `${base}/user/auth/login`,
+  cart: `${base}/user/protected/cart`,
 };

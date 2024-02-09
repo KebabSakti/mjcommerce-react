@@ -1,14 +1,10 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { CounterContext } from "../provider";
+import { CartContext } from "../context/cart-context";
 import SearchBar from "./search-bar";
-import { useAppSelector } from "../redux/hooks";
 
 export default function NavBar() {
-  const context: any = useContext(CounterContext);
-  const count = useAppSelector((state) => state.counter.value);
-
-  console.log("NAVBAR REBUILD");
+  const cartContext = useContext(CartContext);
 
   return (
     <div className="bg-primary">
@@ -41,7 +37,14 @@ export default function NavBar() {
         <div className="flex gap-3">
           <Link to="" className="relative">
             <div className="h-5 w-5 flex justify-center items-center rounded-full bg-red-500 text-white text-[10px] font-bold outline outline-2 outline-white absolute -right-2 -top-2">
-              {count.data}
+              {(() => {
+                const total = cartContext?.cart?.cartItem?.reduce(
+                  (a, b) => a + Number(b.qty!),
+                  0
+                );
+
+                return total ?? 0;
+              })()}
             </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +61,6 @@ export default function NavBar() {
               />
             </svg>
           </Link>
-          {/* </Badge> */}
           <Link to="">
             <svg
               xmlns="http://www.w3.org/2000/svg"

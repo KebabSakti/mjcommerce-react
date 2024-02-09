@@ -8,7 +8,7 @@ export default class UserCartController {
   async show(req: Request, res: Response) {
     try {
       const userId = req.app.locals.userId;
-      const result = await cartRepository.show(userId);
+      const result = await cartRepository.show({ userId: userId });
 
       res.json(result);
     } catch (error: any) {

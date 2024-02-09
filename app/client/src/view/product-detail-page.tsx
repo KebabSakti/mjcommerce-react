@@ -1,25 +1,18 @@
-import { faker } from "@faker-js/faker";
-import { Carousel, Rating, Spinner } from "flowbite-react";
-import { useContext, useEffect, useReducer } from "react";
+import { Carousel, Spinner } from "flowbite-react";
+import { useEffect, useReducer } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useParams } from "react-router-dom";
 import { ProductModel } from "../../../lib/model/product-model";
 import { ReducerAction, Result } from "../lib/config/type";
-import { createReducer, currency } from "../lib/helper/common";
+import { createReducer } from "../lib/helper/common";
 import { Failure } from "../lib/helper/failure";
 import ProductRepository from "../lib/repository/product-repository";
+import ProductInfo from "./component/product-info";
 import ProductRatingComponent from "./component/product-rating-component";
-import { CounterContext } from "./provider";
-import { useAppDispatch, useAppSelector } from "./redux/hooks";
-import { setCounter } from "./redux/counter-slice";
 
 const productRepository = new ProductRepository();
 
 export default function ProductDetailPage() {
-  const context: any = useContext(CounterContext);
-  const count = useAppSelector((state) => state.counter.value);
-  const dispatcher = useAppDispatch();
-
   const { id } = useParams();
 
   const [state, dispatch] = useReducer(createReducer<Result<ProductModel>>, {
@@ -69,147 +62,7 @@ export default function ProductDetailPage() {
                 })}
               </Carousel>
             </div>
-            <div className="w-full md:basis-1/2 flex flex-col gap-1">
-              <div className="font-semibold text-xl">{product.name}</div>
-              <div className="flex gap-4 text-sm">
-                <div className="flex gap-1 justify-center items-center">
-                  <span className="font-bold">
-                    {product.rating!.toFixed(1)}
-                  </span>
-                  <Rating>
-                    {[...Array(5)].map((_, i) => (
-                      <Rating.Star
-                        key={i}
-                        filled={Math.floor(product.rating!) > i}
-                      />
-                    ))}
-                  </Rating>
-                </div>
-                <div className="flex gap-1 justify-center items-center">
-                  <span className="font-bold">{product.view}</span>
-                  <span>Dilihat</span>
-                </div>
-                <div className="flex gap-1 justify-center items-center">
-                  <span className="font-bold">{product.sell}</span>
-                  <span>Terjual</span>
-                </div>
-              </div>
-              <div className="flex flex-col mt-2">
-                <span className="text-xs text-gray-400">
-                  per {faker.science.unit.name}
-                </span>
-                <span className="font-bold text-2xl">
-                  {currency(product.price!)}
-                </span>
-                {(() => {
-                  if (
-                    product.productVariant![0].wholesaleMin != null ||
-                    product.productVariant![0].wholesalePrice! != null
-                  ) {
-                    return (
-                      <span className="text-xs font-bold underline">
-                        Beli {product.productVariant![0].wholesaleMin}++ harga{" "}
-                        <span className="text-red-500">
-                          {currency(product.productVariant![0].wholesalePrice!)}
-                        </span>
-                      </span>
-                    );
-                  }
-                })()}
-              </div>
-              <div className="flex mt-6">
-                <span className="w-20 shrink-0">Varian</span>
-                <div className="flex gap-2 flex-wrap text-xs">
-                  {product.productVariant!.map((e, i) => {
-                    return (
-                      <div
-                        key={i}
-                        className="p-1 outline outline-1 outline-primary hover:cursor-pointer hover:bg-primary hover:text-onPrimary"
-                      >
-                        {e.name}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="flex mt-6">
-                <span className="w-20 shrink-0">Kuantitas</span>
-                <div className="flex outline outline-1 outline-primary">
-                  <button
-                    className="p-2"
-                    onClick={() => {
-                      dispatcher(setCounter(count.data! - 1));
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-5 h-4 stroke-red-500 stroke-2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 12h14"
-                      />
-                    </svg>
-                  </button>
-                  <input
-                    className="p-1 w-12 text-center"
-                    value={1}
-                    onChange={() => {}}
-                  />
-                  <button
-                    className="p-2"
-                    onClick={() => {
-                      context.setCounter(context.counter + 1);
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-5 h-4 stroke-green-500 stroke-2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div className="flex gap-2 mt-6 text-sm">
-                <button className="flex gap-2 bg-primary py-2 px-4 items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-6 h-6 stroke-onPrimary stroke-2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-                    />
-                  </svg>
-                  <span className="text-onPrimary">Masukkan Keranjang</span>
-                </button>
-                <button
-                  className="flex gap-2 bg-secondary py-2 px-4"
-                  onClick={() => {}}
-                >
-                  <span className="text-onSecondary">Beli Sekarang</span>
-                </button>
-              </div>
-            </div>
+            <ProductInfo product={product} />
           </div>
           <div className="bg-surface p-4 flex items-center gap-4 text-onSurface md:flex-row md:gap-4">
             <div className="w-20 h-20 rounded-full border border-gray-200 overflow-hidden">

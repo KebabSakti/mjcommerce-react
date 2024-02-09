@@ -4,6 +4,7 @@ import AuthBar from "./auth-bar";
 import ErrorBoundary from "./error-boundary";
 import Footer from "./footer";
 import NavBar from "./nav-bar";
+import { CartProvider } from "../context/cart-context";
 
 const customTheme: CustomFlowbiteTheme = {
   carousel: {
@@ -32,8 +33,10 @@ export default function Layout() {
         <ErrorBoundary>
           <div className="bg-background min-h-screen">
             <AuthBar />
-            <NavBar />
-            <Outlet />
+            <CartProvider>
+              <NavBar />
+              <Outlet />
+            </CartProvider>
             <Footer />
           </div>
           <button

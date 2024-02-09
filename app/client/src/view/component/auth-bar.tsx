@@ -10,7 +10,7 @@ export default function AuthBar() {
   }, []);
 
   useEffect(() => {
-    console.log(authContext?.auth);
+    // 
   }, [authContext?.auth]);
 
   async function init() {

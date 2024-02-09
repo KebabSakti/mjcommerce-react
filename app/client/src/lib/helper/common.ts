@@ -1,6 +1,6 @@
 import { ProductRating } from "../../../../lib/model/product-rating";
 import {
-  DebounceFunction,
+  // DebounceFunction,
   Empty,
   ReducerAction,
   ReducerParameter,
@@ -72,14 +72,22 @@ export function calculateRating(rating: ProductRating[]): number {
 export function debounce(
   func: DebounceFunction,
   delay: number
-): DebounceFunction {
+): [DebounceFunction, () => void] {
   let timeoutId: ReturnType<typeof setTimeout>;
 
-  return function (...args: any[]): void {
+  const debouncedFunction: DebounceFunction = function (...args: any[]): void {
     clearTimeout(timeoutId);
 
     timeoutId = setTimeout(() => {
       func(...args);
     }, delay);
   };
+
+  const cancelDebounce = (): void => {
+    clearTimeout(timeoutId);
+  };
+
+  return [debouncedFunction, cancelDebounce];
 }
+
+type DebounceFunction = (...args: any[]) => void;

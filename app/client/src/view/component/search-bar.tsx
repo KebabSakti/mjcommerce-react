@@ -12,6 +12,7 @@ const productRepository = new ProductRepository();
 export default function SearchBar() {
   const inputRef = useRef(null);
   const [keyword, setKeyword] = useState("");
+  const [debounceSearch] = debounce(search, 500);
 
   const [state, dispatch] = useReducer(createReducer<Result<ProductModel[]>>, {
     type: null,
@@ -68,7 +69,7 @@ export default function SearchBar() {
           type="text"
           placeholder="Cari di sini"
           className="bg-background h-10 px-4 text-sm w-full"
-          onChange={debounce(search, 500)}
+          onChange={debounceSearch}
         />
         {(() => {
           if (keyword.length > 0) {
