@@ -14,6 +14,22 @@ export default class AuthRepository {
     return data;
   }
 
+  async register(param: Record<string, any>): Promise<void> {
+    const queryUrl = urlParser(url.register);
+
+    const response = await fetch(queryUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(param),
+    });
+
+    if (!response.ok) {
+      throw Failure.network(response);
+    }
+  }
+
   async login(param: Record<string, any>): Promise<Result<string>> {
     const queryUrl = urlParser(url.login);
 

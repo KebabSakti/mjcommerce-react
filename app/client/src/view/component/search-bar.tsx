@@ -96,7 +96,7 @@ export default function SearchBar() {
                             const product = state.payload?.data![i]!;
 
                             return (
-                              <Link key={i} to={`/product/${product.id}`}>
+                              <Link key={i} to={`/product-detail/${product.id}`}>
                                 <div className="flex items-center gap-3 text-sm text-onBackground">
                                   <div className="w-8 h-8">
                                     <LazyLoadImage

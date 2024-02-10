@@ -2,33 +2,54 @@ import { useContext, useEffect } from "react";
 import { ProductVariant } from "../../../../lib/model/product-variant";
 import { Empty } from "../../lib/config/type";
 import { CartContext } from "../context/cart-context";
+import { AuthContext } from "../context/auth-context";
+import { useNavigate } from "react-router-dom";
 
 export default function QuantityItem({
   productVariant,
 }: {
   productVariant: ProductVariant | Empty;
 }) {
+  const authContext = useContext(AuthContext);
   const cartContext = useContext(CartContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    //
+    cartContext?.init();
   }, []);
 
   function increment() {
-    cartContext?.addItem(productVariant!);
+    if (authContext?.auth) {
+      cartContext?.addItem(productVariant!);
+    } else {
+      mustLogin();
+    }
   }
 
   function decrement() {
-    cartContext?.removeItem(productVariant!);
+    if (authContext?.auth) {
+      cartContext?.removeItem(productVariant!);
+    } else {
+      mustLogin();
+    }
   }
 
-  function inputOnChange(_: any) {
-    // setCounter(e.target.value);
+  function inputOnChange(e: any) {
+    if (authContext?.auth) {
+      const value = parseInt(e.target.value);
+      cartContext?.setItem(productVariant!, value);
+    } else {
+      mustLogin();
+    }
+  }
+
+  function mustLogin() {
+    navigate("/login");
   }
 
   return (
     <>
-      <div className="flex outline outline-1 outline-primary">
+      <div className="flex">
         <button className="bg-secondary p-2" onClick={decrement}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +57,7 @@ export default function QuantityItem({
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-5 h-4 stroke-onSecondary stroke-2"
+            className="w-5 h-5 stroke-onSecondary stroke-2"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
           </svg>
@@ -51,6 +72,8 @@ export default function QuantityItem({
 
           return (
             <input
+              type="number"
+              min={0}
               className="p-1 w-14 text-center"
               name="item"
               required
@@ -59,7 +82,6 @@ export default function QuantityItem({
             />
           );
         })()}
-
         <button className="bg-primary p-2" onClick={increment}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +89,7 @@ export default function QuantityItem({
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-5 h-4 stroke-onPrimary stroke-2"
+            className="w-5 h-5 stroke-onPrimary stroke-2"
           >
             <path
               strokeLinecap="round"

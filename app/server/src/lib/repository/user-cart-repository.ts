@@ -5,16 +5,28 @@ import { CartModel } from "./../../../../lib/model/cart-model";
 
 export default class UserCartRepository {
   async show(param: Record<string, any>): Promise<Result<CartModel>> {
+    // const result = await prisma.cart.findFirst({
+    //   where: { userId: param.userId },
+    //   include: {
+    //     cartItem: {
+    //       include: {
+    //         productVariant: {
+    //           include: {
+    //             product: true,
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    // });
+
     const result = await prisma.cart.findFirst({
       where: { userId: param.userId },
       include: {
         cartItem: {
           include: {
-            productVariant: {
-              include: {
-                product: true,
-              },
-            },
+            product: true,
+            productVariant: true,
           },
         },
       },

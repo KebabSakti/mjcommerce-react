@@ -6,7 +6,7 @@ import { currency } from "../../lib/helper/common";
 export default function ProductItem({ product }: { product: ProductModel }) {
   return (
     <>
-      <Link to={`/product/${product.id}`}>
+      <Link to={`/product-detail/${product.id}`}>
         <div className="bg-surface h-full w-full flex flex-col text-onSurface snap-start">
           <div className="bg-gray-100 grow">
             <LazyLoadImage

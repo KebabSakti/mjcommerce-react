@@ -10,9 +10,11 @@ import { AuthContext } from "./auth-context";
 
 export interface CartContextType {
   cart: CartModel | Empty;
+  init: () => Promise<void>;
   getCartItem: (variant: ProductVariant) => CartItemModel | Empty;
   addItem: (variant: ProductVariant) => void;
   removeItem: (variant: ProductVariant) => void;
+  setItem: (variant: ProductVariant, qty: number) => void;
 }
 
 const cartRepository = new CartRepository();
@@ -78,9 +80,16 @@ export function CartProvider({ children }: any) {
     const index = items.findIndex((e) => e.productVariantId == variant.id);
 
     if (index >= 0) {
+      let price = variant.price;
       const itemQty = items[index].qty! + 1;
-      const itemTotal = itemQty * variant.price!;
 
+      if (variant.wholesaleMin && variant.wholesalePrice) {
+        if (itemQty >= variant.wholesaleMin) {
+          price = variant.wholesalePrice;
+        }
+      }
+
+      const itemTotal = itemQty * price!;
       items[index] = { ...items[index], qty: itemQty, total: itemTotal };
     } else {
       items.push({
@@ -110,9 +119,16 @@ export function CartProvider({ children }: any) {
 
     if (index >= 0) {
       if (items[index].qty! > 1) {
+        let price = variant.price;
         const itemQty = items[index].qty! - 1;
-        const itemTotal = itemQty * variant.price!;
 
+        if (variant.wholesaleMin && variant.wholesalePrice) {
+          if (itemQty >= variant.wholesaleMin) {
+            price = variant.wholesalePrice;
+          }
+        }
+
+        const itemTotal = itemQty * price!;
         items[index] = { ...items[index], qty: itemQty, total: itemTotal };
       } else {
         items.splice(index, 1);
@@ -130,8 +146,52 @@ export function CartProvider({ children }: any) {
     }
   }
 
+  function setItem(variant: ProductVariant, qty: number = 1) {
+    let price = variant.price;
+    const items = cart!.cartItem!;
+    const index = items.findIndex((e) => e.productVariantId == variant.id);
+    const itemQty = qty;
+
+    if (variant.wholesaleMin && variant.wholesalePrice) {
+      if (itemQty >= variant.wholesaleMin) {
+        price = variant.wholesalePrice;
+      }
+    }
+
+    const itemTotal = itemQty * price!;
+
+    if (index >= 0) {
+      if (itemQty > 0) {
+        items[index] = { ...items[index], qty: itemQty, total: itemTotal };
+      } else {
+        items.splice(index, 1);
+      }
+    } else {
+      items.push({
+        id: nanoid(),
+        cartId: cart!.id,
+        productId: variant.productId,
+        productVariantId: variant.id,
+        qty: itemQty,
+        total: itemTotal,
+      });
+    }
+
+    const cartTotal = items.reduce((a, b) => a + Number(b.total!), 0);
+    const cartQtyTotal = items.reduce((a, b) => a + Number(b.qty!), 0);
+
+    setCart({
+      ...cart,
+      cartItem: items,
+      qty: cartQtyTotal,
+      total: cartTotal,
+    });
+  }
+
   return (
-    <CartContext.Provider value={{ cart, getCartItem, addItem, removeItem }}>
+    <CartContext.Provider
+      value={{ init, cart, getCartItem, addItem, removeItem, setItem }}
+    >
       {children}
     </CartContext.Provider>
   );

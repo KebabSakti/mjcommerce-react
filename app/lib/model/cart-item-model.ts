@@ -1,5 +1,6 @@
 import { CartModel } from "./cart-model";
 import { ProductModel } from "./product-model";
+import { ProductVariant } from "./product-variant";
 
 export interface CartItemModel {
   id?: string;
@@ -12,4 +13,5 @@ export interface CartItemModel {
   updated?: string;
   cart?: CartModel;
   product?: ProductModel;
+  productVariant?: ProductVariant;
 }

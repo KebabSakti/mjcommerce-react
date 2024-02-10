@@ -8,6 +8,7 @@ import { Failure } from "../lib/helper/failure";
 import CategoryRepository from "../lib/repository/category-repository";
 import ProductRepository from "../lib/repository/product-repository";
 import ProductItem from "./component/product-item";
+import StatusBar from "./component/status-bar";
 
 const productRepository = new ProductRepository();
 const categoryRepository = new CategoryRepository();
@@ -107,6 +108,7 @@ export default function ProductPage() {
   return (
     <>
       <div className="flex flex-col gap-2 m-4 min-h-screen lg:w-3/5 lg:mx-auto">
+        <StatusBar title="Semua Produk" />
         <div className="bg-surface text-onSurface w-full py-2 px-4 flex gap-2 items-center">
           <div>Urutkan:</div>
           <div className="flex gap-2 overflow-scroll snap-x no-scrollbar">
@@ -253,7 +255,7 @@ export default function ProductPage() {
             })()}
           </div>
         </div>
-        <div className="flex gap-2 overflow-scroll snap-x no-scrollbar">
+        <div className="flex gap-2">
           {(() => {
             const active =
               query.categoryId == null
@@ -271,45 +273,47 @@ export default function ProductPage() {
               </>
             );
           })()}
-          {(() => {
-            if (category.payload?.data?.length! > 0) {
+          <div className="flex gap-2 overflow-scroll snap-x no-scrollbar">
+            {(() => {
+              if (category.payload?.data?.length! > 0) {
+                return (
+                  <>
+                    {category.payload?.data!.map((e, i) => {
+                      const active =
+                        query.categoryId == e.id
+                          ? "bg-secondary text-onSecondary font-semibold"
+                          : "bg-surface text-onSurface";
+
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => {
+                            selectCategory(e.id!);
+                          }}
+                          className={`py-2 px-4 whitespace-nowrap snap-start ${active}`}
+                        >
+                          {e.name}
+                        </button>
+                      );
+                    })}
+                  </>
+                );
+              }
+
               return (
                 <>
-                  {category.payload?.data!.map((e, i) => {
-                    const active =
-                      query.categoryId == e.id
-                        ? "bg-secondary text-onSecondary font-semibold"
-                        : "bg-surface text-onSurface";
-
+                  {[...Array(20)].map((_, i) => {
                     return (
-                      <button
+                      <div
                         key={i}
-                        onClick={() => {
-                          selectCategory(e.id!);
-                        }}
-                        className={`py-2 px-4 whitespace-nowrap snap-start ${active}`}
-                      >
-                        {e.name}
-                      </button>
+                        className="bg-gray-200 animate-pulse w-20 shrink-0"
+                      />
                     );
                   })}
                 </>
               );
-            }
-
-            return (
-              <>
-                {[...Array(20)].map((_, i) => {
-                  return (
-                    <div
-                      key={i}
-                      className="bg-gray-200 animate-pulse w-20 shrink-0"
-                    />
-                  );
-                })}
-              </>
-            );
-          })()}
+            })()}
+          </div>
         </div>
         <div className="grid grid-cols-2 gap-2 md:grid-cols-5 lg:grid-cols-6">
           {(() => {

@@ -9,6 +9,7 @@ import { Failure } from "../lib/helper/failure";
 import ProductRepository from "../lib/repository/product-repository";
 import ProductInfo from "./component/product-info";
 import ProductRatingComponent from "./component/product-rating-component";
+import StatusBar from "./component/status-bar";
 
 const productRepository = new ProductRepository();
 
@@ -45,6 +46,7 @@ export default function ProductDetailPage() {
     return (
       <>
         <div className="flex flex-col gap-4 m-4 min-h-screen lg:w-3/5 lg:mx-auto">
+          <StatusBar title="Produk Detail" />
           <div className="bg-surface p-4 flex flex-col gap-2 text-onSurface md:flex-row md:gap-4">
             <div className="h-60 w-full md:h-80 md:basis-1/2">
               <Carousel indicators={false}>
@@ -65,7 +67,7 @@ export default function ProductDetailPage() {
             <ProductInfo product={product} />
           </div>
           <div className="bg-surface p-4 flex items-center gap-4 text-onSurface md:flex-row md:gap-4">
-            <div className="w-20 h-20 rounded-full border border-gray-200 overflow-hidden">
+            <div className="rounded-full border border-gray-200 overflow-hidden shrink-0">
               <img
                 src="https://img.freepik.com/free-vector/colorful-bird-illustration-gradient_343694-1741.jpg?w=740&t=st=1705831617~exp=1705832217~hmac=5489184651f534582403eb81870f9afaeebb7b0c7c75a1ffad70c154dd5233fb"
                 alt=""
@@ -78,10 +80,10 @@ export default function ProductDetailPage() {
               </span>
               <div className="flex gap-2">
                 <Link
-                  to=""
+                  to={`/product?storeId=${product.store?.id}&page=1&limit=60`}
                   className="flex gap-1 items-center bg-primary px-2 py-1 w-max"
                 >
-                  <span className="text-onPrimary text-sm">Kunjungi Toko</span>
+                  <span className="text-onPrimary text-sm">Lihat Produk</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -98,10 +100,11 @@ export default function ProductDetailPage() {
                   </svg>
                 </Link>
                 <Link
-                  to=""
-                  className="flex gap-1 items-center bg-secondary px-2 py-1 w-max"
+                  to={`https://wa.me/6281254982664`}
+                  target="_blank"
+                  className="flex gap-1 items-center bg-green-500 px-2 py-1 w-max"
                 >
-                  <span className="text-onSecondary text-sm">Chat</span>
+                  <span className="text-white text-sm">Chat Penjual</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
