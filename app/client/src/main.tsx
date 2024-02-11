@@ -5,6 +5,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "./index.css";
 import CartPage from "./view/cart-page";
+import CheckoutPage from "./view/checkout-page";
 import Layout from "./view/component/layout";
 import { AuthProvider } from "./view/context/auth-context";
 import { CartProvider } from "./view/context/cart-context";
@@ -14,9 +15,10 @@ import HomePage from "./view/home-page";
 import LoginPage from "./view/login-page";
 import ProductDetailPage from "./view/product-detail-page";
 import ProductPage from "./view/product-page";
+import ProfilePage from "./view/profile-page";
 import { store } from "./view/redux/store";
 import RegisterPage from "./view/register-page";
-import CheckoutPage from "./view/checkout-page";
+import DashboardPage from "./view/dashboard-page";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +37,16 @@ const router = createBrowserRouter([
       { path: "/product-detail/:id", element: <ProductDetailPage /> },
       { path: "/cart", element: <CartPage /> },
       { path: "/checkout", element: <CheckoutPage /> },
+      {
+        path: "/profile",
+        element: <ProfilePage />,
+        children: [
+          {
+            index:true,
+            element: <DashboardPage />,
+          },
+        ],
+      },
       { path: "/debug", element: <DebugPage /> },
     ],
   },

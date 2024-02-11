@@ -1,14 +1,20 @@
-import { Empty, Result } from "../config/type";
+import { Result } from "../config/type";
 import { url } from "../config/url";
 import { urlParser } from "../helper/common";
 import { Failure } from "../helper/failure";
+import { AuthModel } from "./../../../../lib/model/auth-model";
 
 export default class AuthRepository {
-  load(): Result<string | Empty> {
-    const token = localStorage.getItem("token");
+  load(): Result<AuthModel> {
+    let result;
+    const authString = localStorage.getItem("auth");
+
+    if (authString) {
+      result = JSON.parse(authString);
+    }
 
     const data = {
-      data: token,
+      data: result,
     };
 
     return data;
@@ -30,7 +36,7 @@ export default class AuthRepository {
     }
   }
 
-  async login(param: Record<string, any>): Promise<Result<string>> {
+  async login(param: Record<string, any>): Promise<Result<AuthModel>> {
     const queryUrl = urlParser(url.login);
 
     const response = await fetch(queryUrl, {
@@ -46,12 +52,12 @@ export default class AuthRepository {
     }
 
     const data = await response.json();
-    localStorage.setItem("token", data.data);
+    localStorage.setItem("auth", JSON.stringify(data.data));
 
     return data;
   }
 
   logout() {
-    localStorage.removeItem("token");
+    localStorage.removeItem("auth");
   }
 }

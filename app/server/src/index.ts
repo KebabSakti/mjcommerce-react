@@ -7,12 +7,13 @@ import { prisma } from "./lib/helper/prisma";
 import { SocketIo } from "./lib/helper/socket-io";
 import userMiddleware from "./view/middleware/user-middleware";
 import userAccountRoute from "./view/route/user-account-route";
+import userAuthRoute from "./view/route/user-auth-route";
 import userBannerRoute from "./view/route/user-banner-route";
 import userCartRoute from "./view/route/user-cart-route";
 import userCategoryRoute from "./view/route/user-category-route";
+import userOrderRoute from "./view/route/user-order-route";
 import userProductRatingRoute from "./view/route/user-product-rating-route";
 import userProductRoute from "./view/route/user-product-route";
-import userAuthRoute from "./view/route/user-auth-route";
 
 const app = express();
 const server = http.createServer(app);
@@ -41,6 +42,7 @@ app.use("/user/product-rating", userProductRatingRoute);
 app.use("/user/protected", userMiddleware);
 app.use("/user/protected/account", userAccountRoute);
 app.use("/user/protected/cart", userCartRoute);
+app.use("/user/protected/order", userOrderRoute);
 
 app.get("/user/debug", async (req, res) => {
   // const userId = randomUUID();

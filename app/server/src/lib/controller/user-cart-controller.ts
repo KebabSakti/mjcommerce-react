@@ -27,4 +27,14 @@ export default class UserCartController {
       Failure.handle(error, res);
     }
   }
+
+  async delete(req: Request, res: Response) {
+    try {
+      const result = await cartRepository.delete(req.body);
+
+      res.json(result);
+    } catch (error: any) {
+      Failure.handle(error, res);
+    }
+  }
 }

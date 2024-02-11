@@ -4,8 +4,10 @@ import logo from "../../asset/maju-jaya.png";
 import mascot from "../../asset/mascot-only.png";
 import { CartContext } from "../context/cart-context";
 import SearchBar from "./search-bar";
+import { AuthContext } from "../context/auth-context";
 
 export default function NavBar() {
+  const authContext = useContext(AuthContext);
   const cartContext = useContext(CartContext);
 
   return (
@@ -47,7 +49,7 @@ export default function NavBar() {
               />
             </svg>
           </Link>
-          <Link to="">
+          <Link to={authContext?.auth ? "/profile" : "/login"}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

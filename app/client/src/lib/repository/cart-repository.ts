@@ -24,14 +24,38 @@ export default class CartRepository {
   }
 
   async update(param: Record<string, any>): Promise<CartModel> {
+    const payload = { ...param };
     const queryUrl = urlParser(url.cart);
+    delete payload.token;
 
     const response = await fetch(queryUrl, {
       method: "POST",
-      body: JSON.stringify(param),
+      body: JSON.stringify(payload),
       headers: {
         Authorization: `Bearer ${param.token}`,
         "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw Failure.network(response);
+    }
+
+    const data = await response.json();
+
+    return data;
+  }
+
+  async delete(param: Record<string, any>): Promise<Result<null>> {
+    const payload = { ...param };
+    const queryUrl = urlParser(url.cart);
+    delete payload.token;
+
+    const response = await fetch(queryUrl, {
+      method: "DELETE",
+      body: JSON.stringify(payload),
+      headers: {
+        Authorization: `Bearer ${param.token}`,
       },
     });
 

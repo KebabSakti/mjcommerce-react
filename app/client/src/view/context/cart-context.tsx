@@ -48,7 +48,7 @@ export function CartProvider({ children }: any) {
     if (authContext?.auth == null) {
       setCart(defaultValue);
     } else {
-      cartRepository.show({ token: authContext.auth }).then((result) => {
+      cartRepository.show({ token: authContext.auth.token }).then((result) => {
         if (result.data) {
           setCart(result.data);
         }
@@ -59,7 +59,11 @@ export function CartProvider({ children }: any) {
   function updateCart() {
     if (authContext?.auth) {
       const param = cart as any;
-      cartRepository.update({ ...param, token: authContext?.auth });
+      if (cart?.cartItem?.length) {
+        cartRepository.update({ ...param, token: authContext.auth.token });
+      } else {
+        cartRepository.delete({ ...param, token: authContext.auth.token });
+      }
     }
   }
 

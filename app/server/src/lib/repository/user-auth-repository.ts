@@ -1,3 +1,4 @@
+import { AuthModel } from "./../../../../lib/model/auth-model";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { Result } from "../config/type";
@@ -5,11 +6,14 @@ import { BadRequest, NotFound, Unauthorized } from "../helper/failure";
 import { prisma } from "../helper/prisma";
 
 export default class UserAuthRepository {
-  async login(param: Record<string, any>): Promise<Result<string>> {
+  async login(param: Record<string, any>): Promise<Result<AuthModel>> {
     const user = await prisma.user.findFirst({
       where: {
         active: true,
         email: param.email,
+      },
+      include: {
+        store: true,
       },
     });
 
@@ -23,16 +27,19 @@ export default class UserAuthRepository {
       throw new BadRequest("Password anda salah");
     }
 
-    const result = jwt.sign(user.id, process.env.HASH_SALT as string);
+    const token = jwt.sign(user.id, process.env.HASH_SALT as string);
 
-    const data = {
-      data: result as any,
+    const data: any = {
+      data: {
+        token: token,
+        user: user,
+      },
     };
 
     return data;
   }
 
-  async validate(token: string): Promise<Result<string>> {
+  async validate(token: string): Promise<Result<AuthModel>> {
     try {
       const userId = jwt.verify(
         token,
@@ -50,8 +57,11 @@ export default class UserAuthRepository {
         throw new NotFound("User tidak ditemukan");
       }
 
-      const data = {
-        data: user.id,
+      const data: any = {
+        data: {
+          token: token,
+          user: user,
+        },
       };
 
       return data;

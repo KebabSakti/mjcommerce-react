@@ -22,6 +22,8 @@ export default class UserAuthController {
       }
 
       const result = await userAuthRepository.login(req.body);
+      delete result.data?.user?.id;
+      delete result.data?.user?.password;
 
       res.json(result);
     } catch (error: any) {

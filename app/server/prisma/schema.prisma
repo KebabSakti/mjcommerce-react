@@ -220,6 +220,11 @@ model Order {
   paymentPicture  String
   paymentFee      Decimal          @default(0) @db.Decimal(19, 4)
   paymentFixed    Boolean          @default(true)
+  adminFee        Decimal          @default(0) @db.Decimal(19, 4)
+  shippingFee     Decimal          @default(0) @db.Decimal(19, 4)
+  productTotal    Decimal          @default(0) @db.Decimal(19, 4)
+  productQty      Int              @default(0)
+  payTotal        Decimal          @default(0) @db.Decimal(19, 4)
   receiverName    String
   receiverAddress String           @db.Text
   receiverPhone   String
@@ -236,31 +241,30 @@ model Order {
 }
 
 model OrderItem {
-  id                  String           @id @default(uuid())
+  id                  String   @id @default(uuid())
   orderId             String
   storeId             String
   productId           String
   productName         String
   productPicture      String
-  productPrice        Decimal          @db.Decimal(19, 4)
+  productPrice        Decimal  @db.Decimal(19, 4)
   productUnit         String?
   productVariantId    String
   productVariantName  String
   productVariantUnit  String?
-  productVariantPrice Decimal          @db.Decimal(19, 4)
-  wholesalePrice      Decimal?         @db.Decimal(19, 4)
+  productVariantPrice Decimal  @db.Decimal(19, 4)
+  wholesalePrice      Decimal? @db.Decimal(19, 4)
   wholesaleMin        Int?
   qty                 Int
-  total               Decimal          @db.Decimal(19, 4)
+  total               Decimal  @db.Decimal(19, 4)
   instant             Boolean
   shippingId          String
   shippingName        String
-  shippingFee         Decimal          @default(0) @db.Decimal(19, 4)
-  weight              Float            @default(1000)
-  created             DateTime         @default(now())
-  updated             DateTime         @default(now())
-  order               Order            @relation(fields: [orderId], references: [id])
-  shippingStatus      ShippingStatus[]
+  shippingFee         Decimal  @default(0) @db.Decimal(19, 4)
+  weight              Float    @default(1000)
+  created             DateTime @default(now())
+  updated             DateTime @default(now())
+  order               Order    @relation(fields: [orderId], references: [id])
 
   @@index([orderId, storeId, shippingName])
 }
@@ -286,13 +290,11 @@ model PaymentStatus {
 }
 
 model ShippingStatus {
-  id          String    @id @default(uuid())
-  orderId     String?
-  orderItemId String
-  status      Status    @default(PENDING)
-  note        String?   @db.Text
-  created     DateTime  @default(now())
-  updated     DateTime  @default(now())
-  orderItem   OrderItem @relation(fields: [orderItemId], references: [id])
-  order       Order?    @relation(fields: [orderId], references: [id])
+  id      String   @id @default(uuid())
+  orderId String?
+  status  Status   @default(PENDING)
+  note    String?  @db.Text
+  created DateTime @default(now())
+  updated DateTime @default(now())
+  order   Order?   @relation(fields: [orderId], references: [id])
 }

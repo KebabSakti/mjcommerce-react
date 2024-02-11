@@ -48,7 +48,7 @@ export default function ProductDetailPage() {
 
     return (
       <>
-        <div className="flex flex-col gap-4 m-4 min-h-screen lg:w-3/5 lg:mx-auto">
+        <div className="flex flex-col gap-2 m-4 min-h-screen lg:w-3/5 lg:mx-auto">
           <StatusBar title="Produk Detail" />
           <div className="bg-surface p-4 flex flex-col gap-2 text-onSurface md:flex-row md:gap-4">
             <div className="h-60 w-full md:h-80 md:basis-1/2">

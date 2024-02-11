@@ -37,7 +37,9 @@ export default function LoginPage() {
   return (
     <>
       <div className="bg-background min-h-screen flex flex-col gap-4 justify-center items-center">
-        <img src={logo} alt="Logo Maju Jaya" className="w-1/2 md:w-[10%]" />
+        <Link to="/" className="w-1/2 md:w-[10%]">
+          <img src={logo} alt="Logo Maju Jaya" />
+        </Link>
         <div className="text-onBackground font-semibold text-lg">
           LOGIN PENGGUNA
         </div>

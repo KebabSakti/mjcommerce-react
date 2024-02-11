@@ -4,6 +4,7 @@ import { ProductVariant } from "../../../../lib/model/product-variant";
 import { Empty } from "../../lib/config/type";
 import { AuthContext } from "../context/auth-context";
 import { CartContext } from "../context/cart-context";
+import { toast } from "react-toastify";
 
 export default function QuantityItem({
   productVariant,
@@ -40,6 +41,7 @@ export default function QuantityItem({
   }
 
   function mustLogin() {
+    toast("Login untuk mulai belanja");
     navigate("/login");
   }
 

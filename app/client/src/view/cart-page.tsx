@@ -33,7 +33,9 @@ export default function CartPage() {
                       </div>
                       <div className="flex flex-col gap-4">
                         <div>
-                          <div>{e.product?.name}</div>
+                          <Link to={`/product-detail/${e.product?.id}`}>
+                            {e.product?.name}
+                          </Link>
                           <div className="text-xs text-gray-400">
                             Varian : {e.productVariant?.name}
                           </div>
