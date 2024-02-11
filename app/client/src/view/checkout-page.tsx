@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import StatusBar from "./component/status-bar";
-import { CartContext } from "./context/cart-context";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { currency } from "../lib/helper/common";
-import QuantityItem from "./component/quantity-item";
+import StatusBar from "./component/status-bar";
+import { CartContext } from "./context/cart-context";
 
 export default function CheckoutPage() {
   const cartContext = useContext(CartContext);
@@ -119,10 +118,10 @@ export default function CheckoutPage() {
               {currency(cartContext?.cart?.total ?? 0)}
             </div>
           </div>
-          <div className="flex justify-between items-center">
+          {/* <div className="flex justify-between items-center">
             <div>Ongkir</div>
             <div className="font-semibold">{currency(0)}</div>
-          </div>
+          </div> */}
           <div className="flex justify-between items-center">
             <div>Biaya Admin</div>
             <div className="font-semibold">{currency(0)}</div>

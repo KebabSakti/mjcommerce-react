@@ -90,7 +90,7 @@ export default function ProductInfo({ product }: { product: ProductModel }) {
             })}
           </div>
         </div>
-        <div className="flex mt-6">
+        <div className="flex mt-6 items-center">
           <span className="w-20 shrink-0">Kuantitas</span>
           <QuantityItem productVariant={selectedVariant} />
         </div>

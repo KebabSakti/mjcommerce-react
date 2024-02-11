@@ -10,7 +10,7 @@ import { AuthContext } from "./auth-context";
 
 export interface CartContextType {
   cart: CartModel | Empty;
-  init: () => Promise<void>;
+  init: () => void;
   getCartItem: (variant: ProductVariant) => CartItemModel | Empty;
   addItem: (variant: ProductVariant) => void;
   removeItem: (variant: ProductVariant) => void;
@@ -44,18 +44,19 @@ export function CartProvider({ children }: any) {
     };
   }, [cart]);
 
-  async function init() {
+  function init() {
     if (authContext?.auth == null) {
       setCart(defaultValue);
     } else {
-      const result = await cartRepository.show({ token: authContext.auth });
-      if (result.data) {
-        setCart(result.data);
-      }
+      cartRepository.show({ token: authContext.auth }).then((result) => {
+        if (result.data) {
+          setCart(result.data);
+        }
+      });
     }
   }
 
-  async function updateCart() {
+  function updateCart() {
     if (authContext?.auth) {
       const param = cart as any;
       cartRepository.update({ ...param, token: authContext?.auth });

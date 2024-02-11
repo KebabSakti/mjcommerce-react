@@ -1,9 +1,9 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { ProductVariant } from "../../../../lib/model/product-variant";
 import { Empty } from "../../lib/config/type";
-import { CartContext } from "../context/cart-context";
 import { AuthContext } from "../context/auth-context";
-import { useNavigate } from "react-router-dom";
+import { CartContext } from "../context/cart-context";
 
 export default function QuantityItem({
   productVariant,
@@ -13,10 +13,6 @@ export default function QuantityItem({
   const authContext = useContext(AuthContext);
   const cartContext = useContext(CartContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    cartContext?.init();
-  }, []);
 
   function increment() {
     if (authContext?.auth) {

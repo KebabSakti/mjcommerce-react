@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../asset/maju-jaya.png";
 import mascot from "../../asset/mascot-only.png";
@@ -7,10 +7,6 @@ import SearchBar from "./search-bar";
 
 export default function NavBar() {
   const cartContext = useContext(CartContext);
-
-  useEffect(() => {
-    cartContext?.init();
-  }, []);
 
   return (
     <div className="bg-primary">

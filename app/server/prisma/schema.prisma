@@ -13,8 +13,9 @@ datasource db {
 
 enum Status {
   PENDING
-  COMPLETE
+  COMPLETED
   FAILED
+  CANCELED
 }
 
 model User {
@@ -235,25 +236,31 @@ model Order {
 }
 
 model OrderItem {
-  id             String           @id @default(uuid())
-  orderId        String
-  storeId        String
-  productId      String
-  productName    String
-  productPicture String
-  productPrice   Decimal          @db.Decimal(19, 4)
-  productUnit    String
-  qty            Int
-  total          Decimal          @db.Decimal(19, 4)
-  instant        Boolean
-  shippingId     String
-  shippingName   String
-  shippingFee    Decimal          @default(0) @db.Decimal(19, 4)
-  weight         Float            @default(1000)
-  created        DateTime         @default(now())
-  updated        DateTime         @default(now())
-  order          Order            @relation(fields: [orderId], references: [id])
-  shippingStatus ShippingStatus[]
+  id                  String           @id @default(uuid())
+  orderId             String
+  storeId             String
+  productId           String
+  productName         String
+  productPicture      String
+  productPrice        Decimal          @db.Decimal(19, 4)
+  productUnit         String?
+  productVariantId    String
+  productVariantName  String
+  productVariantUnit  String?
+  productVariantPrice Decimal          @db.Decimal(19, 4)
+  wholesalePrice      Decimal?         @db.Decimal(19, 4)
+  wholesaleMin        Int?
+  qty                 Int
+  total               Decimal          @db.Decimal(19, 4)
+  instant             Boolean
+  shippingId          String
+  shippingName        String
+  shippingFee         Decimal          @default(0) @db.Decimal(19, 4)
+  weight              Float            @default(1000)
+  created             DateTime         @default(now())
+  updated             DateTime         @default(now())
+  order               Order            @relation(fields: [orderId], references: [id])
+  shippingStatus      ShippingStatus[]
 
   @@index([orderId, storeId, shippingName])
 }

@@ -1,5 +1,5 @@
 import { Carousel, Spinner } from "flowbite-react";
-import { useEffect, useReducer } from "react";
+import { useContext, useEffect, useReducer } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useParams } from "react-router-dom";
 import { ProductModel } from "../../../lib/model/product-model";
@@ -10,11 +10,13 @@ import ProductRepository from "../lib/repository/product-repository";
 import ProductInfo from "./component/product-info";
 import ProductRatingComponent from "./component/product-rating-component";
 import StatusBar from "./component/status-bar";
+import { CartContext } from "./context/cart-context";
 
 const productRepository = new ProductRepository();
 
 export default function ProductDetailPage() {
   const { id } = useParams();
+  const cartContext = useContext(CartContext);
 
   const [state, dispatch] = useReducer(createReducer<Result<ProductModel>>, {
     type: null,
@@ -24,6 +26,7 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     init();
+    cartContext?.init();
   }, [id]);
 
   async function init(): Promise<void> {
