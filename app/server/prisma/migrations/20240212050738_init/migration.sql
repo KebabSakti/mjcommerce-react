@@ -92,6 +92,7 @@ CREATE TABLE `Product` (
     `name` VARCHAR(191) NOT NULL,
     `description` TEXT NOT NULL,
     `picture` VARCHAR(191) NOT NULL,
+    `price` DECIMAL(19, 4) NOT NULL,
     `sell` INTEGER NOT NULL DEFAULT 0,
     `view` INTEGER NOT NULL DEFAULT 0,
     `rating` DOUBLE NOT NULL DEFAULT 0,
@@ -167,14 +168,13 @@ CREATE TABLE `Cart` (
 CREATE TABLE `CartItem` (
     `id` VARCHAR(191) NOT NULL,
     `cartId` VARCHAR(191) NOT NULL,
-    `productId` VARCHAR(191) NOT NULL,
     `productVariantId` VARCHAR(191) NOT NULL,
     `qty` INTEGER NOT NULL,
     `total` DECIMAL(19, 4) NOT NULL,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    INDEX `CartItem_cartId_productVariantId_productId_idx`(`cartId`, `productVariantId`, `productId`),
+    INDEX `CartItem_cartId_productVariantId_idx`(`cartId`, `productVariantId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -207,6 +207,11 @@ CREATE TABLE `Order` (
     `paymentPicture` VARCHAR(191) NOT NULL,
     `paymentFee` DECIMAL(19, 4) NOT NULL DEFAULT 0,
     `paymentFixed` BOOLEAN NOT NULL DEFAULT true,
+    `adminFee` DECIMAL(19, 4) NOT NULL DEFAULT 0,
+    `shippingFee` DECIMAL(19, 4) NOT NULL DEFAULT 0,
+    `productTotal` DECIMAL(19, 4) NOT NULL DEFAULT 0,
+    `productQty` INTEGER NOT NULL DEFAULT 0,
+    `payTotal` DECIMAL(19, 4) NOT NULL DEFAULT 0,
     `receiverName` VARCHAR(191) NOT NULL,
     `receiverAddress` TEXT NOT NULL,
     `receiverPhone` VARCHAR(191) NOT NULL,
@@ -228,7 +233,13 @@ CREATE TABLE `OrderItem` (
     `productName` VARCHAR(191) NOT NULL,
     `productPicture` VARCHAR(191) NOT NULL,
     `productPrice` DECIMAL(19, 4) NOT NULL,
-    `productUnit` VARCHAR(191) NOT NULL,
+    `productUnit` VARCHAR(191) NULL,
+    `productVariantId` VARCHAR(191) NOT NULL,
+    `productVariantName` VARCHAR(191) NOT NULL,
+    `productVariantUnit` VARCHAR(191) NULL,
+    `productVariantPrice` DECIMAL(19, 4) NOT NULL,
+    `wholesalePrice` DECIMAL(19, 4) NULL,
+    `wholesaleMin` INTEGER NULL,
     `qty` INTEGER NOT NULL,
     `total` DECIMAL(19, 4) NOT NULL,
     `instant` BOOLEAN NOT NULL,
@@ -247,7 +258,7 @@ CREATE TABLE `OrderItem` (
 CREATE TABLE `OrderStatus` (
     `id` VARCHAR(191) NOT NULL,
     `orderId` VARCHAR(191) NOT NULL,
-    `status` ENUM('PENDING', 'COMPLETE', 'FAILED') NOT NULL DEFAULT 'PENDING',
+    `status` ENUM('PENDING', 'COMPLETED', 'FAILED', 'CANCELED') NOT NULL DEFAULT 'PENDING',
     `note` TEXT NULL,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -259,7 +270,7 @@ CREATE TABLE `OrderStatus` (
 CREATE TABLE `PaymentStatus` (
     `id` VARCHAR(191) NOT NULL,
     `orderId` VARCHAR(191) NOT NULL,
-    `status` ENUM('PENDING', 'COMPLETE', 'FAILED') NOT NULL DEFAULT 'PENDING',
+    `status` ENUM('PENDING', 'COMPLETED', 'FAILED', 'CANCELED') NOT NULL DEFAULT 'PENDING',
     `note` TEXT NULL,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -271,8 +282,7 @@ CREATE TABLE `PaymentStatus` (
 CREATE TABLE `ShippingStatus` (
     `id` VARCHAR(191) NOT NULL,
     `orderId` VARCHAR(191) NULL,
-    `orderItemId` VARCHAR(191) NOT NULL,
-    `status` ENUM('PENDING', 'COMPLETE', 'FAILED') NOT NULL DEFAULT 'PENDING',
+    `status` ENUM('PENDING', 'COMPLETED', 'FAILED', 'CANCELED') NOT NULL DEFAULT 'PENDING',
     `note` TEXT NULL,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -308,9 +318,6 @@ ALTER TABLE `Cart` ADD CONSTRAINT `Cart_userId_fkey` FOREIGN KEY (`userId`) REFE
 ALTER TABLE `CartItem` ADD CONSTRAINT `CartItem_cartId_fkey` FOREIGN KEY (`cartId`) REFERENCES `Cart`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `CartItem` ADD CONSTRAINT `CartItem_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `CartItem` ADD CONSTRAINT `CartItem_productVariantId_fkey` FOREIGN KEY (`productVariantId`) REFERENCES `ProductVariant`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -321,9 +328,6 @@ ALTER TABLE `OrderStatus` ADD CONSTRAINT `OrderStatus_orderId_fkey` FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE `PaymentStatus` ADD CONSTRAINT `PaymentStatus_orderId_fkey` FOREIGN KEY (`orderId`) REFERENCES `Order`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `ShippingStatus` ADD CONSTRAINT `ShippingStatus_orderItemId_fkey` FOREIGN KEY (`orderItemId`) REFERENCES `OrderItem`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `ShippingStatus` ADD CONSTRAINT `ShippingStatus_orderId_fkey` FOREIGN KEY (`orderId`) REFERENCES `Order`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

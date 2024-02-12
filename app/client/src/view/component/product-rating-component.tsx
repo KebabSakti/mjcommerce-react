@@ -158,6 +158,14 @@ export default function ProductRatingComponent({
             );
           }
 
+          if (state.payload?.data?.length! == 0) {
+            return (
+              <div className="h-20 w-full flex justify-center items-center text-gray-400">
+                Belum ada penilaian untuk produk ini
+              </div>
+            );
+          }
+
           return (
             <>
               <div className="h-20 w-full flex justify-center items-center">

@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 require("dotenv").config();
 
 import cors from "cors";
@@ -45,206 +46,122 @@ app.use("/user/protected/cart", userCartRoute);
 app.use("/user/protected/order", userOrderRoute);
 
 app.get("/user/debug", async (req, res) => {
-  // const userId = randomUUID();
+  const userId = "43fbf773-a819-4d10-a57c-3d48634e7688";
 
-  // const query = {
-  //   name: "kebab",
-  //   age: 20,
-  // };
+  // await prisma.$transaction(async (tx) => {
+  //   await Promise.all(
+  //     [...Array(10)].map(async (_) => {
+  //       await tx.banner.create({
+  //         data: {
+  //           name: faker.commerce.productName(),
+  //           picture: faker.image.urlLoremFlickr({ category: "food" }),
+  //           active: true,
+  //           big: true,
+  //         },
+  //       });
+  //     })
+  //   );
 
-  // const url = new URL("http://192.168.10.32:1001/banner");
-  // url.search = new URLSearchParams(query as any) as any;
+  //   // store
+  //   const store = await tx.store.create({
+  //     data: {
+  //       userId: userId,
+  //       name: faker.company.name(),
+  //       description: faker.lorem.lines({ min: 1, max: 3 }),
+  //       address: faker.location.streetAddress(),
+  //       phone: faker.phone.number(),
+  //       lat: `${faker.location.latitude()}`,
+  //       lng: `${faker.location.longitude()}`,
+  //     },
+  //   });
 
-  // console.log(url.href);
+  //   await Promise.all(
+  //     [...Array(20)].map(async (_) => {
+  //       //category
+  //       const category = await tx.category.create({
+  //         data: {
+  //           name: faker.commerce.department(),
+  //           picture: faker.image.urlLoremFlickr({ category: "food" }),
+  //           active: true,
+  //         },
+  //       });
 
-  // const user = await prisma.user.create({
-  //   data: {
-  //     id: userId,
-  //   },
+  //       await Promise.all(
+  //         [...Array(25)].map(async (_) => {
+  //           //product
+  //           const product = await tx.product.create({
+  //             data: {
+  //               storeId: store.id,
+  //               categoryId: category.id,
+  //               priority: faker.number.int({ min: 0, max: 3 }),
+  //               name: faker.commerce.productName(),
+  //               description: faker.lorem.lines(1),
+  //               picture: faker.image.urlLoremFlickr({ category: "food" }),
+  //               sell: faker.number.int({ max: 999 }),
+  //               view: faker.number.int({ max: 999 }),
+  //               rating: faker.number.float({ max: 5 }),
+  //               price: faker.commerce.price({
+  //                 min: 1000,
+  //                 max: 1000000,
+  //                 dec: 0,
+  //               }),
+  //             },
+  //           });
+
+  //           await Promise.all(
+  //             [...Array(5)].map(async (_) => {
+  //               await prisma.productGalery.create({
+  //                 data: {
+  //                   productId: product.id,
+  //                   picture: faker.image.urlLoremFlickr({ category: "food" }),
+  //                 },
+  //               });
+  //             })
+  //           );
+
+  //           await Promise.all(
+  //             [...Array(10)].map(async (_) => {
+  //               await tx.productVariant.create({
+  //                 data: {
+  //                   productId: product.id,
+  //                   name: faker.commerce.productName(),
+  //                   stok: faker.number.int({ max: 100 }),
+  //                   price: faker.commerce.price({
+  //                     min: 1000,
+  //                     max: 1000000,
+  //                     dec: 0,
+  //                   }),
+  //                   wholesalePrice: faker.commerce.price({
+  //                     min: 1000,
+  //                     max: 1000000,
+  //                     dec: 0,
+  //                   }),
+  //                   wholesaleMin: faker.number.int({ min: 3, max: 10 }),
+  //                   unit: faker.science.unit.name,
+  //                   weight: faker.number.int({ min: 1000, max: 5000 }),
+  //                 },
+  //               });
+  //             })
+  //           );
+
+  //           await Promise.all(
+  //             [...Array(20)].map(async (_) => {
+  //               await tx.productRating.create({
+  //                 data: {
+  //                   userId: userId,
+  //                   productId: product.id,
+  //                   productName: faker.commerce.productName(),
+  //                   rating: faker.number.float({ max: 5 }),
+  //                   comment: faker.lorem.lines(2),
+  //                 },
+  //               });
+  //             })
+  //           );
+  //         })
+  //       );
+  //     })
+  //   );
   // });
-
-  // await Promise.all(
-  //   [...Array(10)].map(async (_) => {
-  //     await prisma.banner.create({
-  //       data: {
-  //         name: faker.commerce.productName(),
-  //         picture: faker.image.urlLoremFlickr({ category: "food" }),
-  //         active: true,
-  //         big: true,
-  //       },
-  //     });
-  //   })
-  // );
-
-  // const query = await prisma.user.findFirst({
-  //   where: {
-  //     id: userId,
-  //   },
-  //   include: {
-  //     store: true,
-  //   },
-  // });
-
-  // store
-  // const store = await prisma.store.create({
-  //   data: {
-  //     userId: userId,
-  //     name: faker.company.name(),
-  //     description: faker.lorem.lines({ min: 1, max: 3 }),
-  //     address: faker.location.streetAddress(),
-  //     phone: faker.phone.number(),
-  //     lat: `${faker.location.latitude()}`,
-  //     lng: `${faker.location.longitude()}`,
-  //   },
-  // });
-
-  // await Promise.all(
-  //   [...Array(20)].map(async (_) => {
-  //     //category
-  //     const category = await prisma.category.create({
-  //       data: {
-  //         name: faker.commerce.department(),
-  //         picture: faker.image.urlLoremFlickr({ category: "food" }),
-  //         active: true,
-  //       },
-  //     });
-
-  //     await Promise.all(
-  //       [...Array(25)].map(async (_) => {
-  //         //product
-  //         const product = await prisma.product.create({
-  //           data: {
-  //             storeId: store.id,
-  //             categoryId: category.id,
-  //             name: faker.commerce.productName(),
-  //             description: faker.lorem.lines(1),
-  //             picture: faker.image.urlLoremFlickr({ category: "food" }),
-  //             sell: faker.number.int({ max: 999 }),
-  //             view: faker.number.int({ max: 999 }),
-  //             rating: faker.number.float({ max: 5 }),
-  //           },
-  //         });
-
-  //         await Promise.all(
-  //           [...Array(10)].map(async (_) => {
-  //             await prisma.productVariant.create({
-  //               data: {
-  //                 productId: product.id,
-  //                 name: faker.commerce.productName(),
-  //                 stok: faker.number.int({ max: 100 }),
-  //                 price: faker.commerce.price({
-  //                   min: 1000,
-  //                   max: 1000000,
-  //                   dec: 0,
-  //                 }),
-  //                 wholesalePrice: faker.commerce.price({
-  //                   min: 1000,
-  //                   max: 1000000,
-  //                   dec: 0,
-  //                 }),
-  //                 wholesaleMin: faker.number.int({ min: 3, max: 10 }),
-  //                 unit: faker.science.unit.name,
-  //                 weight: faker.number.int({ min: 1000, max: 5000 }),
-  //               },
-  //             });
-  //           })
-  //         );
-  //       })
-  //     );
-  //   })
-  // );
-
-  // const cart = await prisma.cart.create({
-  //   data: {
-  //     userId: req.app.locals.id,
-  //     qty: faker.number.int({ max: 5 }),
-  //     total: faker.commerce.price({
-  //       min: 1000,
-  //       max: 1000000,
-  //       dec: 0,
-  //     }),
-  //   },
-  // });
-
-  // await Promise.all(
-  //   [...Array(20)].map(async (_) => {
-  //     await prisma.cartItem.create({
-  //       data: {
-  //         cartId: cart.id,
-  //         productId: randomUUID(),
-  //         qty: faker.number.int({ max: 5 }),
-  //         total: faker.commerce.price({
-  //           min: 1000,
-  //           max: 1000000,
-  //           dec: 0,
-  //         }),
-  //       },
-  //     });
-  //   })
-  // );
-
-  // let condition: any = { where: { active: true } };
-
-  // condition.where = {active: false, asd:'asd' };
-
-  // const productController = new ProductController();
-
-  // const result = await productController.getFilteredProduct({
-  //   filter: req.query,
-  //   paginate: { skip: 0, take: 2 },
-  //   sort: {
-  //     field: ProductSortingField.PRICE,
-  //     direction: SortingDirection.DESC,
-  //   },
-  // });
-
-  // const products = await prisma.product.findMany({
-  //   include: { productVariant: true },
-  // });
-
-  // await Promise.all(
-  //   products.map(async (e) => {
-  //     await prisma.product.update({
-  //       where: { id: e.id },
-  //       data: {
-  //         price: e.productVariant[0].price,
-  //       },
-  //     });
-
-  //     await Promise.all(
-  //       [...Array(100)].map(async () => {
-  //         await prisma.productRating.create({
-  //           data: {
-  //             productId: e.id,
-  //             userId: "73929587-4053-446e-ac20-31a79c07a86d",
-  //             productName: e.productVariant![0].name,
-  //             rating: faker.number.float({ min: 1, max: 5 }),
-  //             comment: faker.lorem.paragraph(),
-  //           },
-  //         });
-  //       })
-  //     );
-  //   })
-  // );
-
-  const data = await prisma.$transaction(async (tx) => {
-    const query = await tx.cart.upsert({
-      where: { userId: "73929587-4053-446e-ac20-31a79c07a86d" },
-      update: {
-        qty: 2,
-        total: 20,
-      },
-      create: {
-        userId: "73929587-4053-446e-ac20-31a79c07a86d",
-        qty: 1,
-        total: 10,
-      },
-    });
-
-    return query;
-  });
-
-  console.log(data);
 
   res.end();
 });

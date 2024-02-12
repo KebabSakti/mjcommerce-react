@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { Rating } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { ProductModel } from "../../../../lib/model/product-model";
@@ -48,7 +47,7 @@ export default function ProductInfo({ product }: { product: ProductModel }) {
         </div>
         <div className="flex flex-col mt-2">
           <span className="text-xs text-gray-400">
-            per {faker.science.unit.name}
+            {selectedVariant?.product?.unit}
           </span>
           <span className="font-bold text-2xl">
             {currency(selectedVariant?.price ?? product.price!)}

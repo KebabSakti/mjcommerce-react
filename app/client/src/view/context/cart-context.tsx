@@ -21,6 +21,8 @@ const cartRepository = new CartRepository();
 export const CartContext = createContext<CartContextType | Empty>(null);
 
 export function CartProvider({ children }: any) {
+  console.log("CART RENDER");
+
   const defaultValue = {
     id: nanoid(),
     qty: 0,
@@ -100,7 +102,6 @@ export function CartProvider({ children }: any) {
       items.push({
         id: nanoid(),
         cartId: cart!.id,
-        productId: variant.productId,
         productVariantId: variant.id,
         qty: 1,
         total: variant.price,
@@ -175,7 +176,6 @@ export function CartProvider({ children }: any) {
       items.push({
         id: nanoid(),
         cartId: cart!.id,
-        productId: variant.productId,
         productVariantId: variant.id,
         qty: itemQty,
         total: itemTotal,

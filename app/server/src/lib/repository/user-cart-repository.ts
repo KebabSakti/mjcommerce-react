@@ -10,8 +10,15 @@ export default class UserCartRepository {
       include: {
         cartItem: {
           include: {
-            product: true,
-            productVariant: true,
+            productVariant: {
+              include: {
+                product: {
+                  include: {
+                    store: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -44,13 +51,6 @@ export default class UserCartRepository {
           qty: cartQtyTotal,
           total: cartTotal,
         },
-        include: {
-          cartItem: {
-            include: {
-              product: true,
-            },
-          },
-        },
       });
 
       await tx.cartItem.deleteMany({
@@ -68,7 +68,6 @@ export default class UserCartRepository {
               cartId: cart.id,
               qty: e.qty!,
               total: e.total!,
-              productId: e.productId!,
               productVariantId: e.productVariantId!,
             },
           });
@@ -78,13 +77,6 @@ export default class UserCartRepository {
       const result = await tx.cart.findFirst({
         where: {
           id: cartId,
-        },
-        include: {
-          cartItem: {
-            include: {
-              product: true,
-            },
-          },
         },
       });
 

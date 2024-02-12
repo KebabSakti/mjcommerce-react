@@ -17,6 +17,7 @@ export default function ProductItem({ product }: { product: ProductModel }) {
           </div>
           <div className="p-2 flex flex-col justify-between h-2/6">
             <div className="text-sm line-clamp-2">{product.name}</div>
+            <span className="text-xs text-gray-400">{product.unit}</span>
             <div className="font-semibold">{currency(product.price!)}</div>
           </div>
         </div>
