@@ -10,7 +10,7 @@ export default function CartPage() {
   const cartContext = useContext(CartContext);
 
   useEffect(() => {
-    // cartContext?.init();
+    cartContext?.init();
   }, []);
 
   return (

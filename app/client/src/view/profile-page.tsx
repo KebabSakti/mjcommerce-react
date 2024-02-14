@@ -17,9 +17,9 @@ export default function ProfilePage() {
       <StatusBar title="Halaman Anda" />
       <div className="bg-surface text-onSurface w-full py-2 px-4 flex justify-between items-center">
         <div className="font-semibold">
-          <div className="text-lg">{authContext?.auth?.user?.name}</div>
-          <div className="text-lg">{authContext?.auth?.user?.email}</div>
-          <Link to="" className="text-primary flex items-center text-sm">
+          <div className="line-clamp-1">{authContext?.auth?.user?.name}</div>
+          <div className="line-clamp-1">{authContext?.auth?.user?.email}</div>
+          <Link to="" className="text-primary flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -37,7 +37,7 @@ export default function ProfilePage() {
             Edit Profil
           </Link>
         </div>
-        <div className="flex flex-col gap-1 md:flex-row md:gap-2">
+        <div className="flex flex-col gap-1 shrink-0 md:flex-row md:gap-2">
           <button className="bg-primary text-onPrimary font-semibold p-2 rounded flex gap-1 items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -7,8 +7,14 @@ const orderRepository = new UserOrderRepository();
 export default class UserOrderController {
   async create(req: Request, res: Response) {
     try {
-      const userId = req.app.locals.userId;
-      const param = { ...req.body, userId: userId };
+      const user = req.app.locals.user;
+      const param = {
+        ...req.body,
+        userId: user.id,
+        userName: user.name,
+        userPhone: user.phone,
+      };
+
       const result = await orderRepository.create(param);
 
       res.json(result);

@@ -21,8 +21,6 @@ const cartRepository = new CartRepository();
 export const CartContext = createContext<CartContextType | Empty>(null);
 
 export function CartProvider({ children }: any) {
-  console.log("CART RENDER");
-
   const defaultValue = {
     id: nanoid(),
     qty: 0,

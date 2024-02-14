@@ -5,7 +5,9 @@ export const url = {
   category: `${base}/user/category`,
   product: `${base}/user/product`,
   productRating: `${base}/user/product-rating`,
+  payment: `${base}/user/payment`,
   login: `${base}/user/auth/login`,
   register: `${base}/user/auth/register`,
   cart: `${base}/user/protected/cart`,
+  order: `${base}/user/protected/order`,
 };

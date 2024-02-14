@@ -241,6 +241,9 @@ model OrderItem {
   id                  String   @id @default(uuid())
   orderId             String
   storeId             String
+  storeUserId         String
+  storeName           String
+  storePhone          String
   productId           String
   productName         String
   productPicture      String
@@ -254,16 +257,12 @@ model OrderItem {
   wholesaleMin        Int?
   qty                 Int
   total               Decimal  @db.Decimal(19, 4)
-  instant             Boolean
-  shippingId          String
-  shippingName        String
-  shippingFee         Decimal  @default(0) @db.Decimal(19, 4)
   weight              Float    @default(1000)
   created             DateTime @default(now())
   updated             DateTime @default(now())
   order               Order    @relation(fields: [orderId], references: [id])
 
-  @@index([orderId, storeId, shippingName])
+  @@index([orderId, storeName, productName, productVariantName])
 }
 
 model OrderStatus {

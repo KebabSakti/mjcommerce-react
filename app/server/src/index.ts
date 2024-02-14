@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 require("dotenv").config();
 
 import cors from "cors";
@@ -13,6 +12,7 @@ import userBannerRoute from "./view/route/user-banner-route";
 import userCartRoute from "./view/route/user-cart-route";
 import userCategoryRoute from "./view/route/user-category-route";
 import userOrderRoute from "./view/route/user-order-route";
+import userPaymentRoute from "./view/route/user-payment-route";
 import userProductRatingRoute from "./view/route/user-product-rating-route";
 import userProductRoute from "./view/route/user-product-route";
 
@@ -39,6 +39,7 @@ app.use("/user/banner", userBannerRoute);
 app.use("/user/category", userCategoryRoute);
 app.use("/user/product", userProductRoute);
 app.use("/user/product-rating", userProductRatingRoute);
+app.use("/user/payment", userPaymentRoute);
 //============================================================//
 app.use("/user/protected", userMiddleware);
 app.use("/user/protected/account", userAccountRoute);
@@ -167,6 +168,18 @@ app.get("/user/debug", async (req, res) => {
 });
 
 app.post("/user/debug", async (req, res) => {
+  await prisma.payment.create({
+    data: {
+      code: "COD",
+      name: "COD - Cash On Delivery",
+      description: "Bayar di tujuan setelah barang kamu terima",
+      picture:
+        "https://res.cloudinary.com/vjtechsolution/image/upload/v1707823397/cod.png",
+      fee: 0,
+      active: true,
+    },
+  });
+
   res.end();
 });
 

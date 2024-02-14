@@ -22,7 +22,14 @@ export default class UserOrderRepository {
           receiverPhone: param.receiverPhone,
           receiverLat: param.receiverLat,
           receiverLng: param.receiverLng,
-          orderItem: param.orderItem,
+          adminFee: param.adminFee,
+          payTotal: param.payTotal,
+          productQty: param.productQty,
+          productTotal: param.productTotal,
+          shippingFee: param.shippingFee,
+          orderItem: {
+            create: param.orderItem,
+          },
           orderStatus: {
             create: {
               status: "PENDING",

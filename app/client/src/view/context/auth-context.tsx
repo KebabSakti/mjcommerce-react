@@ -36,7 +36,7 @@ export function AuthProvider({ children }: any) {
   }
 
   function logout(): void {
-    localStorage.removeItem("token");
+    authRepository.logout();
     setAuth(null);
   }
 

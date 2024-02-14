@@ -19,6 +19,7 @@ export default async function userMiddleware(
         const token = payloads[1];
         const result = await userAuthRepository.validate(token);
         req.app.locals.userId = result.data?.user?.id;
+        req.app.locals.user = result.data?.user;
 
         return next();
       }
