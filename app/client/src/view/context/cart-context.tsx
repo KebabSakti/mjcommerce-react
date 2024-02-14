@@ -15,6 +15,7 @@ export interface CartContextType {
   addItem: (variant: ProductVariant) => void;
   removeItem: (variant: ProductVariant) => void;
   setItem: (variant: ProductVariant, qty: number) => void;
+  clearItem: () => void;
 }
 
 const cartRepository = new CartRepository();
@@ -191,9 +192,21 @@ export function CartProvider({ children }: any) {
     });
   }
 
+  function clearItem() {
+    setCart(defaultValue);
+  }
+
   return (
     <CartContext.Provider
-      value={{ init, cart, getCartItem, addItem, removeItem, setItem }}
+      value={{
+        init,
+        cart,
+        getCartItem,
+        addItem,
+        removeItem,
+        setItem,
+        clearItem,
+      }}
     >
       {children}
     </CartContext.Provider>

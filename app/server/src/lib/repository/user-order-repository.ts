@@ -48,6 +48,17 @@ export default class UserOrderRepository {
         },
       });
 
+      // await Promise.all(
+      //   param.orderItem.map(async (e: any) => {
+      //     await tx.orderItem.create({
+      //       data: {
+      //         ...e,
+      //         orderId: order.id,
+      //       },
+      //     });
+      //   })
+      // );
+
       const data = {
         data: order as any,
       };

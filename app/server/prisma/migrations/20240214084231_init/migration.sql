@@ -229,6 +229,9 @@ CREATE TABLE `OrderItem` (
     `id` VARCHAR(191) NOT NULL,
     `orderId` VARCHAR(191) NOT NULL,
     `storeId` VARCHAR(191) NOT NULL,
+    `storeUserId` VARCHAR(191) NOT NULL,
+    `storeName` VARCHAR(191) NOT NULL,
+    `storePhone` VARCHAR(191) NOT NULL,
     `productId` VARCHAR(191) NOT NULL,
     `productName` VARCHAR(191) NOT NULL,
     `productPicture` VARCHAR(191) NOT NULL,
@@ -242,15 +245,11 @@ CREATE TABLE `OrderItem` (
     `wholesaleMin` INTEGER NULL,
     `qty` INTEGER NOT NULL,
     `total` DECIMAL(19, 4) NOT NULL,
-    `instant` BOOLEAN NOT NULL,
-    `shippingId` VARCHAR(191) NOT NULL,
-    `shippingName` VARCHAR(191) NOT NULL,
-    `shippingFee` DECIMAL(19, 4) NOT NULL DEFAULT 0,
     `weight` DOUBLE NOT NULL DEFAULT 1000,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    INDEX `OrderItem_orderId_storeId_shippingName_idx`(`orderId`, `storeId`, `shippingName`),
+    INDEX `OrderItem_orderId_storeName_productName_productVariantName_idx`(`orderId`, `storeName`, `productName`, `productVariantName`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

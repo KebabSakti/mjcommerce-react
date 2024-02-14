@@ -1,22 +1,23 @@
 import { Spinner } from "flowbite-react";
 import { useContext, useEffect, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { PaymentModel } from "../../../lib/model/payment-model";
 import { currency } from "../lib/helper/common";
+import OrderRepository from "../lib/repository/order-repository";
 import ModalLoading from "./component/modal-loading";
+import PaymentComponent from "./component/payment-component";
 import StatusBar from "./component/status-bar";
 import { AuthContext } from "./context/auth-context";
 import { CartContext } from "./context/cart-context";
-import OrderRepository from "../lib/repository/order-repository";
-import { toast } from "react-toastify";
-import PaymentComponent from "./component/payment-component";
-import { PaymentModel } from "../../../lib/model/payment-model";
-import { OrderItem } from "../../../lib/model/order-model";
 
 const orderRepository = new OrderRepository();
 
 export default function CheckoutPage() {
   const authContext = useContext(AuthContext);
   const cartContext = useContext(CartContext);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const [fees, setFees] = useState<any>({
@@ -30,6 +31,9 @@ export default function CheckoutPage() {
     receiverName: "",
     receiverPhone: "",
     receiverAddress: "",
+  });
+
+  const [order, setOrder] = useState<any>({
     paymentId: null,
     paymentName: null,
     paymentPicture: null,
@@ -47,7 +51,15 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     init();
-  }, [authContext?.auth, cartContext?.cart]);
+  }, [authContext?.auth,cartContext?.cart]);
+
+  useEffect(() => {
+    initAuth();
+  }, [authContext?.auth]);
+
+  useEffect(() => {
+    initCart();
+  }, [cartContext?.cart]);
 
   useEffect(() => {
     const total =
@@ -56,15 +68,30 @@ export default function CheckoutPage() {
       Number(fees.shippingFee) +
       Number(fees.payTotal);
 
-    setInput({ ...input, payTotal: total });
+    setOrder({ ...order, payTotal: total });
   }, [fees]);
 
-  function init() {
-    const orderItem: OrderItem[] = cartContext?.cart?.cartItem.map((e) => {
-      const item = e.productVariant;
+  function init(){
+    console.log(cartContext?.cart);
+    console.log(authContext?.auth);
+  }
 
+  function initAuth() {
+    setInput({
+      ...input,
+      receiverName: authContext?.auth?.user?.name ?? "",
+      receiverPhone: authContext?.auth?.user?.phone ?? "",
+      receiverAddress: authContext?.auth?.user?.address ?? "",
+    });
+  }
+
+  function initCart() {
+    const orderItem: any = cartContext?.cart?.cartItem?.map((e) => {
       return {
         storeId: e.productVariant?.product?.store?.id,
+        storeUserId: e.productVariant?.product?.store?.userId,
+        storeName: e.productVariant?.product?.store?.name,
+        storePhone: e.productVariant?.product?.store?.phone,
         productId: e.productVariant?.product?.id,
         productName: e.productVariant?.product?.name,
         productPicture: e.productVariant?.product?.picture,
@@ -81,11 +108,8 @@ export default function CheckoutPage() {
       };
     });
 
-    setInput({
-      ...input,
-      receiverName: authContext?.auth?.user?.name ?? "",
-      receiverPhone: authContext?.auth?.user?.phone ?? "",
-      receiverAddress: authContext?.auth?.user?.address ?? "",
+    setOrder({
+      ...order,
       payTotal: cartContext?.cart?.total,
       orderItem: orderItem,
     });
@@ -100,7 +124,7 @@ export default function CheckoutPage() {
   function handleForm(e: any) {
     e.preventDefault();
 
-    if (input.paymentId == null) {
+    if (order.paymentId == null) {
       alert("Pilih metode pembayaran");
       return;
     }
@@ -109,8 +133,8 @@ export default function CheckoutPage() {
   }
 
   function selectPayment(payment: PaymentModel) {
-    setInput({
-      ...input,
+    setOrder({
+      ...order,
       paymentId: payment.id,
       paymentName: payment.name,
       paymentPicture: payment.picture,
@@ -128,7 +152,12 @@ export default function CheckoutPage() {
       await orderRepository.create({
         token: authContext?.auth?.token,
         ...input,
+        ...order,
       });
+
+      cartContext?.clearItem();
+      toast("Order berhasil");
+      navigate("/", { replace: true });
     } catch (error) {
       toast("Terjadi kesalahan, harap coba beberapa saat lagi");
       setLoading(false);
@@ -255,7 +284,7 @@ export default function CheckoutPage() {
                 <div className="bg-surface text-onSurface w-full py-2 px-4 flex flex-col divide-y">
                   <div className="font-semibold py-4">METODE PEMBAYARAN</div>
                   <PaymentComponent
-                    paymentId={input.paymentId}
+                    paymentId={order.paymentId}
                     selectPayment={selectPayment}
                   />
                 </div>
@@ -271,16 +300,16 @@ export default function CheckoutPage() {
                     <div className="flex justify-between items-center">
                       <div>Biaya Admin</div>
                       <div className="font-semibold">
-                        {currency(input.adminFee)}
+                        {currency(order.adminFee)}
                       </div>
                     </div>
                     {(() => {
-                      if (input.paymentId) {
+                      if (order.paymentId) {
                         return (
                           <div className="flex justify-between items-center">
-                            <div>Biaya ({input.paymentName})</div>
+                            <div>Biaya ({order.paymentName})</div>
                             <div className="font-semibold">
-                              {currency(input.paymentFee)}
+                              {currency(order.paymentFee)}
                             </div>
                           </div>
                         );
@@ -289,7 +318,7 @@ export default function CheckoutPage() {
                     <div className="flex justify-between items-center">
                       <div>Total Bayar</div>
                       <div className="font-bold text-2xl text-red-500">
-                        {currency(input.payTotal)}
+                        {currency(order.payTotal)}
                       </div>
                     </div>
                   </div>
