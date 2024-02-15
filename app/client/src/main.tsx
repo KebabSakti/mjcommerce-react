@@ -19,6 +19,7 @@ import ProfilePage from "./view/profile-page";
 import OrderPage from "./view/redux/order-page";
 import { store } from "./view/redux/store";
 import RegisterPage from "./view/register-page";
+import SuccessPage from "./view/success-page";
 
 const router = createBrowserRouter([
   {
@@ -37,12 +38,13 @@ const router = createBrowserRouter([
       { path: "/product-detail/:id", element: <ProductDetailPage /> },
       { path: "/cart", element: <CartPage /> },
       { path: "/checkout", element: <CheckoutPage /> },
+      { path: "/success", element: <SuccessPage /> },
       {
         path: "/profile",
         element: <ProfilePage />,
         children: [
           {
-            index:true,
+            index: true,
             element: <OrderPage />,
           },
         ],

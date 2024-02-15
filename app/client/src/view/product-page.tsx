@@ -9,6 +9,7 @@ import CategoryRepository from "../lib/repository/category-repository";
 import ProductRepository from "../lib/repository/product-repository";
 import ProductItem from "./component/product-item";
 import StatusBar from "./component/status-bar";
+import ScrollTop from "./component/scrolltop";
 
 const productRepository = new ProductRepository();
 const categoryRepository = new CategoryRepository();
@@ -362,6 +363,7 @@ export default function ProductPage() {
           }
         })()}
       </div>
+      <ScrollTop />
     </>
   );
 }

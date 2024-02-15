@@ -35,7 +35,7 @@ export default function RegisterPage() {
       setLoading(true);
       await authContext?.register(input);
       toast("Daftar berhasil, login menggunakan email dan password baru anda");
-      setLoading(false);
+      navigate("/login", { replace: true });
     } catch (error) {
       toast("Daftar gagal, mohon coba beberapa saat lagi");
       setLoading(false);

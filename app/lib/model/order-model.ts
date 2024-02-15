@@ -2,6 +2,9 @@ export interface OrderItem {
   id?: string;
   orderId?: string;
   storeId?: string;
+  storeUserId?: string;
+  storeName?: string;
+  storePhone?: string;
   productId?: string;
   productName?: string;
   productPicture?: string;

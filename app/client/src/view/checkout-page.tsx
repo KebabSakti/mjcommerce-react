@@ -11,6 +11,8 @@ import PaymentComponent from "./component/payment-component";
 import StatusBar from "./component/status-bar";
 import { AuthContext } from "./context/auth-context";
 import { CartContext } from "./context/cart-context";
+import ModalPrompt from "./component/modal-prompt";
+import { OrderItem } from "../../../lib/model/order-model";
 
 const orderRepository = new OrderRepository();
 
@@ -19,73 +21,34 @@ export default function CheckoutPage() {
   const cartContext = useContext(CartContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  const [fees, setFees] = useState<any>({
-    paymentFee: 0,
-    adminFee: 0,
-    shippingFee: 0,
-    payTotal: 0,
-  });
+  const [prompt, setPrompt] = useState(false);
 
   const [input, setInput] = useState<any>({
     receiverName: "",
     receiverPhone: "",
     receiverAddress: "",
-  });
-
-  const [order, setOrder] = useState<any>({
     paymentId: null,
     paymentName: null,
     paymentPicture: null,
     paymentFixed: null,
-    receiverLat: null,
-    receiverLng: null,
+    productQty: 0,
+    productTotal: 0,
     paymentFee: 0,
     adminFee: 0,
-    productQty: 0,
     shippingFee: 0,
-    productTotal: 0,
-    payTotal: 0,
-    orderItem: null,
   });
 
   useEffect(() => {
     init();
-  }, [authContext?.auth,cartContext?.cart]);
+  }, [authContext?.auth, cartContext?.cart]);
 
   useEffect(() => {
-    initAuth();
-  }, [authContext?.auth]);
+    console.log(input);
+  }, [input]);
 
-  useEffect(() => {
-    initCart();
-  }, [cartContext?.cart]);
+  function init() {
+    const stores: Record<string, any>[] = [];
 
-  useEffect(() => {
-    const total =
-      Number(fees.paymentFee) +
-      Number(fees.adminFee) +
-      Number(fees.shippingFee) +
-      Number(fees.payTotal);
-
-    setOrder({ ...order, payTotal: total });
-  }, [fees]);
-
-  function init(){
-    console.log(cartContext?.cart);
-    console.log(authContext?.auth);
-  }
-
-  function initAuth() {
-    setInput({
-      ...input,
-      receiverName: authContext?.auth?.user?.name ?? "",
-      receiverPhone: authContext?.auth?.user?.phone ?? "",
-      receiverAddress: authContext?.auth?.user?.address ?? "",
-    });
-  }
-
-  function initCart() {
     const orderItem: any = cartContext?.cart?.cartItem?.map((e) => {
       return {
         storeId: e.productVariant?.product?.store?.id,
@@ -108,56 +71,100 @@ export default function CheckoutPage() {
       };
     });
 
-    setOrder({
-      ...order,
-      payTotal: cartContext?.cart?.total,
-      orderItem: orderItem,
+    orderItem.map((e: OrderItem) => {
+      if (!stores.some((s) => s.storeId == e.storeId)) {
+        const storeQty = orderItem
+          .filter((p: any) => p.storeId == e.storeId)
+          .reduce((a: any, b: any) => a + Number(b.qty), 0);
+
+        const storeTotal = orderItem
+          .filter((p: any) => p.storeId == e.storeId)
+          .reduce((a: any, b: any) => a + Number(b.total), 0);
+
+        stores.push({
+          storeId: e.storeId,
+          storeUserId: e.storeUserId,
+          storeName: e.storeName,
+          storePhone: e.storePhone,
+          qty: storeQty,
+          total: storeTotal,
+          items: orderItem.filter((p: any) => p.storeId == e.storeId),
+        });
+      }
     });
 
-    setFees({ ...fees, payTotal: cartContext?.cart?.total });
+    setInput({
+      ...input,
+      receiverName: authContext?.auth?.user?.name ?? "",
+      receiverPhone: authContext?.auth?.user?.phone ?? "",
+      receiverAddress: authContext?.auth?.user?.address ?? "",
+      productQty: cartContext?.cart?.qty,
+      productTotal: cartContext?.cart?.total,
+      stores: stores,
+      // orderItem: orderItem,
+    });
   }
 
   function inputOnChange(e: any) {
     setInput({ ...input, [e.target.name]: e.target.value });
   }
 
+  function calculateTotal(): number {
+    const total =
+      Number(input.paymentFee) +
+      Number(input.adminFee) +
+      Number(input.shippingFee) +
+      Number(cartContext?.cart?.total);
+
+    return total;
+  }
+
   function handleForm(e: any) {
     e.preventDefault();
 
-    if (order.paymentId == null) {
+    if (input.paymentId == null) {
       alert("Pilih metode pembayaran");
       return;
     }
 
+    setPrompt(true);
+  }
+
+  function positivePrompt() {
     createOrder();
   }
 
+  function negativePrompt() {
+    setPrompt(false);
+  }
+
   function selectPayment(payment: PaymentModel) {
-    setOrder({
-      ...order,
+    setInput({
+      ...input,
       paymentId: payment.id,
       paymentName: payment.name,
       paymentPicture: payment.picture,
-      paymentFee: Number(payment.fee),
       paymentFixed: payment.fixed,
+      paymentFee: Number(payment.fee),
     });
-
-    setFees({ ...fees, paymentFee: Number(payment.fee) });
   }
 
   async function createOrder() {
     try {
+      setPrompt(false);
       setLoading(true);
+      // delete input.stores;
 
-      await orderRepository.create({
+      const payload = {
         token: authContext?.auth?.token,
         ...input,
-        ...order,
-      });
+        payTotal: calculateTotal(),
+      };
+
+      await orderRepository.create(payload);
 
       cartContext?.clearItem();
-      toast("Order berhasil");
-      navigate("/", { replace: true });
+      navigate("/success", { replace: true });
     } catch (error) {
       toast("Terjadi kesalahan, harap coba beberapa saat lagi");
       setLoading(false);
@@ -203,88 +210,89 @@ export default function CheckoutPage() {
                     />
                   </div>
                 </div>
-                <div className="bg-surface text-onSurface w-full py-2 px-4 flex flex-col divide-y">
-                  <div className="font-semibold py-4">PRODUK DIPESAN</div>
-                  <div className="max-h-[500px] overflow-y-scroll flex flex-col divide-y">
-                    {(() => {
-                      if (cartContext?.cart?.cartItem?.length) {
-                        return (
-                          <>
-                            {cartContext.cart.cartItem.map((e, i) => {
-                              return (
-                                <div key={i} className="py-6">
-                                  <div className="flex gap-1 items-center">
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      strokeWidth={1.5}
-                                      stroke="currentColor"
-                                      className="w-6 h-6"
-                                    >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"
-                                      />
-                                    </svg>
-                                    <div className="font-semibold text-green-500">
-                                      {e.productVariant?.product?.store?.name}
-                                    </div>
-                                  </div>
-                                  <div className="flex gap-4">
-                                    <div className="bg-gray-100 w-16 h-16 mt-2">
-                                      <LazyLoadImage
-                                        src={e.productVariant?.product?.picture}
-                                        alt=""
-                                        className="h-full w-full object-cover"
-                                      />
-                                    </div>
-                                    <div className="flex flex-col">
-                                      <div>
-                                        {e.productVariant?.product?.name}
+                {input.stores?.map((store: any) => {
+                  return (
+                    <div
+                      key={store.storeId}
+                      className="bg-surface text-onSurface w-full py-2 px-4 flex flex-col divide-y"
+                    >
+                      <div className="font-semibold py-4 flex gap-1 items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"
+                          />
+                        </svg>
+                        <div className="font-semibold text-green-500">
+                          {store.storeName}
+                        </div>
+                      </div>
+                      <div className="max-h-[500px] overflow-y-scroll flex flex-col divide-y">
+                        {(() => {
+                          return (
+                            <>
+                              {store.items.map((e: any, i: any) => {
+                                return (
+                                  <div key={i} className="py-6">
+                                    <div className="flex gap-4">
+                                      <div className="bg-gray-100 w-16 h-16 mt-2">
+                                        <LazyLoadImage
+                                          src={e.productPicture}
+                                          alt=""
+                                          className="h-full w-full object-cover"
+                                        />
                                       </div>
-                                      <div className="text-xs text-gray-400">
-                                        Varian : {e.productVariant?.name}
-                                      </div>
-                                      <div>Jumlah : {e.qty}</div>
-                                      <div className="font-semibold flex gap-1 items-center">
-                                        <div>{currency(e.total!)}</div>
-                                        {(() => {
-                                          if (
-                                            e.productVariant?.wholesaleMin !=
-                                              null &&
-                                            e.productVariant?.wholesalePrice !=
-                                              null
-                                          ) {
+                                      <div className="flex flex-col">
+                                        <div>{e.productName}</div>
+                                        <div className="text-xs text-gray-400">
+                                          Varian : {e.productVariantName}
+                                        </div>
+                                        <div>Jumlah : {e.qty}</div>
+                                        <div className="font-semibold flex gap-1 items-center">
+                                          <div>{currency(e.total!)}</div>
+                                          {(() => {
                                             if (
-                                              e.qty! >=
-                                              e.productVariant.wholesaleMin
+                                              e.wholesaleMin != null &&
+                                              e.wholesalePrice != null
                                             ) {
-                                              return (
-                                                <div className="text-red-500 text-xs">
-                                                  (Grosir)
-                                                </div>
-                                              );
+                                              if (e.qty! >= e.wholesaleMin) {
+                                                return (
+                                                  <div className="text-red-500 text-xs">
+                                                    (Grosir)
+                                                  </div>
+                                                );
+                                              }
                                             }
-                                          }
-                                        })()}
+                                          })()}
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
-                                </div>
-                              );
-                            })}
-                          </>
-                        );
-                      }
-                    })()}
-                  </div>
-                </div>
+                                );
+                              })}
+                            </>
+                          );
+                        })()}
+                      </div>
+                      <div className="py-4 font-semibold flex justify-between items-center">
+                        <div>Total ({store.qty}) Produk</div>
+                        <div>{currency(store.total)}</div>
+                      </div>
+                    </div>
+                  );
+                })}
                 <div className="bg-surface text-onSurface w-full py-2 px-4 flex flex-col divide-y">
                   <div className="font-semibold py-4">METODE PEMBAYARAN</div>
                   <PaymentComponent
-                    paymentId={order.paymentId}
+                    paymentId={input.paymentId}
                     selectPayment={selectPayment}
                   />
                 </div>
@@ -292,7 +300,7 @@ export default function CheckoutPage() {
                   <div className="font-semibold py-4">DETAIL BIAYA</div>
                   <div className="py-4 flex flex-col gap-1">
                     <div className="flex justify-between items-center">
-                      <div>Subtotal Produk</div>
+                      <div>Subtotal ({input.productQty}) Produk</div>
                       <div className="font-semibold">
                         {currency(cartContext?.cart?.total ?? 0)}
                       </div>
@@ -300,25 +308,25 @@ export default function CheckoutPage() {
                     <div className="flex justify-between items-center">
                       <div>Biaya Admin</div>
                       <div className="font-semibold">
-                        {currency(order.adminFee)}
+                        {currency(input.adminFee)}
                       </div>
                     </div>
-                    {(() => {
-                      if (order.paymentId) {
+                    {/* {(() => {
+                      if (input.paymentId) {
                         return (
                           <div className="flex justify-between items-center">
-                            <div>Biaya ({order.paymentName})</div>
+                            <div>Biaya ({input.paymentName})</div>
                             <div className="font-semibold">
-                              {currency(order.paymentFee)}
+                              {currency(input.paymentFee)}
                             </div>
                           </div>
                         );
                       }
-                    })()}
+                    })()} */}
                     <div className="flex justify-between items-center">
-                      <div>Total Bayar</div>
+                      <div>Total</div>
                       <div className="font-bold text-2xl text-red-500">
-                        {currency(order.payTotal)}
+                        {currency(calculateTotal())}
                       </div>
                     </div>
                   </div>
@@ -339,6 +347,12 @@ export default function CheckoutPage() {
           );
         })()}
       </div>
+      <ModalPrompt
+        show={prompt}
+        positive={positivePrompt}
+        negative={negativePrompt}
+        text="Cek kembali pesanan anda, proses ini tidak dapat dibatalkan. Lanjutkan?"
+      />
       <ModalLoading show={loading} text="Membuat orderan, mohon tunggu.." />
     </>
   );

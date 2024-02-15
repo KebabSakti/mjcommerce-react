@@ -11,6 +11,7 @@ import ProductInfo from "./component/product-info";
 import ProductRatingComponent from "./component/product-rating-component";
 import StatusBar from "./component/status-bar";
 import { CartContext } from "./context/cart-context";
+import ScrollTop from "./component/scrolltop";
 
 const productRepository = new ProductRepository();
 
@@ -139,6 +140,7 @@ export default function ProductDetailPage() {
           </div>
           <ProductRatingComponent productId={product.id!} />
         </div>
+        <ScrollTop />
       </>
     );
   }
