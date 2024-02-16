@@ -75,7 +75,7 @@ export default function ProfilePage() {
         <div className="bg-primary text-onPrimary w-full">
           <div className="flex divide-x divide-onPrimary overflow-x-scroll no-scrollbar">
             <Link
-              to="/profile?page=1&limit=5"
+              to="/profile?page=1&limit=5&sort=updated&direction=desc"
               className="bg-surface text-onSurface font-semibold py-2 px-4 shrink-0 flex gap-2 items-center"
             >
               <div>Pesanan Saya</div>

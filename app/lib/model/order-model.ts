@@ -76,6 +76,7 @@ export interface OrderModel {
   paymentPicture?: string;
   paymentFee?: number;
   paymentFixed?: boolean;
+  adminFee?: number;
   receiverName?: string;
   receiverAddress?: string;
   receiverPhone?: string;

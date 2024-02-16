@@ -13,6 +13,7 @@ datasource db {
 
 enum Status {
   PENDING
+  ACTIVE
   COMPLETED
   FAILED
   CANCELED

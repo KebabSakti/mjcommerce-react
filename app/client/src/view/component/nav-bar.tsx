@@ -49,7 +49,13 @@ export default function NavBar() {
               />
             </svg>
           </Link>
-          <Link to={authContext?.auth ? "/profile?page=1&limit=5" : "/login"}>
+          <Link
+            to={
+              authContext?.auth
+                ? "/profile?page=1&limit=5&sort=updated&direction=desc"
+                : "/login"
+            }
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
