@@ -3,16 +3,16 @@ import { useContext, useEffect, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { OrderItem } from "../../../lib/model/order-model";
 import { PaymentModel } from "../../../lib/model/payment-model";
 import { currency } from "../lib/helper/common";
 import OrderRepository from "../lib/repository/order-repository";
 import ModalLoading from "./component/modal-loading";
+import ModalPrompt from "./component/modal-prompt";
 import PaymentComponent from "./component/payment-component";
 import StatusBar from "./component/status-bar";
 import { AuthContext } from "./context/auth-context";
 import { CartContext } from "./context/cart-context";
-import ModalPrompt from "./component/modal-prompt";
-import { OrderItem } from "../../../lib/model/order-model";
 
 const orderRepository = new OrderRepository();
 
@@ -41,10 +41,6 @@ export default function CheckoutPage() {
   useEffect(() => {
     init();
   }, [authContext?.auth, cartContext?.cart]);
-
-  useEffect(() => {
-    console.log(input);
-  }, [input]);
 
   function init() {
     const stores: Record<string, any>[] = [];

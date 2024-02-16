@@ -1,5 +1,6 @@
 import { Result } from "../config/type";
 import { invoice } from "../helper/common";
+import { BadRequest } from "../helper/failure";
 import { prisma } from "../helper/prisma";
 import { OrderModel } from "./../../../../lib/model/order-model";
 
@@ -7,6 +8,7 @@ export default class UserOrderRepository {
   async read(param: Record<string, any>): Promise<Record<string, any>> {
     const result = await prisma.$transaction(async (tx) => {
       const sortingField = ["updated"];
+      const filterField = ["userId", "storeId"];
 
       let condition: any = {
         where: {},
@@ -15,34 +17,36 @@ export default class UserOrderRepository {
       if (param.hasOwnProperty("orderStatus")) {
         condition["where"] = {
           ...condition.where,
-          orderStatus: {
-            status: {
-              contains: param.orderStatus,
-            },
-          },
-        };
-      }
-
-      if (param.hasOwnProperty("storeId")) {
-        condition["where"] = {
-          ...condition.where,
-          orderItem: {
-            storeId: {
-              has: param.storeId,
-            },
-          },
+          statusOrder: param.orderStatus,
         };
       }
 
       if (param.hasOwnProperty("invoice")) {
         condition["where"] = {
           ...condition.where,
-          invoice: { contains: param.invoice },
+          invoice: param.invoice,
+        };
+      }
+
+      if (param.hasOwnProperty("filter") || param.hasOwnProperty("value")) {
+        const index = filterField.indexOf(param.filter);
+
+        if (index < 0) {
+          throw new BadRequest();
+        }
+
+        condition["where"] = {
+          ...condition.where,
+          [filterField[index]]: param.value,
         };
       }
 
       if (param.hasOwnProperty("sort") && param.hasOwnProperty("direction")) {
         const index = sortingField.indexOf(param.sort);
+
+        if (index < 0) {
+          throw new BadRequest();
+        }
 
         if (index >= 0) {
           condition = {
@@ -106,10 +110,10 @@ export default class UserOrderRepository {
               userId: param.userId,
               userName: param.userName,
               userPhone: param.userPhone,
-              storeId: param.storeId,
-              storeUserId: param.storeUserId,
-              storeName: param.storeName,
-              storePhone: param.storePhone,
+              storeId: store.storeId,
+              storeUserId: store.storeUserId,
+              storeName: store.storeName,
+              storePhone: store.storePhone,
               paymentId: param.paymentId,
               paymentName: param.paymentName,
               paymentPicture: param.paymentPicture,

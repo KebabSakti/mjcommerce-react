@@ -10,4 +10,5 @@ export const url = {
   register: `${base}/user/auth/register`,
   cart: `${base}/user/protected/cart`,
   order: `${base}/user/protected/order`,
+  store: `${base}/user/protected/store`,
 };

@@ -1,3 +1,5 @@
+import { StoreModel } from "./store-model";
+
 export enum UserShowField {
   ID = "id",
   EMAIL = "email",
@@ -22,4 +24,5 @@ export interface UserModel {
   guest?: boolean;
   created?: string;
   updated?: string;
+  store?: StoreModel;
 }

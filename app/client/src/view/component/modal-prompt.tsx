@@ -1,4 +1,4 @@
-import { Button, Modal } from "flowbite-react";
+import { Modal } from "flowbite-react";
 import { ReactNode } from "react";
 import { Empty } from "../../lib/config/type";
 
@@ -16,7 +16,7 @@ export default function ModalPrompt({
   children?: ReactNode | Empty;
 }) {
   return (
-    <Modal show={show} size="md" popup>
+    <Modal show={show} size="md" popup onClose={negative}>
       <Modal.Header />
       <Modal.Body>
         {children ?? (

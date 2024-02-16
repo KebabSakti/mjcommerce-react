@@ -15,6 +15,7 @@ import userOrderRoute from "./view/route/user-order-route";
 import userPaymentRoute from "./view/route/user-payment-route";
 import userProductRatingRoute from "./view/route/user-product-rating-route";
 import userProductRoute from "./view/route/user-product-route";
+import userStoreRoute from "./view/route/user-store-route";
 import { faker } from "@faker-js/faker";
 import { randomUUID } from "crypto";
 
@@ -45,37 +46,38 @@ app.use("/user/payment", userPaymentRoute);
 //============================================================//
 app.use("/user/protected", userMiddleware);
 app.use("/user/protected/account", userAccountRoute);
+app.use("/user/protected/store", userStoreRoute);
 app.use("/user/protected/cart", userCartRoute);
 app.use("/user/protected/order", userOrderRoute);
 
 app.get("/user/debug", async (req, res) => {
-  const userId = "a0e661ae-f916-4fa3-adab-d7159aaf3363";
+  const userId = "cbb2ac04-6996-4f0d-919f-eddeff39a467";
 
   await prisma.$transaction(async (tx) => {
-    // await tx.payment.create({
-    //   data: {
-    //     code: "COD",
-    //     name: "COD - Cash On Delivery",
-    //     description: "Bayar di tujuan setelah barang kamu terima",
-    //     picture:
-    //       "https://res.cloudinary.com/vjtechsolution/image/upload/v1707823397/cod.png",
-    //     fee: 0,
-    //     active: true,
-    //   },
-    // });
+    await tx.payment.create({
+      data: {
+        code: "COD",
+        name: "COD - Cash On Delivery",
+        description: "Bayar di tujuan setelah barang kamu terima",
+        picture:
+          "https://res.cloudinary.com/vjtechsolution/image/upload/v1707823397/cod.png",
+        fee: 0,
+        active: true,
+      },
+    });
 
-    // await Promise.all(
-    //   [...Array(10)].map(async (_) => {
-    //     await tx.banner.create({
-    //       data: {
-    //         name: faker.commerce.productName(),
-    //         picture: faker.image.urlLoremFlickr({ category: "food" }),
-    //         active: true,
-    //         big: true,
-    //       },
-    //     });
-    //   })
-    // );
+    await Promise.all(
+      [...Array(10)].map(async (_) => {
+        await tx.banner.create({
+          data: {
+            name: faker.commerce.productName(),
+            picture: faker.image.urlLoremFlickr({ category: "food" }),
+            active: true,
+            big: true,
+          },
+        });
+      })
+    );
 
     // store
     const store = await tx.store.create({
@@ -93,29 +95,29 @@ app.get("/user/debug", async (req, res) => {
     await Promise.all(
       [...Array(10)].map(async (_) => {
         //category
-        // const category = await tx.category.create({
-        //   data: {
-        //     name: faker.commerce.department(),
-        //     picture: faker.image.urlLoremFlickr({ category: "food" }),
-        //     active: true,
-        //   },
-        // });
+        const category = await tx.category.create({
+          data: {
+            name: faker.commerce.department(),
+            picture: faker.image.urlLoremFlickr({ category: "food" }),
+            active: true,
+          },
+        });
 
         await Promise.all(
           [...Array(10)].map(async (_) => {
             const productId = randomUUID();
 
-            const randomCategory = await prisma.category.findMany({
-              take: 1,
-              skip: Math.floor(Math.random() * 20),
-            });
+            // const randomCategory = await prisma.category.findMany({
+            //   take: 1,
+            //   skip: Math.floor(Math.random() * 20),
+            // });
 
             //product
             const product = await tx.product.create({
               data: {
                 id: productId,
                 storeId: store.id,
-                categoryId: randomCategory[0].id,
+                categoryId: category.id,
                 priority: faker.number.int({ min: 0, max: 3 }),
                 name: faker.commerce.productName(),
                 description: faker.lorem.lines(1),

@@ -67,6 +67,10 @@ export interface OrderModel {
   userId?: string;
   userName?: string;
   userPhone?: string;
+  storeId?: string;
+  storeUserId?: string;
+  storeName?: string;
+  storePhone?: string;
   paymentId?: string;
   paymentName?: string;
   paymentPicture?: string;
@@ -77,6 +81,11 @@ export interface OrderModel {
   receiverPhone?: string;
   receiverLat?: string;
   receiverLng?: string;
+  statusOrder?: string;
+  statusPayment?: string;
+  statusShipping?: string;
+  productQty?: number;
+  productTotal?: number;
   created?: string;
   updated?: string;
   orderItem?: OrderItem[];

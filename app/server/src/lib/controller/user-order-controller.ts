@@ -23,7 +23,8 @@ export default class UserOrderController {
 
       const param = {
         ...req.query,
-        userId: user.id,
+        filter: req.query.filter ?? "userId",
+        value: req.query.value ?? user.id,
       };
 
       const result = await orderRepository.read(param);

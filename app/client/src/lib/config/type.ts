@@ -42,4 +42,10 @@ export type Result<T> = {
   paginate?: Paginate | Empty;
 };
 
+export type DataState<T> = {
+  status: string;
+  data?: T | Empty;
+  error?: Error | Empty;
+};
+
 export type DebounceFunction = (...args: any[]) => void;

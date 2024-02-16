@@ -1,15 +1,9 @@
-import { useEffect, useState } from "react";
-import { PaymentModel } from "../../../../lib/model/payment-model";
-import { Empty } from "../../lib/config/type";
-import PaymentRepository from "../../lib/repository/payment-repository";
 import { Spinner } from "flowbite-react";
+import { useEffect, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-
-type DataState<T> = {
-  status: string;
-  data?: T | Empty;
-  error?: Error | Empty;
-};
+import { PaymentModel } from "../../../../lib/model/payment-model";
+import { DataState, Empty } from "../../lib/config/type";
+import PaymentRepository from "../../lib/repository/payment-repository";
 
 const paymentRepository = new PaymentRepository();
 
