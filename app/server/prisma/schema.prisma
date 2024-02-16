@@ -212,6 +212,10 @@ model Order {
   userId          String
   userName        String
   userPhone       String
+  storeId         String
+  storeUserId     String
+  storeName       String
+  storePhone      String
   paymentId       String
   paymentName     String
   paymentPicture  String
@@ -227,6 +231,9 @@ model Order {
   receiverPhone   String
   receiverLat     String?
   receiverLng     String?
+  statusOrder     Status           @default(PENDING)
+  statusPayment   Status           @default(PENDING)
+  statusShipping  Status           @default(PENDING)
   created         DateTime         @default(now())
   updated         DateTime         @default(now())
   orderItem       OrderItem[]

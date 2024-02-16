@@ -4,6 +4,7 @@ import UserOrderController from "../../lib/controller/user-order-controller";
 const router = express.Router();
 const orderController = new UserOrderController();
 
+router.get("/", orderController.read);
 router.post("/", orderController.create);
 
 export default router;
