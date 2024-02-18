@@ -54,12 +54,19 @@ export default function ProductDetailPage() {
           <div className="bg-surface p-4 flex flex-col gap-2 text-onSurface md:flex-row md:gap-4">
             <div className="h-60 w-full md:h-80 md:basis-1/2">
               <Carousel indicators={false}>
+                <LazyLoadImage
+                  src={product.picture}
+                  alt={product.name}
+                  width={800}
+                  height={600}
+                  className="bg-gray-100 object-cover h-full w-full"
+                />
                 {gallery?.map((e, i) => {
                   return (
                     <LazyLoadImage
                       key={i}
                       src={e.picture}
-                      alt=""
+                      alt={product.name}
                       width={800}
                       height={600}
                       className="bg-gray-100 object-cover h-full w-full"

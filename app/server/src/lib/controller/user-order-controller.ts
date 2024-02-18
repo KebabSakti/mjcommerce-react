@@ -52,4 +52,14 @@ export default class UserOrderController {
       Failure.handle(error, res);
     }
   }
+
+  async update(req: Request, res: Response) {
+    try {
+      await orderRepository.update(req.body);
+
+      res.end();
+    } catch (error: any) {
+      Failure.handle(error, res);
+    }
+  }
 }

@@ -1,23 +1,29 @@
+import { Modal, Spinner } from "flowbite-react";
 import { useContext, useEffect, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useSearchParams } from "react-router-dom";
-import { DataState } from "../../lib/config/type";
-import { currency, debounce } from "../../lib/helper/common";
-import OrderRepository from "../../lib/repository/order-repository";
-import { AuthContext } from "../context/auth-context";
-import { Modal, Spinner } from "flowbite-react";
-import { OrderModel } from "../../../../lib/model/order-model";
+import { toast } from "react-toastify";
+import { OrderModel } from "../../../lib/model/order-model";
+import { DataState } from "../lib/config/type";
+import { currency, debounce } from "../lib/helper/common";
+import OrderRepository from "../lib/repository/order-repository";
+import ModalLoading from "./component/modal-loading";
+import ModalPrompt from "./component/modal-prompt";
+import StatusBadge from "./component/status-badge";
+import { AuthContext } from "./context/auth-context";
 
 const orderRepository = new OrderRepository();
 
-export default function OrderPage() {
+export default function ShopPage() {
   let [searchParams, setSearchParams] = useSearchParams();
   const authContext = useContext(AuthContext);
   const query = Object.fromEntries([...searchParams]);
   const page = parseInt(query.page);
   const limit = parseInt(query.limit);
-  const max = page * (limit * 2);
+  const max = (page - 1) * (limit * 2);
   const [debounceSearch] = debounce(search, 500);
+  const [prompt, setPrompt] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<OrderModel | null>(null);
   const [orders, setOrders] = useState<DataState<Record<string, any>>>();
 
@@ -44,6 +50,30 @@ export default function OrderPage() {
       });
     } catch (error: any) {
       setOrders({ ...orders, status: "error", error: error });
+    }
+  }
+
+  function updateOrder(status: string) {
+    try {
+      setUpdateLoading(true);
+
+      orderRepository
+        .update({
+          id: selectedOrder?.id,
+          statusOrder: status,
+          token: authContext?.auth?.token,
+        })
+        .then((_) => {
+          setPrompt(false);
+          setSelectedOrder(null);
+          setUpdateLoading(false);
+          getOrders();
+          toast("Proses berhasil, pesanan aktif");
+        });
+    } catch (error: any) {
+      setPrompt(false);
+      setUpdateLoading(false);
+      toast("Proses gagal, harap coba beberapa saat lagi");
     }
   }
 
@@ -94,6 +124,22 @@ export default function OrderPage() {
     setSelectedOrder(null);
   }
 
+  function positivePrompt() {
+    if (selectedOrder) {
+      if (selectedOrder.statusOrder == "PENDING") {
+        updateOrder("ACTIVE");
+      }
+
+      if (selectedOrder.statusOrder == "ACTIVE") {
+        updateOrder("COMPLETED");
+      }
+    }
+  }
+
+  function negativePrompt() {
+    setPrompt(false);
+  }
+
   return (
     <div className="bg-surface text-onSurface p-4">
       <div className="flex gap-2 items-center md:justify-end">
@@ -114,6 +160,7 @@ export default function OrderPage() {
           >
             <option value="ALL">SEMUA</option>
             <option value="PENDING">PENDING</option>
+            <option value="ACTIVE">AKTIF</option>
             <option value="COMPLETED">SELESAI</option>
             <option value="FAILED">GAGAL</option>
             <option value="CANCELED">BATAL</option>
@@ -190,11 +237,11 @@ export default function OrderPage() {
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"
+                            d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
                           />
                         </svg>
-                        <div className="font-semibold text-green-500 line-clamp-1">
-                          {e.storeName}
+                        <div className="font-semibold line-clamp-1">
+                          {e.receiverName}
                         </div>
                       </div>
                       <div className="flex gap-4">
@@ -233,7 +280,7 @@ export default function OrderPage() {
                           </div>
                         </div>
                         <div className="flex justify-between items-center text-sm">
-                          <div className="text-gray-500">No Invoice</div>
+                          <div className="text-gray-500">No Pesanan</div>
                           <div>{e.invoice}</div>
                         </div>
                         <div className="flex justify-between items-center text-sm">
@@ -244,9 +291,7 @@ export default function OrderPage() {
                         </div>
                         <div className="flex justify-between items-center text-sm">
                           <div className="text-gray-500">Status</div>
-                          <div className="px-2 py-1 bg-yellow-300 rounded-full text-white text-xs">
-                            {e.statusOrder}
-                          </div>
+                          <StatusBadge status={e.statusOrder!} />
                         </div>
                       </div>
                     </button>
@@ -254,7 +299,9 @@ export default function OrderPage() {
                 })}
               </div>
               {(() => {
-                if (max < orders?.data?.paginate?.total!) {
+                if (
+                  orders?.data?.paginate?.total! > orders?.data?.data?.length
+                ) {
                   return (
                     <div className="flex justify-center gap-1 mt-2">
                       <button
@@ -285,14 +332,52 @@ export default function OrderPage() {
                     return (
                       <>
                         <Modal.Header>
-                          <div className="px-3 py-1 bg-yellow-300 rounded-full text-white text-sm font-semibold">
-                            {order.statusOrder}
+                          <div className="pt-2">
+                            <StatusBadge status={order.statusOrder!} />
                           </div>
                         </Modal.Header>
                         <Modal.Body>
-                          <div className="w-full text-onBackground flex flex-col gap-6 overflow-y-auto h-[500px]">
+                          <div className="w-full text-onBackground flex flex-col gap-6 overflow-y-auto h-[500px] no-scrollbar">
                             <div className="flex flex-col gap-4">
-                              <div className="font-semibold">DATA PENERIMA</div>
+                              <div className="font-semibold">
+                                DETAIL PESANAN
+                              </div>
+                              <div className="flex flex-col gap-2 bg-gray-100 p-2 rounded">
+                                <div>
+                                  <div className="text-xs text-gray-400">
+                                    Waktu Pesanan
+                                  </div>
+                                  <div>
+                                    {new Date(
+                                      order.created!
+                                    ).toLocaleDateString("id-ID", {
+                                      year: "numeric",
+                                      month: "long",
+                                      day: "numeric",
+                                      hour: "numeric",
+                                      minute: "numeric",
+                                      second: "numeric",
+                                    })}
+                                  </div>
+                                </div>
+                                <div>
+                                  <div className="text-xs text-gray-400">
+                                    No Pesanan
+                                  </div>
+                                  <div>{order.invoice}</div>
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                  <div className="text-xs text-gray-400">
+                                    Status
+                                  </div>
+                                  <div className="w-fit">
+                                    <StatusBadge status={order.statusOrder!} />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex flex-col gap-4">
+                              <div className="font-semibold">DATA PEMESAN</div>
                               <div className="flex flex-col gap-2 bg-gray-100 p-2 rounded">
                                 <div>
                                   <div className="text-xs text-gray-400">
@@ -374,10 +459,6 @@ export default function OrderPage() {
                                   );
                                 })()}
                               </div>
-                              <div className="py-2 font-semibold flex justify-between items-center">
-                                <div>Total ({order.productQty}) Produk</div>
-                                <div>{currency(order.productTotal!)}</div>
-                              </div>
                             </div>
                             <div className="flex flex-col gap-4">
                               <div className="font-semibold">DETAIL BIAYA</div>
@@ -412,14 +493,24 @@ export default function OrderPage() {
                                 </div>
                               </div>
                             </div>
+                            {(() => {
+                              if (order.statusOrder == "ACTIVE") {
+                                return (
+                                  <div className="text-center text-sm text-gray-500 border p-2 rounded-lg bg-yellow-50">
+                                    Pesanan ini tidak dapat dibatalkan, hubungi
+                                    admin untuk bantuan
+                                  </div>
+                                );
+                              }
+                            })()}
                           </div>
                         </Modal.Body>
                         <Modal.Footer>
                           <div className="flex justify-end gap-2 items-center w-full">
                             <Link
-                              to=""
+                              to={`https://wa.me/${order.receiverPhone}`}
                               target="_blank"
-                              className="bg-green-500 p-2 rounded text-white flex gap-1 items-center"
+                              className="bg-primary p-2 rounded text-onPrimary flex gap-1 items-center"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -435,25 +526,59 @@ export default function OrderPage() {
                                   d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
                                 />
                               </svg>
-                              <div>Hubungi Penjual</div>
+                              <div>Hubungi Pembeli</div>
                             </Link>
-                            <button className="bg-red-500 text-white p-2 rounded flex gap-1 items-center">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="w-6 h-6"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                                />
-                              </svg>
-                              <div>Batalkan</div>
-                            </button>
+                            {(() => {
+                              if (order.statusOrder == "PENDING") {
+                                return (
+                                  <button
+                                    className="bg-blue-500 text-white p-2 rounded flex gap-1 items-center"
+                                    onClick={() => setPrompt(true)}
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      strokeWidth={1.5}
+                                      stroke="currentColor"
+                                      className="w-6 h-6"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z"
+                                      />
+                                    </svg>
+                                    <div>Terima</div>
+                                  </button>
+                                );
+                              }
+
+                              if (order.statusOrder == "ACTIVE") {
+                                return (
+                                  <button
+                                    className="bg-green-500 text-white p-2 rounded flex gap-1 items-center"
+                                    onClick={() => setPrompt(true)}
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      strokeWidth={1.5}
+                                      stroke="currentColor"
+                                      className="w-6 h-6"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                                      />
+                                    </svg>
+                                    <div>Pesanan Selesai</div>
+                                  </button>
+                                );
+                              }
+                            })()}
                           </div>
                         </Modal.Footer>
                       </>
@@ -471,6 +596,13 @@ export default function OrderPage() {
           </div>
         );
       })()}
+      <ModalPrompt
+        show={prompt}
+        positive={positivePrompt}
+        negative={negativePrompt}
+        text="Status pesanan akan di update, proses ini tidak dapat dikembalikan. Lanjutkan?"
+      />
+      <ModalLoading show={updateLoading} />
     </div>
   );
 }

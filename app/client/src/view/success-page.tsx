@@ -41,7 +41,7 @@ export default function SuccessPage() {
             </svg>
           </Link>
           <Link
-            to="/profile"
+            to="/profile?page=1&limit=5&sort=updated&direction=desc"
             replace={true}
             className="bg-secondary text-onSecondary px-4 py-2 rounded flex gap-1"
           >

@@ -45,4 +45,23 @@ export default class OrderRepository {
 
     return data;
   }
+
+  async update(param: Record<string, any>): Promise<void> {
+    const payload = { ...param };
+    const queryUrl = urlParser(url.order);
+    delete payload.token;
+
+    const response = await fetch(queryUrl, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+      headers: {
+        Authorization: `Bearer ${param.token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw Failure.network(response);
+    }
+  }
 }

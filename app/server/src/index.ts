@@ -3,7 +3,6 @@ require("dotenv").config();
 import cors from "cors";
 import express from "express";
 import http from "http";
-import { prisma } from "./lib/helper/prisma";
 import { SocketIo } from "./lib/helper/socket-io";
 import userMiddleware from "./view/middleware/user-middleware";
 import userAccountRoute from "./view/route/user-account-route";
@@ -16,8 +15,6 @@ import userPaymentRoute from "./view/route/user-payment-route";
 import userProductRatingRoute from "./view/route/user-product-rating-route";
 import userProductRoute from "./view/route/user-product-route";
 import userStoreRoute from "./view/route/user-store-route";
-import { faker } from "@faker-js/faker";
-import { randomUUID } from "crypto";
 
 const app = express();
 const server = http.createServer(app);
@@ -50,162 +47,243 @@ app.use("/user/protected/store", userStoreRoute);
 app.use("/user/protected/cart", userCartRoute);
 app.use("/user/protected/order", userOrderRoute);
 
-app.get("/user/debug", async (req, res) => {
-  const userId = "cbb2ac04-6996-4f0d-919f-eddeff39a467";
+// app.get("/user/debug", async (req, res) => {
+//   const userId = "cbb2ac04-6996-4f0d-919f-eddeff39a467";
 
-  await prisma.$transaction(async (tx) => {
-    await tx.payment.create({
-      data: {
-        code: "COD",
-        name: "COD - Cash On Delivery",
-        description: "Bayar di tujuan setelah barang kamu terima",
-        picture:
-          "https://res.cloudinary.com/vjtechsolution/image/upload/v1707823397/cod.png",
-        fee: 0,
-        active: true,
-      },
-    });
+//   await prisma.$transaction(async (tx) => {
+//     // await tx.payment.create({
+//     //   data: {
+//     //     code: "COD",
+//     //     name: "COD - Cash On Delivery",
+//     //     description: "Bayar di tujuan setelah barang kamu terima",
+//     //     picture:
+//     //       "https://res.cloudinary.com/vjtechsolution/image/upload/v1707823397/cod.png",
+//     //     fee: 0,
+//     //     active: true,
+//     //   },
+//     // });
+//     // await Promise.all(
+//     //   [...Array(10)].map(async (_) => {
+//     //     await tx.banner.create({
+//     //       data: {
+//     //         name: faker.commerce.productName(),
+//     //         picture: faker.image.urlLoremFlickr({ category: "food" }),
+//     //         active: true,
+//     //         big: true,
+//     //       },
+//     //     });
+//     //   })
+//     // );
+//     // store
+//     // const store = await tx.store.create({
+//     //   data: {
+//     //     userId: userId,
+//     //     name: faker.company.name(),
+//     //     description: faker.lorem.lines({ min: 1, max: 3 }),
+//     //     address: faker.location.streetAddress(),
+//     //     phone: faker.phone.number(),
+//     //     lat: `${faker.location.latitude()}`,
+//     //     lng: `${faker.location.longitude()}`,
+//     //   },
+//     // });
+//     // await Promise.all(
+//     //   [...Array(10)].map(async (_) => {
+//     //     //category
+//     //     const category = await tx.category.create({
+//     //       data: {
+//     //         name: faker.commerce.department(),
+//     //         picture: faker.image.urlLoremFlickr({ category: "food" }),
+//     //         active: true,
+//     //       },
+//     //     });
+//     //     await Promise.all(
+//     //       [...Array(10)].map(async (_) => {
+//     //         const productId = randomUUID();
+//     //         // const randomCategory = await prisma.category.findMany({
+//     //         //   take: 1,
+//     //         //   skip: Math.floor(Math.random() * 20),
+//     //         // });
+//     //         //product
+//     //         const product = await tx.product.create({
+//     //           data: {
+//     //             id: productId,
+//     //             storeId: store.id,
+//     //             categoryId: category.id,
+//     //             priority: faker.number.int({ min: 0, max: 3 }),
+//     //             name: faker.commerce.productName(),
+//     //             description: faker.lorem.lines(1),
+//     //             picture: faker.image.urlLoremFlickr({ category: "food" }),
+//     //             sell: faker.number.int({ max: 999 }),
+//     //             view: faker.number.int({ max: 999 }),
+//     //             rating: faker.number.float({ max: 5 }),
+//     //             price: faker.commerce.price({
+//     //               min: 1000,
+//     //               max: 1000000,
+//     //               dec: 0,
+//     //             }),
+//     //           },
+//     //         });
+//     //         await Promise.all(
+//     //           [...Array(5)].map(async (_) => {
+//     //             await tx.productGalery.create({
+//     //               data: {
+//     //                 productId: productId,
+//     //                 picture: faker.image.urlLoremFlickr({ category: "food" }),
+//     //               },
+//     //             });
+//     //           })
+//     //         );
+//     //         await Promise.all(
+//     //           [...Array(10)].map(async (_) => {
+//     //             await tx.productVariant.create({
+//     //               data: {
+//     //                 productId: productId,
+//     //                 name: faker.commerce.productName(),
+//     //                 stok: faker.number.int({ max: 100 }),
+//     //                 price: faker.commerce.price({
+//     //                   min: 1000,
+//     //                   max: 1000000,
+//     //                   dec: 0,
+//     //                 }),
+//     //                 wholesalePrice: faker.commerce.price({
+//     //                   min: 1000,
+//     //                   max: 1000000,
+//     //                   dec: 0,
+//     //                 }),
+//     //                 wholesaleMin: faker.number.int({ min: 3, max: 10 }),
+//     //                 unit: faker.science.unit.name,
+//     //                 weight: faker.number.int({ min: 1000, max: 5000 }),
+//     //               },
+//     //             });
+//     //           })
+//     //         );
+//     //         await Promise.all(
+//     //           [...Array(20)].map(async (_) => {
+//     //             await tx.productRating.create({
+//     //               data: {
+//     //                 userId: userId,
+//     //                 productId: productId,
+//     //                 productName: faker.commerce.productName(),
+//     //                 rating: faker.number.float({ max: 5 }),
+//     //                 comment: faker.lorem.lines(2),
+//     //               },
+//     //             });
+//     //           })
+//     //         );
+//     //       })
+//     //     );
+//     //   })
+//     // );
+//   });
 
-    await Promise.all(
-      [...Array(10)].map(async (_) => {
-        await tx.banner.create({
-          data: {
-            name: faker.commerce.productName(),
-            picture: faker.image.urlLoremFlickr({ category: "food" }),
-            active: true,
-            big: true,
-          },
-        });
-      })
-    );
+//   res.end();
+// });
 
-    // store
-    const store = await tx.store.create({
-      data: {
-        userId: userId,
-        name: faker.company.name(),
-        description: faker.lorem.lines({ min: 1, max: 3 }),
-        address: faker.location.streetAddress(),
-        phone: faker.phone.number(),
-        lat: `${faker.location.latitude()}`,
-        lng: `${faker.location.longitude()}`,
-      },
-    });
+// app.post("/user/debug", async (req, res) => {
+//   // const fs = require("fs");
+//   // const filename = "dummy.txt";
+//   // const data = fs.readFileSync(filename, "utf8");
+//   // const images = data.split("\n");
+//   // const storeId = "aaef7dc5-41f2-44cf-8748-06e28ab6f3f0";
+//   // const userId = "cbb2ac04-6996-4f0d-919f-eddeff39a467";
 
-    await Promise.all(
-      [...Array(10)].map(async (_) => {
-        //category
-        const category = await tx.category.create({
-          data: {
-            name: faker.commerce.department(),
-            picture: faker.image.urlLoremFlickr({ category: "food" }),
-            active: true,
-          },
-        });
+//   // await prisma.$transaction(async (tx) => {
+//   //   const datas = await tx.category.findMany();
 
-        await Promise.all(
-          [...Array(10)].map(async (_) => {
-            const productId = randomUUID();
+//   //   for (const e of datas) {
+//   //     await Promise.all(
+//   //       [...Array(10)].map(async (_) => {
+//   //         const productId = randomUUID();
+//   //         const index = Math.floor(Math.random() * images.length);
 
-            // const randomCategory = await prisma.category.findMany({
-            //   take: 1,
-            //   skip: Math.floor(Math.random() * 20),
-            // });
+//   //         //product
+//   //         await tx.product.create({
+//   //           data: {
+//   //             id: productId,
+//   //             storeId: storeId,
+//   //             categoryId: e.id,
+//   //             priority: faker.number.int({ min: 0, max: 3 }),
+//   //             name: faker.commerce.productName(),
+//   //             description: faker.lorem.lines(1),
+//   //             picture: images[index],
+//   //             sell: faker.number.int({ max: 999 }),
+//   //             view: faker.number.int({ max: 999 }),
+//   //             rating: faker.number.float({ max: 5 }),
+//   //             price: faker.commerce.price({
+//   //               min: 1000,
+//   //               max: 1000000,
+//   //               dec: 0,
+//   //             }),
+//   //           },
+//   //         });
 
-            //product
-            const product = await tx.product.create({
-              data: {
-                id: productId,
-                storeId: store.id,
-                categoryId: category.id,
-                priority: faker.number.int({ min: 0, max: 3 }),
-                name: faker.commerce.productName(),
-                description: faker.lorem.lines(1),
-                picture: faker.image.urlLoremFlickr({ category: "food" }),
-                sell: faker.number.int({ max: 999 }),
-                view: faker.number.int({ max: 999 }),
-                rating: faker.number.float({ max: 5 }),
-                price: faker.commerce.price({
-                  min: 1000,
-                  max: 1000000,
-                  dec: 0,
-                }),
-              },
-            });
+//   //         await Promise.all(
+//   //           [...Array(5)].map(async (_) => {
+//   //             await tx.productGalery.create({
+//   //               data: {
+//   //                 productId: productId,
+//   //                 picture: images[index],
+//   //               },
+//   //             });
+//   //           })
+//   //         );
 
-            await Promise.all(
-              [...Array(5)].map(async (_) => {
-                await tx.productGalery.create({
-                  data: {
-                    productId: productId,
-                    picture: faker.image.urlLoremFlickr({ category: "food" }),
-                  },
-                });
-              })
-            );
+//   //         await Promise.all(
+//   //           [...Array(10)].map(async (_) => {
+//   //             await tx.productVariant.create({
+//   //               data: {
+//   //                 productId: productId,
+//   //                 name: faker.commerce.productName(),
+//   //                 stok: faker.number.int({ max: 100 }),
+//   //                 price: faker.commerce.price({
+//   //                   min: 1000,
+//   //                   max: 1000000,
+//   //                   dec: 0,
+//   //                 }),
+//   //                 wholesalePrice: faker.commerce.price({
+//   //                   min: 1000,
+//   //                   max: 1000000,
+//   //                   dec: 0,
+//   //                 }),
+//   //                 wholesaleMin: faker.number.int({ min: 3, max: 10 }),
+//   //                 unit: faker.science.unit.name,
+//   //                 weight: faker.number.int({ min: 1000, max: 5000 }),
+//   //               },
+//   //             });
+//   //           })
+//   //         );
 
-            await Promise.all(
-              [...Array(10)].map(async (_) => {
-                await tx.productVariant.create({
-                  data: {
-                    productId: productId,
-                    name: faker.commerce.productName(),
-                    stok: faker.number.int({ max: 100 }),
-                    price: faker.commerce.price({
-                      min: 1000,
-                      max: 1000000,
-                      dec: 0,
-                    }),
-                    wholesalePrice: faker.commerce.price({
-                      min: 1000,
-                      max: 1000000,
-                      dec: 0,
-                    }),
-                    wholesaleMin: faker.number.int({ min: 3, max: 10 }),
-                    unit: faker.science.unit.name,
-                    weight: faker.number.int({ min: 1000, max: 5000 }),
-                  },
-                });
-              })
-            );
+//   //         await Promise.all(
+//   //           [...Array(20)].map(async (_) => {
+//   //             await tx.productRating.create({
+//   //               data: {
+//   //                 userId: userId,
+//   //                 productId: productId,
+//   //                 productName: faker.commerce.productName(),
+//   //                 rating: faker.number.float({ max: 5 }),
+//   //                 comment: faker.lorem.lines(2),
+//   //               },
+//   //             });
+//   //           })
+//   //         );
+//   //       })
+//   //     );
+//   //   }
+//   // });
 
-            await Promise.all(
-              [...Array(20)].map(async (_) => {
-                await tx.productRating.create({
-                  data: {
-                    userId: userId,
-                    productId: productId,
-                    productName: faker.commerce.productName(),
-                    rating: faker.number.float({ max: 5 }),
-                    comment: faker.lorem.lines(2),
-                  },
-                });
-              })
-            );
-          })
-        );
-      })
-    );
-  });
+//   const hashedPassword = await bcrypt.hash("12345678", 10);
 
-  res.end();
-});
+//   await prisma.user.update({
+//     where: {
+//       email: "admin@majujayashop.com",
+//     },
+//     data: {
+//       password: hashedPassword,
+//     },
+//   });
 
-app.post("/user/debug", async (req, res) => {
-  await Promise.all(
-    [...Array(10)].map(async () => {
-      await prisma.category.create({
-        data: {
-          name: faker.commerce.department(),
-          picture: faker.image.urlLoremFlickr({ category: "food" }),
-          active: true,
-        },
-      });
-    })
-  );
-
-  res.end();
-});
+//   res.end();
+// });
 
 //route not found 404
 app.use("*", (_, res) => res.status(404).json("Route path not found"));

@@ -70,7 +70,7 @@ model Banner {
   id          String   @id @default(uuid())
   name        String
   description String?  @db.Text
-  picture     String
+  picture     String   @db.Text
   big         Boolean
   active      Boolean  @default(false)
   created     DateTime @default(now())
@@ -104,7 +104,7 @@ model Product {
   priority       Int              @default(0)
   name           String
   description    String           @db.Text
-  picture        String
+  picture        String           @db.Text
   price          Decimal          @db.Decimal(19, 4)
   sell           Int              @default(0)
   view           Int              @default(0)
@@ -144,7 +144,7 @@ model ProductVariant {
 model ProductGalery {
   id        String   @id @default(uuid())
   productId String
-  picture   String
+  picture   String   @db.Text
   created   DateTime @default(now())
   updated   DateTime @default(now())
   product   Product  @relation(fields: [productId], references: [id])

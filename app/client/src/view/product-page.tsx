@@ -8,8 +8,8 @@ import { Failure } from "../lib/helper/failure";
 import CategoryRepository from "../lib/repository/category-repository";
 import ProductRepository from "../lib/repository/product-repository";
 import ProductItem from "./component/product-item";
-import StatusBar from "./component/status-bar";
 import ScrollTop from "./component/scrolltop";
+import StatusBar from "./component/status-bar";
 
 const productRepository = new ProductRepository();
 const categoryRepository = new CategoryRepository();

@@ -59,7 +59,7 @@ export default class UserOrderRepository {
       }
 
       if (param.hasOwnProperty("page") && param.hasOwnProperty("limit")) {
-        const skip = param.page == 1 ? 0 : param.page * param.limit;
+        const skip = (Number(param.page) - 1) * Number(param.limit);
 
         condition = {
           ...condition,
@@ -163,5 +163,26 @@ export default class UserOrderRepository {
     });
 
     return result;
+  }
+
+  async update(param: Record<string, any>): Promise<void> {
+    await prisma.$transaction(async (tx) => {
+      await tx.order.update({
+        where: {
+          id: param.id,
+        },
+        data: {
+          statusOrder: param.statusOrder,
+          updated: new Date(),
+        },
+      });
+
+      await tx.orderStatus.create({
+        data: {
+          orderId: param.id,
+          status: param.statusOrder,
+        },
+      });
+    });
   }
 }

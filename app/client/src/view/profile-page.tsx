@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import ModalPrompt from "./component/modal-prompt";
 import StatusBar from "./component/status-bar";
 import StoreInfo from "./component/store-info";
@@ -8,6 +8,7 @@ import { AuthContext } from "./context/auth-context";
 export default function ProfilePage() {
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
   const [prompt, setPrompt] = useState(false);
 
   function positivePrompt() {
@@ -32,7 +33,7 @@ export default function ProfilePage() {
           <div className="font-semibold">
             <div>{authContext?.auth?.user?.name}</div>
             <div>{authContext?.auth?.user?.email}</div>
-            <Link to="" className="text-primary flex items-center">
+            {/* <Link to="" className="text-primary flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -48,10 +49,10 @@ export default function ProfilePage() {
                 />
               </svg>
               Edit Data
-            </Link>
+            </Link> */}
           </div>
           <button
-            className="bg-red-500 text-white font-semibold p-2 rounded-full flex gap-1 items-center"
+            className="bg-red-500 text-white font-semibold p-1 rounded-full flex gap-1 items-center"
             onClick={() => {
               setPrompt(true);
             }}
@@ -74,24 +75,47 @@ export default function ProfilePage() {
         </div>
         <div className="bg-primary text-onPrimary w-full">
           <div className="flex divide-x divide-onPrimary overflow-x-scroll no-scrollbar">
-            <Link
-              to="/profile?page=1&limit=5&sort=updated&direction=desc"
-              className="bg-surface text-onSurface font-semibold py-2 px-4 shrink-0 flex gap-2 items-center"
-            >
-              <div>Pesanan Saya</div>
-              <div className="size-6 rounded-full text-xs font-bold bg-red-500 text-white flex items-center justify-center">
-                1
-              </div>
-            </Link>
-            <Link to="" className="py-2 px-4 shrink-0 flex gap-2 items-center">
-              <div>Orderan Masuk</div>
-              <div className="size-6 rounded-full text-xs font-bold bg-red-500 text-white flex items-center justify-center">
-                2
-              </div>
-            </Link>
-            <Link to="" className="py-2 px-4 shrink-0">
+            {(() => {
+              const active =
+                location.pathname == "/profile"
+                  ? "bg-surface text-onSurface font-semibold"
+                  : "bg-primary text-onPrimary";
+
+              return (
+                <Link
+                  to="/profile?page=1&limit=5&sort=updated&direction=desc"
+                  className={`${active} py-2 px-4 shrink-0 flex gap-2 items-center`}
+                >
+                  <div>Pesanan Saya</div>
+                  {/* <div className="size-6 rounded-full text-xs font-bold bg-red-500 text-white flex items-center justify-center">
+                    1
+                  </div> */}
+                </Link>
+              );
+            })()}
+            {(() => {
+              if (authContext?.auth?.user?.store) {
+                const active =
+                  location.pathname == "/profile/shop"
+                    ? "bg-surface text-onSurface font-semibold"
+                    : "bg-primary text-onPrimary";
+
+                return (
+                  <Link
+                    to="/profile/shop?page=1&limit=5&sort=updated&direction=desc&filter=storeId&value=aaef7dc5-41f2-44cf-8748-06e28ab6f3f0"
+                    className={`${active} py-2 px-4 shrink-0 flex gap-2 items-center`}
+                  >
+                    <div>Orderan Masuk</div>
+                    {/* <div className="size-6 rounded-full text-xs font-bold bg-red-500 text-white flex items-center justify-center">
+                    1
+                  </div> */}
+                  </Link>
+                );
+              }
+            })()}
+            {/* <Link to="" className="py-2 px-4 shrink-0">
               Produk Saya
-            </Link>
+            </Link> */}
           </div>
           <Outlet />
         </div>

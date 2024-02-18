@@ -4,7 +4,6 @@ import AuthBar from "./auth-bar";
 import ErrorBoundary from "./error-boundary";
 import Footer from "./footer";
 import NavBar from "./nav-bar";
-import ScrollTop from "./scrolltop";
 
 const customTheme: CustomFlowbiteTheme = {
   carousel: {

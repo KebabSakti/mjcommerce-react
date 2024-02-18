@@ -6,5 +6,6 @@ const orderController = new UserOrderController();
 
 router.get("/", orderController.read);
 router.post("/", orderController.create);
+router.put("/", orderController.update);
 
 export default router;
