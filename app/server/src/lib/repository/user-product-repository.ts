@@ -111,4 +111,8 @@ export default class UserProductRepository {
 
     return result;
   }
+
+  async create(param: Record<string, any>): Promise<void> {
+    // await prisma.$transaction((tx) => {});
+  }
 }

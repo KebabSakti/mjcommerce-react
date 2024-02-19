@@ -28,9 +28,11 @@ export default function ProductMangementPage() {
   const [prompt, setPrompt] = useState<string | null>();
 
   const [input, setInput] = useState({
+    storeId: query.storeId,
     categoryId: "",
     name: "",
     description: "",
+    picture: "",
     varian: [{ name: "", price: "", wholesaleMin: "", wholesalePrice: "" }],
   });
 
@@ -429,7 +431,7 @@ export default function ProductMangementPage() {
                         <div className="flex gap-2">
                           <input
                             type="text"
-                            placeholder="Nama Produk"
+                            placeholder="Nama Varian"
                             name="name"
                             required
                             className="border-gray-200 rounded w-full"
@@ -440,7 +442,7 @@ export default function ProductMangementPage() {
                           />
                           <input
                             type="number"
-                            placeholder="Harga Normal"
+                            placeholder="Harga"
                             name="price"
                             min={0}
                             required

@@ -47,6 +47,11 @@ app.use("/user/protected/store", userStoreRoute);
 app.use("/user/protected/cart", userCartRoute);
 app.use("/user/protected/order", userOrderRoute);
 
+app.post("/upload", (req, res) => {
+  console.log(req.file);
+  res.end();
+});
+
 // app.get("/user/debug", async (req, res) => {
 //   const userId = "cbb2ac04-6996-4f0d-919f-eddeff39a467";
 
