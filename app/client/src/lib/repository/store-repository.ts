@@ -20,4 +20,23 @@ export default class StoreRepository {
 
     return data;
   }
+
+  async create(param: Record<string, any>): Promise<void> {
+    const token = param.token;
+    const queryUrl = urlParser(url.store);
+    delete param.token;
+
+    const response = await fetch(queryUrl, {
+      method: "POST",
+      body: JSON.stringify(param),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw Failure.network(response);
+    }
+  }
 }

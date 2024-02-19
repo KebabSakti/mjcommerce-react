@@ -5,5 +5,6 @@ const router = express.Router();
 const storeController = new UserStoreController();
 
 router.get("/", storeController.show);
+router.post("/", storeController.create);
 
 export default router;

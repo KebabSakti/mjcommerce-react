@@ -12,4 +12,10 @@ export default class UserStoreRepository {
 
     return data;
   }
+
+  async create(param: Record<string, any>): Promise<void> {
+    await prisma.store.create({
+      data: param as any,
+    });
+  }
 }

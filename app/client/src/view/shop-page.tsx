@@ -68,7 +68,7 @@ export default function ShopPage() {
           setSelectedOrder(null);
           setUpdateLoading(false);
           getOrders();
-          toast("Proses berhasil, pesanan aktif");
+          toast("Proses berhasil, pesanan ter update");
         });
     } catch (error: any) {
       setPrompt(false);

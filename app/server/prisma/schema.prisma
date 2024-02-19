@@ -83,7 +83,7 @@ model Store {
   id          String    @id @default(uuid())
   userId      String    @unique
   name        String
-  description String    @db.Text
+  description String?    @db.Text
   address     String    @db.Text
   phone       String
   lat         String?

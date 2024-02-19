@@ -21,6 +21,7 @@ import { store } from "./view/redux/store";
 import RegisterPage from "./view/register-page";
 import SuccessPage from "./view/success-page";
 import ShopPage from "./view/shop-page";
+import ProductMangementPage from "./view/product-management-page";
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
           {
             path: "/profile/shop",
             element: <ShopPage />,
+          },
+          {
+            path: "/profile/product-management",
+            element: <ProductMangementPage />,
           },
         ],
       },
