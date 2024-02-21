@@ -15,7 +15,14 @@ export default class UserProductRepository {
         "created",
       ];
 
-      let condition: any = { where: { active: true } };
+      let condition: any = { where: {} };
+
+      if (!param.hasOwnProperty("active")) {
+        condition["where"] = {
+          ...condition.where,
+          active: true,
+        };
+      }
 
       if (param.hasOwnProperty("storeId")) {
         condition["where"] = {
@@ -88,7 +95,7 @@ export default class UserProductRepository {
   async show(id: string): Promise<Result<ProductModel>> {
     const result = await prisma.$transaction(async (tx) => {
       const query = await tx.product.findFirst({
-        where: { active: true, id: id },
+        where: { id: id },
         include: {
           store: true,
           category: true,
@@ -113,6 +120,50 @@ export default class UserProductRepository {
   }
 
   async create(param: Record<string, any>): Promise<void> {
-    // await prisma.$transaction((tx) => {});
+    await prisma.$transaction(async (tx) => {
+      const picture = param.files.find((e: any) => e.tag == "picture");
+      const galleries = param.files.filter((e: any) => e.tag == "gallery");
+
+      const product = await tx.product.create({
+        data: {
+          storeId: param.storeId,
+          categoryId: param.categoryId,
+          name: param.name,
+          description: param.description,
+          picture: picture.link,
+          price: param.varian[0].price,
+        },
+      });
+
+      for (const varian of param.varian) {
+        await tx.productVariant.create({
+          data: {
+            productId: product.id,
+            name: varian.name,
+            price: varian.price,
+            wholesaleMin: varian.wholesaleMin,
+            wholesalePrice: varian.wholesalePrice,
+          },
+        });
+      }
+
+      for (const gallery of galleries) {
+        await tx.productGalery.create({
+          data: {
+            productId: product.id,
+            picture: gallery.link,
+          },
+        });
+      }
+    });
+  }
+
+  async update(param: Record<string, any>): Promise<void> {
+    await prisma.product.update({
+      where: {
+        id: param.id,
+      },
+      data: param,
+    });
   }
 }

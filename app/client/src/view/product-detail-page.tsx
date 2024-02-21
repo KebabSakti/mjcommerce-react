@@ -1,23 +1,24 @@
-import { Carousel, Spinner } from "flowbite-react";
-import { useContext, useEffect, useReducer } from "react";
+import { Carousel, Modal, Spinner } from "flowbite-react";
+import { useContext, useEffect, useReducer, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useParams } from "react-router-dom";
 import { ProductModel } from "../../../lib/model/product-model";
-import { ReducerAction, Result } from "../lib/config/type";
-import { createReducer } from "../lib/helper/common";
+import { Empty, ReducerAction, Result } from "../lib/config/type";
+import { createReducer, nl2br } from "../lib/helper/common";
 import { Failure } from "../lib/helper/failure";
 import ProductRepository from "../lib/repository/product-repository";
 import ProductInfo from "./component/product-info";
 import ProductRatingComponent from "./component/product-rating-component";
+import ScrollTop from "./component/scrolltop";
 import StatusBar from "./component/status-bar";
 import { CartContext } from "./context/cart-context";
-import ScrollTop from "./component/scrolltop";
 
 const productRepository = new ProductRepository();
 
 export default function ProductDetailPage() {
   const { id } = useParams();
   const cartContext = useContext(CartContext);
+  const [image, setImage] = useState<string | Empty>(null);
 
   const [state, dispatch] = useReducer(createReducer<Result<ProductModel>>, {
     type: null,
@@ -52,14 +53,15 @@ export default function ProductDetailPage() {
         <div className="flex flex-col gap-2 m-4 min-h-screen lg:w-3/5 lg:mx-auto">
           <StatusBar title="Produk Detail" />
           <div className="bg-surface p-4 flex flex-col gap-2 text-onSurface md:flex-row md:gap-4">
-            <div className="h-60 w-full md:h-80 md:basis-1/2">
+            <div className="bg-gray-700 h-60 w-full md:h-80 md:basis-1/2">
               <Carousel indicators={false}>
                 <LazyLoadImage
                   src={product.picture}
                   alt={product.name}
-                  width={800}
-                  height={600}
-                  className="bg-gray-100 object-cover h-full w-full"
+                  className="object-contain h-full w-full"
+                  onClick={() => {
+                    setImage(product.picture);
+                  }}
                 />
                 {gallery?.map((e, i) => {
                   return (
@@ -67,9 +69,10 @@ export default function ProductDetailPage() {
                       key={i}
                       src={e.picture}
                       alt={product.name}
-                      width={800}
-                      height={600}
-                      className="bg-gray-100 object-cover h-full w-full"
+                      className="object-contain h-full w-full"
+                      onClick={() => {
+                        setImage(e.picture);
+                      }}
                     />
                   );
                 })}
@@ -143,11 +146,43 @@ export default function ProductDetailPage() {
           </div>
           <div className="bg-surface p-4 flex flex-col gap-2 text-onSurface">
             <div className="text-xl font-semibold">Deskripsi</div>
-            <div>{product.description}</div>
+            <div>{nl2br(product.description ?? "")}</div>
           </div>
           <ProductRatingComponent productId={product.id!} />
         </div>
         <ScrollTop />
+        <Modal
+          dismissible
+          show={image != null}
+          onClose={() => {
+            setImage(null);
+          }}
+        >
+          <div className="relative">
+            <button
+              className="absolute right-2 top-2 bg-white drop-shadow rounded-full p-1"
+              onClick={() => {
+                setImage(null);
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-7 h-7"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                />
+              </svg>
+            </button>
+            <img src={image!} className="w-full h-full" />
+          </div>
+        </Modal>
       </>
     );
   }

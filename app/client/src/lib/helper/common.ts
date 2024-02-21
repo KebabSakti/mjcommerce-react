@@ -108,3 +108,7 @@ export function invoice(): string {
 
   return prefix + dateString + randomDigits;
 }
+
+export function nl2br(value:string) {
+  return value.replace(/(?:\r\n|\r|\n)/g, '<br>');
+}

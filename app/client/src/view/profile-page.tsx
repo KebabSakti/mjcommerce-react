@@ -241,7 +241,7 @@ export default function ProfilePage() {
                 return (
                   <>
                     <Link
-                      to={`/profile/product-management?page=1&limit=60&sort=created&direction=desc&storeId=${store.data.id}`}
+                      to={`/profile/product-management?page=1&limit=60&sort=created&direction=desc&active=all&storeId=${store.data.id}`}
                       className={`${active} py-2 px-4 shrink-0 flex gap-2 items-center`}
                     >
                       Produk Saya
