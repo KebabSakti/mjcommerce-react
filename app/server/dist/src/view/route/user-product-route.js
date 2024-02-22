@@ -9,4 +9,6 @@ const router = express_1.default.Router();
 const productController = new user_product_controller_1.default();
 router.get("/", productController.index);
 router.get("/:id", productController.show);
+router.post("/", productController.create);
+router.put("/", productController.update);
 exports.default = router;

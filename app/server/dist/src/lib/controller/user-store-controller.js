@@ -17,5 +17,16 @@ class UserStoreController {
             failure_1.Failure.handle(error, res);
         }
     }
+    async create(req, res) {
+        try {
+            const user = req.app.locals.user;
+            const payload = { ...req.body, userId: user.id };
+            await storeRepository.create(payload);
+            res.end();
+        }
+        catch (error) {
+            failure_1.Failure.handle(error, res);
+        }
+    }
 }
 exports.default = UserStoreController;

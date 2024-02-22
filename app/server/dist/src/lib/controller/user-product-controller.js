@@ -34,5 +34,23 @@ class UserProductController {
             failure_1.Failure.handle(error, res);
         }
     }
+    async create(req, res) {
+        try {
+            await productRepository.create(req.body);
+            res.end();
+        }
+        catch (error) {
+            failure_1.Failure.handle(error, res);
+        }
+    }
+    async update(req, res) {
+        try {
+            await productRepository.update(req.body);
+            res.end();
+        }
+        catch (error) {
+            failure_1.Failure.handle(error, res);
+        }
+    }
 }
 exports.default = UserProductController;

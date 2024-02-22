@@ -8,4 +8,5 @@ const user_store_controller_1 = __importDefault(require("../../lib/controller/us
 const router = express_1.default.Router();
 const storeController = new user_store_controller_1.default();
 router.get("/", storeController.show);
+router.post("/", storeController.create);
 exports.default = router;

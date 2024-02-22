@@ -11,5 +11,10 @@ class UserStoreRepository {
         };
         return data;
     }
+    async create(param) {
+        await prisma_1.prisma.store.create({
+            data: param,
+        });
+    }
 }
 exports.default = UserStoreRepository;

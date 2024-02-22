@@ -111,6 +111,7 @@ export default function ProductMangementPage() {
       toast("Proses berhasil, produk berhasil di update");
       setProductDetail(result.data);
       setLoading(false);
+      getData();
     } catch (error: any) {
       toast("Terjadi kesalahan, harap coba beberapa saat lagi");
       setLoading(false);
@@ -699,7 +700,9 @@ export default function ProductMangementPage() {
                       AKTIF
                     </div>
                   ) : (
-                    <div className="text-red-500 border border-red-500 text-xs rounded px-1 w-fit">NON AKTIF</div>
+                    <div className="text-red-500 border border-red-500 text-xs rounded px-1 w-fit">
+                      NON AKTIF
+                    </div>
                   )}
                 </div>
               </div>
@@ -722,8 +725,8 @@ export default function ProductMangementPage() {
             </div>
             {productDetail?.productVariant?.map((e, i) => {
               return (
-                <>
-                  <div key={i}>Varian Produk {i + 1}</div>
+                <div key={i}>
+                  <div>Varian Produk {i + 1}</div>
                   <div className="bg-gray-100 p-2 rounded flex flex-col gap-2">
                     <div>
                       <div className="text-xs text-gray-400">Nama Varian</div>
@@ -744,7 +747,7 @@ export default function ProductMangementPage() {
                       <div>{currency(e.wholesalePrice!)}</div>
                     </div>
                   </div>
-                </>
+                </div>
               );
             })}
           </div>
