@@ -626,7 +626,7 @@ export default function ProductMangementPage() {
       >
         <Modal.Header>Produk Detail</Modal.Header>
         <Modal.Body>
-          <div className="flex flex-col gap-2 h-96 overflow-scroll md:h-[650px]">
+          <div className="flex flex-col gap-2 max-h-[650px] overflow-scroll">
             <div className="bg-gray-700 h-52 w-full rounded shrink-0 md:h-72">
               <Carousel indicators={false}>
                 <LazyLoadImage

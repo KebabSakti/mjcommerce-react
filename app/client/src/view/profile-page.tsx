@@ -250,6 +250,28 @@ export default function ProfilePage() {
                 );
               }
             })()}
+            {(() => {
+              if (store?.data) {
+                const active =
+                  location.pathname == "/profile/sales"
+                    ? "bg-surface text-onSurface font-semibold"
+                    : "bg-primary text-onPrimary";
+
+                const startDate = new Date().toISOString().split("T")[0];
+                const endDate = new Date().toISOString().split("T")[0];
+
+                return (
+                  <>
+                    <Link
+                      to={`/profile/sales?page=1&limit=10&startDate=${startDate}&endDate=${endDate}&storeId=${store.data.id}`}
+                      className={`${active} py-2 px-4 shrink-0 flex gap-2 items-center`}
+                    >
+                      Statistik Penjualan
+                    </Link>
+                  </>
+                );
+              }
+            })()}
           </div>
           <Outlet />
         </div>

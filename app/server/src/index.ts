@@ -15,6 +15,8 @@ import userPaymentRoute from "./view/route/user-payment-route";
 import userProductRatingRoute from "./view/route/user-product-rating-route";
 import userProductRoute from "./view/route/user-product-route";
 import userStoreRoute from "./view/route/user-store-route";
+import userSalesRoute from "./view/route/user-sales-route";
+import { prisma } from "./lib/helper/prisma";
 
 const app = express();
 const server = http.createServer(app);
@@ -46,10 +48,33 @@ app.use("/user/protected/account", userAccountRoute);
 app.use("/user/protected/store", userStoreRoute);
 app.use("/user/protected/cart", userCartRoute);
 app.use("/user/protected/order", userOrderRoute);
+app.use("/user/protected/sales", userSalesRoute);
 
-app.post("/upload", (req, res) => {
-  console.log(req.file);
-  res.end();
+app.get("/", async (req, res) => {
+  const startDate = "2024-02-16";
+  const endDate = "2024-02-18";
+
+  const data = await prisma.order.groupBy({
+    by: ["userId", "userName", "userPhone"],
+    _sum: {
+      payTotal: true,
+      productQty: true,
+    },
+    orderBy: {
+      _sum: {
+        payTotal: "desc",
+      },
+    },
+    where: {
+      statusOrder: "COMPLETED",
+      updated: {
+        gte: startDate + "T00:00:00.000Z",
+        lte: endDate + "T23:59:59.999Z",
+      },
+    },
+  });
+
+  res.json({ data: data });
 });
 
 // app.get("/user/debug", async (req, res) => {
