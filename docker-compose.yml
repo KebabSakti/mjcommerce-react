@@ -3,7 +3,6 @@ version: "3"
 networks:
   majujaya:
 
-
 services:
   server:
     image: node:20-alpine
@@ -17,9 +16,10 @@ services:
       - adminer
       - mariadb
       - client
+      - admin
     ports:
       - 1001:1001
-    command: [ "sh", "-c", "npm run dev" ]
+    command: ["sh", "-c", "npm run dev"]
     networks:
       - majujaya
 
@@ -33,7 +33,21 @@ services:
     working_dir: /var/www/html/client
     ports:
       - 1010:5173
-    command: [ "sh", "-c", "npm run dev" ]
+    command: ["sh", "-c", "npm run dev"]
+    networks:
+      - majujaya
+
+  admin:
+    image: node:20-alpine
+    container_name: admin-majujaya
+    restart: on-failure
+    volumes:
+      - ./app/admin:/var/www/html/admin
+      - ./app/lib:/var/www/html/lib
+    working_dir: /var/www/html/admin
+    ports:
+      - 1011:5173
+    command: ["sh", "-c", "npm run dev"]
     networks:
       - majujaya
 
@@ -54,6 +68,16 @@ services:
       - ./app/client:/var/www/html/client
       - ./app/lib:/var/www/html/lib
     working_dir: /var/www/html/client
+    networks:
+      - majujaya
+
+  node-admin:
+    image: node:20-alpine
+    container_name: node-majujaya
+    volumes:
+      - ./app/admin:/var/www/html/admin
+      - ./app/lib:/var/www/html/lib
+    working_dir: /var/www/html/admin
     networks:
       - majujaya
 

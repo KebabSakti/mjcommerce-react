@@ -4,7 +4,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useParams } from "react-router-dom";
 import { ProductModel } from "../../../lib/model/product-model";
 import { Empty, ReducerAction, Result } from "../lib/config/type";
-import { createReducer, nl2br } from "../lib/helper/common";
+import { createReducer } from "../lib/helper/common";
 import { Failure } from "../lib/helper/failure";
 import ProductRepository from "../lib/repository/product-repository";
 import ProductInfo from "./component/product-info";
@@ -146,7 +146,9 @@ export default function ProductDetailPage() {
           </div>
           <div className="bg-surface p-4 flex flex-col gap-2 text-onSurface">
             <div className="text-xl font-semibold">Deskripsi</div>
-            <div>{nl2br(product.description ?? "")}</div>
+            <div className="whitespace-pre-line">
+              {product.description ?? ""}
+            </div>
           </div>
           <ProductRatingComponent productId={product.id!} />
         </div>

@@ -39,18 +39,19 @@ model User {
   cart          Cart?
 
   @@index([name, phone])
+  @@map("user")
 }
 
 model Admin {
   id       String   @id @default(uuid())
-  email    String   @unique
+  username String   @unique
   password String
   name     String
-  phone    String
   created  DateTime @default(now())
   updated  DateTime @default(now())
 
-  @@index([email, name, phone])
+  @@index([username, name])
+  @@map("admin")
 }
 
 model Category {
@@ -61,9 +62,11 @@ model Category {
   active      Boolean   @default(false)
   created     DateTime  @default(now())
   updated     DateTime  @default(now())
+  deleted     DateTime?
   product     Product[]
 
   @@index([name])
+  @@map("category")
 }
 
 model Banner {
@@ -77,13 +80,14 @@ model Banner {
   updated     DateTime @default(now())
 
   @@index([name])
+  @@map("banner")
 }
 
 model Store {
   id          String    @id @default(uuid())
   userId      String    @unique
   name        String
-  description String?    @db.Text
+  description String?   @db.Text
   address     String    @db.Text
   phone       String
   lat         String?
@@ -95,6 +99,7 @@ model Store {
   product     Product[]
 
   @@index([name, active])
+  @@map("store")
 }
 
 model Product {
@@ -119,6 +124,7 @@ model Product {
   productVariant ProductVariant[]
 
   @@index([storeId, categoryId, name, active])
+  @@map("product")
 }
 
 model ProductVariant {
@@ -139,6 +145,7 @@ model ProductVariant {
   cartItem       CartItem[]
 
   @@index([productId])
+  @@map("productvariant")
 }
 
 model ProductGalery {
@@ -150,6 +157,7 @@ model ProductGalery {
   product   Product  @relation(fields: [productId], references: [id])
 
   @@index([productId])
+  @@map("productgalery")
 }
 
 model ProductRating {
@@ -165,6 +173,7 @@ model ProductRating {
   product     Product  @relation(fields: [productId], references: [id])
 
   @@index([userId, productId, rating])
+  @@map("productrating")
 }
 
 model Cart {
@@ -176,6 +185,8 @@ model Cart {
   updated  DateTime   @default(now())
   user     User       @relation(fields: [userId], references: [id])
   cartItem CartItem[]
+
+  @@map("cart")
 }
 
 model CartItem {
@@ -190,6 +201,7 @@ model CartItem {
   productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
 
   @@index([cartId, productVariantId])
+  @@map("cartitem")
 }
 
 model Payment {
@@ -205,6 +217,7 @@ model Payment {
   updated     DateTime @default(now())
 
   @@index([code, name])
+  @@map("payment")
 }
 
 model Order {
@@ -243,6 +256,7 @@ model Order {
   shippingStatus  ShippingStatus[]
 
   @@index([invoice, userId, userName, userPhone])
+  @@map("order")
 }
 
 model OrderItem {
@@ -271,6 +285,7 @@ model OrderItem {
   order               Order    @relation(fields: [orderId], references: [id])
 
   @@index([orderId, storeName, productName, productVariantName])
+  @@map("orderitem")
 }
 
 model OrderStatus {
@@ -281,6 +296,8 @@ model OrderStatus {
   created DateTime @default(now())
   updated DateTime @default(now())
   order   Order    @relation(fields: [orderId], references: [id])
+
+  @@map("orderstatus")
 }
 
 model PaymentStatus {
@@ -291,6 +308,8 @@ model PaymentStatus {
   created DateTime @default(now())
   updated DateTime @default(now())
   order   Order    @relation(fields: [orderId], references: [id])
+
+  @@map("paymentstatus")
 }
 
 model ShippingStatus {
@@ -301,4 +320,17 @@ model ShippingStatus {
   created DateTime @default(now())
   updated DateTime @default(now())
   order   Order?   @relation(fields: [orderId], references: [id])
+
+  @@map("shippingstatus")
+}
+
+model Configuration {
+  id          String   @id
+  name        String
+  value       String?  @db.Text
+  description String?  @db.Text
+  created     DateTime @default(now())
+  updated     DateTime @default(now())
+
+  @@map("configuration")
 }

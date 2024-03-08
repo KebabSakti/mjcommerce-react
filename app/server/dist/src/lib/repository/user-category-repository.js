@@ -4,7 +4,7 @@ const prisma_1 = require("../helper/prisma");
 class UserCategoryRepository {
     async read() {
         const result = await prisma_1.prisma.category.findMany({
-            where: { active: true },
+            where: { active: true, deleted: null },
             orderBy: {
                 name: "asc",
             },
