@@ -9,6 +9,7 @@ import core from "express";
 import fs from "fs";
 import NodeCache from "node-cache";
 import P from "pino";
+import { convertToValidPhoneNumber } from "./common";
 
 const logger = P({ timestamp: () => `,"time":"${new Date().toJSON()}"` });
 logger.level = "silent";
@@ -74,7 +75,8 @@ export class Whatsapp {
 
   static async send(phone: string, message: string): Promise<void> {
     if (this.socket) {
-      const id = phone + idSuffix;
+      const formattedPhone = convertToValidPhoneNumber(phone);
+      const id = formattedPhone + idSuffix;
 
       if (message.length > 0) {
         await this.socket.sendMessage(id, {

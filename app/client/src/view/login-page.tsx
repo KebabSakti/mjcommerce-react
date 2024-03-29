@@ -10,7 +10,8 @@ export default function LoginPage() {
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [input, setInput] = useState({ email: "", password: "" });
+  const [input, setInput] = useState({ phone: "", otp: "" });
+  const [timer, setTimer] = useState(0);
 
   useEffect(() => {
     if (authContext?.auth) {
@@ -22,6 +23,33 @@ export default function LoginPage() {
     setInput({ ...input, [e.target.name]: e.target.value });
   }
 
+  function countdown() {
+    let seconds = 60;
+    setTimer(seconds--);
+
+    const timer = setInterval(() => {
+      if (seconds <= 0) {
+        clearInterval(timer);
+        setTimer(0);
+      }
+
+      setTimer(seconds--);
+    }, 1000);
+  }
+
+  async function otp() {
+    try {
+      if (input.phone.length < 10) {
+        alert("No Whatsapp tidak valid");
+      } else {
+        await authContext?.otp({ phone: input.phone });
+        countdown();
+      }
+    } catch (error) {
+      toast("Terjadi kesalahan, harap coba beberapa saat lagi");
+    }
+  }
+
   async function loginForm(e: any) {
     e.preventDefault();
 
@@ -29,7 +57,7 @@ export default function LoginPage() {
       setLoading(true);
       await authContext?.login(input);
     } catch (error) {
-      toast("Login gagal, cek kembali email dan password anda");
+      toast("Login gagal, cek kembali input anda");
       setLoading(false);
     }
   }
@@ -47,21 +75,31 @@ export default function LoginPage() {
           onSubmit={loginForm}
           className="bg-surface text-onSurface p-4 drop-shadow rounded flex flex-col gap-4 w-[80%] md:w-[20%]"
         >
+          <div className="flex gap-x-2">
+            <input
+              type="number"
+              placeholder="No Whatsapp"
+              name="phone"
+              required
+              className="border-gray-200 rounded w-full"
+              value={input.phone}
+              onChange={inputOnChange}
+            />
+            <button
+              type="button"
+              className="bg-primary text-onPrimary font-semibold p-2 shrink-0 w-[30%] disabled:bg-gray-300"
+              onClick={otp}
+              disabled={timer > 0}
+            >
+              {timer > 0 ? timer : "Kode OTP"}
+            </button>
+          </div>
           <input
-            type="email"
-            placeholder="Email"
-            name="email"
+            type="number"
+            placeholder="Kode OTP"
+            name="otp"
             required
-            className="border-gray-200 rounded w-full"
-            value={input.email}
-            onChange={inputOnChange}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            name="password"
-            required
-            className="border-gray-200 rounded w-full"
+            className="border-gray-200 rounded w-full disabled:bg-gray-300"
             onChange={inputOnChange}
           />
           <button
@@ -70,12 +108,19 @@ export default function LoginPage() {
           >
             {loading ? <Spinner /> : "LOGIN"}
           </button>
-          <div className="text-center">
-            Belum punya akun?{" "}
-            <Link to="/register" className="text-primary font-semibold">
-              Daftar
-            </Link>
-          </div>
+          {/* <div>
+            <div className="flex justify-center items-center gap-x-1">
+              <div>Belum punya akun?</div>
+              <Link to="/register" className="text-primary font-semibold">
+                Daftar
+              </Link>
+            </div>
+            <div className="flex justify-center items-center gap-x-1">
+              <Link to="/forgot" className="text-primary font-semibold">
+                Lupa Password
+              </Link>
+            </div>
+          </div> */}
         </form>
       </div>
     </>

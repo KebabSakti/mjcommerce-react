@@ -4,15 +4,17 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { StoreModel } from "../../../lib/model/store-model";
 import { DataState } from "../lib/config/type";
+import AccountRepository from "../lib/repository/account-repository";
 import StoreRepository from "../lib/repository/store-repository";
 import ModalLoading from "./component/modal-loading";
 import ModalPrompt from "./component/modal-prompt";
+import ScrollTop from "./component/scrolltop";
 import StatusBar from "./component/status-bar";
 import { AuthContext } from "./context/auth-context";
-import ScrollTop from "./component/scrolltop";
 import { ConfigContext } from "./context/config-context";
 
 const storeRepository = new StoreRepository();
+const accountRepository = new AccountRepository();
 
 export default function ProfilePage() {
   const authContext = useContext(AuthContext);
@@ -22,14 +24,31 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState(false);
   const [storeModal, setStoreModal] = useState(false);
-  const [input, setInput] = useState({ name: "", phone: "", address: "" });
+  const [editProfilModal, setEditProfilModal] = useState(false);
   const [store, setStore] = useState<DataState<StoreModel>>();
+  const [input, setInput] = useState({ name: "", phone: "", address: "" });
+
+  const [profilInput, setProfilInput] = useState({
+    name: "",
+    phone: "",
+    address: "",
+  });
 
   useEffect(() => {
     if (authContext?.auth) {
-      getStore();
+      init();
     }
   }, [authContext?.auth]);
+
+  function init() {
+    getStore();
+
+    setProfilInput({
+      name: authContext?.auth?.user?.name ?? "",
+      phone: authContext?.auth?.user?.phone ?? "",
+      address: authContext?.auth?.user?.address ?? "",
+    });
+  }
 
   async function getStore() {
     try {
@@ -78,9 +97,31 @@ export default function ProfilePage() {
     setInput({ ...input, [e.target.name]: e.target.value });
   }
 
+  function editProfilOnChange(e: any) {
+    setProfilInput({ ...profilInput, [e.target.name]: e.target.value });
+  }
+
   function formSubmit(e: any) {
     e.preventDefault();
     createStore();
+  }
+
+  async function editProfilSubmit(e: any) {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      await accountRepository.update({
+        token: authContext?.auth?.token,
+        ...profilInput,
+      });
+
+      window.location.reload();
+    } catch (error: any) {
+      setLoading(false);
+      toast("Proses gagal, harap ulangi beberapa saat lagi");
+    }
   }
 
   return (
@@ -156,8 +197,13 @@ export default function ProfilePage() {
         <div className="bg-surface text-onSurface w-full py-2 px-4 flex justify-between items-center">
           <div className="font-semibold">
             <div>{authContext?.auth?.user?.name}</div>
-            <div>{authContext?.auth?.user?.email}</div>
-            {/* <Link to="" className="text-primary flex items-center">
+            <div>{authContext?.auth?.user?.phone}</div>
+            <button
+              className="text-primary flex items-center"
+              onClick={() => {
+                setEditProfilModal(true);
+              }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -172,8 +218,8 @@ export default function ProfilePage() {
                   d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
                 />
               </svg>
-              Edit Data
-            </Link> */}
+              Edit Profil
+            </button>
           </div>
           <button
             className="bg-red-500 text-white font-semibold p-1 rounded-full flex gap-1 items-center"
@@ -285,6 +331,60 @@ export default function ProfilePage() {
         </div>
       </div>
       <ScrollTop />
+      <Modal
+        size="lg"
+        show={editProfilModal}
+        onClose={() => {
+          setEditProfilModal(false);
+        }}
+      >
+        <form onSubmit={editProfilSubmit}>
+          <Modal.Header>Edit Profil</Modal.Header>
+          <Modal.Body>
+            <div className="flex flex-col gap-4 w-full text-sm">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Nama"
+                  name="name"
+                  required
+                  className="border-gray-200 rounded w-full"
+                  value={profilInput.name}
+                  onChange={editProfilOnChange}
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="No Whatsapp"
+                  className="border-gray-200 rounded w-full disabled:bg-gray-200"
+                  value={profilInput.phone}
+                  disabled
+                />
+              </div>
+              <div>
+                <Textarea
+                  placeholder="Alamat"
+                  name="address"
+                  className="border-gray-200 rounded w-full h-24 bg-white text-base"
+                  value={profilInput.address}
+                  onChange={editProfilOnChange}
+                />
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <div className="w-full">
+              <button
+                type="submit"
+                className="bg-primary text-onPrimary py-2 px-4 rounded float-right"
+              >
+                Submit
+              </button>
+            </div>
+          </Modal.Footer>
+        </form>
+      </Modal>
       <Modal
         size="lg"
         show={storeModal}

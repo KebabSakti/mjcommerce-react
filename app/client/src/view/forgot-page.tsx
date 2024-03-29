@@ -6,15 +6,15 @@ import "react-toastify/dist/ReactToastify.css";
 import logo from "../asset/maju-jaya-alt.png";
 import { AuthContext } from "./context/auth-context";
 
-export default function RegisterPage() {
+export default function ForgotPage() {
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const [input, setInput] = useState({
-    password: "",
-    name: "",
     phone: "",
+    code: "",
+    password: "",
   });
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function RegisterPage() {
           <img src={logo} alt="Logo Maju Jaya" />
         </Link>
         <div className="text-onBackground font-semibold text-lg">
-          DAFTAR BARU
+          LUPA PASSWORD
         </div>
         <form
           onSubmit={handleForm}
@@ -62,7 +62,7 @@ export default function RegisterPage() {
             name="name"
             required
             className="border-gray-200 rounded w-full"
-            value={input.name}
+            value={input.phone}
             onChange={inputOnChange}
           />
           <div className="flex flex-col gap-1">

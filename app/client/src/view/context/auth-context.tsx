@@ -8,6 +8,7 @@ export interface AuthContextType {
   load: () => void;
   login: (param: Record<string, any>) => Promise<void>;
   register: (param: Record<string, any>) => Promise<void>;
+  otp: (param: Record<string, any>) => Promise<void>;
   logout: () => void;
 }
 
@@ -40,8 +41,12 @@ export function AuthProvider({ children }: any) {
     setAuth(null);
   }
 
+  async function otp(param: Record<string, any>): Promise<void> {
+    await authRepository.otp(param);
+  }
+
   return (
-    <AuthContext.Provider value={{ auth, load, login, register, logout }}>
+    <AuthContext.Provider value={{ auth, load, login, register, logout, otp }}>
       {children}
     </AuthContext.Provider>
   );

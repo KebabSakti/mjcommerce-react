@@ -10,7 +10,7 @@ export default class UserAuthRepository {
     const user = await prisma.user.findFirst({
       where: {
         active: true,
-        email: param.email,
+        phone: param.phone,
       },
       include: {
         store: true,

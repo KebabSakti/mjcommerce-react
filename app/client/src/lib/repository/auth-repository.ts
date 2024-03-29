@@ -57,6 +57,22 @@ export default class AuthRepository {
     return data;
   }
 
+  async otp(param: Record<string, any>): Promise<void> {
+    const queryUrl = urlParser(url.otp);
+
+    const response = await fetch(queryUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(param),
+    });
+
+    if (!response.ok) {
+      throw Failure.network(response);
+    }
+  }
+
   logout() {
     localStorage.removeItem("auth");
   }

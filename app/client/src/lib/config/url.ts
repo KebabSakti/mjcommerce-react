@@ -8,9 +8,11 @@ export const url = {
   productRating: `${base}/user/product-rating`,
   payment: `${base}/user/payment`,
   login: `${base}/user/auth/login`,
+  otp: `${base}/user/auth/otp`,
   register: `${base}/user/auth/register`,
   cart: `${base}/user/protected/cart`,
   order: `${base}/user/protected/order`,
   store: `${base}/user/protected/store`,
   sales: `${base}/user/protected/sales`,
+  account: `${base}/user/protected/account`,
 };

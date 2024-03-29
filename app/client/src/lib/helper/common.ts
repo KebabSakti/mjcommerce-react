@@ -109,6 +109,17 @@ export function invoice(): string {
   return prefix + dateString + randomDigits;
 }
 
-export function nl2br(value:string) {
-  return value.replace(/(?:\r\n|\r|\n)/g, '<br>');
+export function nl2br(value: string) {
+  return value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+}
+
+export function generateRandomNumbers(): number[] {
+  const randomNumbers: number[] = [];
+
+  for (let i = 0; i < 6; i++) {
+    const randomNumber = Math.floor(Math.random() * 100); // Change 100 to adjust the range of random numbers
+    randomNumbers.push(randomNumber);
+  }
+
+  return randomNumbers;
 }

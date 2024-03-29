@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
+import Joi from "joi";
 import { BadRequest, Failure } from "../helper/failure";
 import UserRepository from "../repository/user-account-repository";
-import Joi from "joi";
 
 const userRepository = new UserRepository();
 
@@ -57,17 +57,8 @@ export default class UserController {
 
   async update(req: Request, res: Response) {
     try {
-      const schema = Joi.object({
-        id: Joi.string().required(),
-      }).unknown();
-
-      const { error } = schema.validate(req.body);
-
-      if (error) {
-        throw new BadRequest(error.message);
-      }
-
-      const result = await userRepository.update(req.body);
+      const userId = req.app.locals.user.id;
+      const result = await userRepository.update({ id: userId, ...req.body });
       delete result.data?.password;
 
       res.json(result);

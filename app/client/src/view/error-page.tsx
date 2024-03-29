@@ -1,8 +1,14 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation, useNavigate, useRouteError } from "react-router-dom";
 
 export default function ErrorPage() {
+  const error = useRouteError();
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    console.log(error);
+  }, []);
 
   function navigateHome() {
     let path = location.pathname.includes("admin") ? "/admin/app" : "/";

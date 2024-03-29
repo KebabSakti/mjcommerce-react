@@ -6,5 +6,6 @@ const userAuthController = new UserAuthController();
 
 router.post("/login", userAuthController.login);
 router.post("/register", userAuthController.register);
+router.post("/otp", userAuthController.otp);
 
 export default router;

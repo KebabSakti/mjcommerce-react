@@ -121,7 +121,7 @@ export default function ProductDetailPage() {
                   </svg>
                 </Link>
                 <Link
-                  to={`https://wa.me/6281254982664`}
+                  to={`https://wa.me/${product.store?.phone}`}
                   target="_blank"
                   className="flex gap-1 items-center bg-green-500 px-2 py-1 w-max"
                 >

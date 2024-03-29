@@ -1,32 +1,9 @@
-import { NextFunction, Request, Response } from "express";
-import { Failure, Unauthorized } from "../../lib/helper/failure";
-import UserAuthRepository from "../../lib/repository/user-auth-repository";
+import express from "express";
+import UserAuthController from "../../lib/controller/user-auth-controller";
 
-const userAuthRepository = new UserAuthRepository();
+const router = express.Router();
+const userAuthController = new UserAuthController();
 
-export default async function userMiddleware(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const authorization = req.headers.authorization;
+router.use(userAuthController.validate);
 
-    if (authorization != undefined) {
-      const payloads = authorization.split(" ");
-
-      if (payloads.length == 2) {
-        const token = payloads[1];
-        const result = await userAuthRepository.validate(token);
-        req.app.locals.userId = result.data?.user?.id;
-        req.app.locals.user = result.data?.user;
-
-        return next();
-      }
-    }
-
-    throw new Unauthorized();
-  } catch (error: any) {
-    Failure.handle(error, res);
-  }
-}
+export default router;

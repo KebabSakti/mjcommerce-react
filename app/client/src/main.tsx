@@ -11,8 +11,8 @@ import Layout from "./view/component/layout";
 import { AuthProvider } from "./view/context/auth-context";
 import { CartProvider } from "./view/context/cart-context";
 import { ConfigProvider } from "./view/context/config-context";
-import DebugPage from "./view/debug-page";
 import ErrorPage from "./view/error-page";
+import ForgotPage from "./view/forgot-page";
 import HomePage from "./view/home-page";
 import LoginPage from "./view/login-page";
 import OrderPage from "./view/order-page";
@@ -28,54 +28,61 @@ import SuccessPage from "./view/success-page";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
       {
-        index: true,
-        element: <HomePage />,
-      },
-      {
-        path: "/product",
-        element: <ProductPage />,
-      },
-      { path: "/product-detail/:id", element: <ProductDetailPage /> },
-      { path: "/cart", element: <CartPage /> },
-      { path: "/checkout", element: <CheckoutPage /> },
-      { path: "/success", element: <SuccessPage /> },
-      {
-        path: "/profile",
-        element: <ProfilePage />,
+        path: "/",
+        element: <Layout />,
         children: [
           {
             index: true,
-            element: <OrderPage />,
+            element: <HomePage />,
           },
           {
-            path: "/profile/shop",
-            element: <ShopPage />,
+            path: "/product",
+            element: <ProductPage />,
           },
+          { path: "/product-detail/:id", element: <ProductDetailPage /> },
+          { path: "/cart", element: <CartPage /> },
+          { path: "/checkout", element: <CheckoutPage /> },
+          { path: "/success", element: <SuccessPage /> },
           {
-            path: "/profile/product-management",
-            element: <ProductMangementPage />,
-          },
-          {
-            path: "/profile/sales",
-            element: <SalesPage />,
+            path: "/profile",
+            element: <ProfilePage />,
+            children: [
+              {
+                index: true,
+                element: <OrderPage />,
+              },
+              {
+                path: "/profile/shop",
+                element: <ShopPage />,
+              },
+              {
+                path: "/profile/product-management",
+                element: <ProductMangementPage />,
+              },
+              {
+                path: "/profile/sales",
+                element: <SalesPage />,
+              },
+            ],
           },
         ],
       },
-      { path: "/debug", element: <DebugPage /> },
+      {
+        path: "/login",
+        element: <LoginPage />,
+      },
+      {
+        path: "/register",
+        element: <RegisterPage />,
+      },
+      {
+        path: "/forgot",
+        element: <ForgotPage />,
+      },
     ],
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
-  },
-  {
-    path: "/register",
-    element: <RegisterPage />,
   },
 ]);
 

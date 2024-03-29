@@ -14,10 +14,10 @@ export default class UserRepository {
       };
     }
 
-    if (param.hasOwnProperty("email")) {
+    if (param.hasOwnProperty("phone")) {
       condition["where"] = {
         ...condition.where,
-        email: param.email,
+        phone: param.phone,
       };
     }
 
@@ -38,7 +38,6 @@ export default class UserRepository {
     const result = await prisma.user.create({
       data: {
         password: hashedPassword,
-        email: param.email,
         name: param.name,
         phone: param.phone,
         address: param.address,
@@ -58,7 +57,6 @@ export default class UserRepository {
         id: param.id,
       },
       data: {
-        email: param.email,
         name: param.name,
         phone: param.phone,
         address: param.address,

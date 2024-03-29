@@ -75,7 +75,7 @@ app.use("/admin/protected/category", adminCategoryRoute);
 app.use("/admin/protected/config", adminConfigRoute);
 app.use("/admin/protected/wa", adminWaRoute);
 
-app.get("/", async (req, res) => {
+app.get("/user/protected/debug", async (req, res) => {
   res.end();
 });
 
