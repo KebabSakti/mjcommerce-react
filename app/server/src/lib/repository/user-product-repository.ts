@@ -1,7 +1,7 @@
 import { Result } from "../config/type";
 import { toModel } from "../helper/common";
-import { prisma } from "../helper/prisma";
 import { ProductModel } from "./../../../../lib/model/product-model";
+import { prisma } from "./../helper/prisma";
 
 export default class UserProductRepository {
   async read(param: Record<string, any>): Promise<Result<ProductModel[]>> {
@@ -101,6 +101,11 @@ export default class UserProductRepository {
           category: true,
           productGalery: true,
           productVariant: true,
+          productPrice: {
+            orderBy: {
+              min: "asc",
+            },
+          },
         },
       });
 
@@ -131,18 +136,29 @@ export default class UserProductRepository {
           name: param.name,
           description: param.description,
           picture: picture.link,
-          price: param.varian[0].price,
+          price: param.price[0].price,
         },
       });
 
-      for (const varian of param.varian) {
-        await tx.productVariant.create({
+      // for (const varian of param.varian) {
+      //   await tx.productVariant.create({
+      //     data: {
+      //       productId: product.id,
+      //       name: varian.name,
+      //       price: varian.price,
+      //       wholesaleMin: varian.wholesaleMin,
+      //       wholesalePrice: varian.wholesalePrice,
+      //     },
+      //   });
+      // }
+
+      for (const price of param.price) {
+        await tx.productPrice.create({
           data: {
             productId: product.id,
-            name: varian.name,
-            price: varian.price,
-            wholesaleMin: varian.wholesaleMin,
-            wholesalePrice: varian.wholesalePrice,
+            min: price.min,
+            max: price.max,
+            price: price.price,
           },
         });
       }

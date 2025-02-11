@@ -99,6 +99,7 @@ CREATE TABLE `product` (
     `active` BOOLEAN NOT NULL DEFAULT true,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `deleted` DATETIME(3) NULL,
 
     INDEX `product_storeId_categoryId_name_active_idx`(`storeId`, `categoryId`, `name`, `active`),
     PRIMARY KEY (`id`)
@@ -121,6 +122,20 @@ CREATE TABLE `productvariant` (
     `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     INDEX `productvariant_productId_idx`(`productId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `productprice` (
+    `id` VARCHAR(191) NOT NULL,
+    `productId` VARCHAR(191) NOT NULL,
+    `min` INTEGER NULL,
+    `max` INTEGER NULL,
+    `price` DECIMAL(65, 30) NOT NULL,
+    `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    INDEX `productprice_productId_idx`(`productId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -319,6 +334,9 @@ ALTER TABLE `product` ADD CONSTRAINT `product_storeId_fkey` FOREIGN KEY (`storeI
 
 -- AddForeignKey
 ALTER TABLE `productvariant` ADD CONSTRAINT `productvariant_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `productprice` ADD CONSTRAINT `productprice_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `productgalery` ADD CONSTRAINT `productgalery_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

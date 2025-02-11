@@ -29,4 +29,17 @@ export default class UserStoreController {
       Failure.handle(error, res);
     }
   }
+
+  async update(req: Request, res: Response) {
+    try {
+      const user = req.app.locals.user;
+      req.body.phone = convertToValidPhoneNumber(req.body.phone);
+      const payload = { ...req.body, userId: user.id };
+      await storeRepository.update(payload);
+
+      res.end();
+    } catch (error: any) {
+      Failure.handle(error, res);
+    }
+  }
 }

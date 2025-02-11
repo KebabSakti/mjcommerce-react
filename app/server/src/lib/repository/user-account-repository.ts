@@ -57,9 +57,8 @@ export default class UserRepository {
         id: param.id,
       },
       data: {
-        name: param.name,
-        phone: param.phone,
-        address: param.address,
+        name: param.profile.name,
+        address: param.profile.address,
       },
     });
 

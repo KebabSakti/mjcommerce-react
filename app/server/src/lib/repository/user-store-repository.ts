@@ -18,4 +18,13 @@ export default class UserStoreRepository {
       data: param as any,
     });
   }
+
+  async update(param: Record<string, any>): Promise<void> {
+    await prisma.store.update({
+      where: {
+        id: param.id,
+      },
+      data: param as any,
+    });
+  }
 }

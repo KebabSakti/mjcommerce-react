@@ -117,11 +117,13 @@ model Product {
   active         Boolean          @default(true)
   created        DateTime         @default(now())
   updated        DateTime         @default(now())
+  deleted        DateTime?
   category       Category         @relation(fields: [categoryId], references: [id])
   store          Store            @relation(fields: [storeId], references: [id])
   productRating  ProductRating[]
   productGalery  ProductGalery[]
   productVariant ProductVariant[]
+  productPrice   ProductPrice[]
 
   @@index([storeId, categoryId, name, active])
   @@map("product")
@@ -146,6 +148,20 @@ model ProductVariant {
 
   @@index([productId])
   @@map("productvariant")
+}
+
+model ProductPrice {
+  id        String   @id @default(uuid())
+  productId String
+  min       Int?
+  max       Int?
+  price     Decimal
+  created   DateTime @default(now())
+  updated   DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@index([productId])
+  @@map("productprice")
 }
 
 model ProductGalery {

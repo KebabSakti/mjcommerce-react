@@ -19,6 +19,8 @@ export default function ProductMangementPage() {
   const authContext = useContext(AuthContext);
   const coverImageRef = useRef<any>();
   const galleryImageRef = useRef<any>();
+  const coverImageRefEdit = useRef<any>();
+  const galleryImageRefEdit = useRef<any>();
   let [searchParams, setSearchParams] = useSearchParams();
   const query = Object.fromEntries([...searchParams]);
   const page = parseInt(query.page);
@@ -29,6 +31,7 @@ export default function ProductMangementPage() {
   const [modal, setModal] = useState(false);
   const [data, setData] = useState<DataState<Record<string, any>>>();
   const [productDetail, setProductDetail] = useState<ProductModel | Empty>();
+  const [productEdit, setProductEdit] = useState<ProductModel | Empty>();
   const [image, setImage] = useState<string | Empty>(null);
 
   const [input, setInput] = useState({
@@ -40,6 +43,13 @@ export default function ProductMangementPage() {
     varian: [
       { name: "", price: null, wholesaleMin: null, wholesalePrice: null },
     ],
+    price: [
+      {
+        min: "",
+        max: "",
+        price: "",
+      },
+    ],
   });
 
   useEffect(() => {
@@ -49,6 +59,12 @@ export default function ProductMangementPage() {
   useEffect(() => {
     getData();
   }, [searchParams]);
+
+  //========================//
+  useEffect(() => {
+    console.log(productEdit);
+  }, [productEdit]);
+  //========================//
 
   async function getData() {
     try {
@@ -83,7 +99,6 @@ export default function ProductMangementPage() {
       // getData();
       // toast("Proses berhasil, produk telah ditambahkan");
     } catch (error: any) {
-      console.error(error);
       toast("Terjadi kesalahan, coba beberapa saat lagi");
       setLoading(false);
     }
@@ -95,6 +110,19 @@ export default function ProductMangementPage() {
       const result = await productRepository.show(id);
 
       setProductDetail(result.data);
+      setLoading(false);
+    } catch (error: any) {
+      toast("Terjadi kesalahan, harap coba beberapa saat lagi");
+      setLoading(false);
+    }
+  }
+
+  async function getProductEdit(id: string) {
+    try {
+      setLoading(true);
+      const result = await productRepository.show(id);
+
+      setProductEdit(result.data);
       setLoading(false);
     } catch (error: any) {
       toast("Terjadi kesalahan, harap coba beberapa saat lagi");
@@ -152,15 +180,14 @@ export default function ProductMangementPage() {
   }
 
   function multipleInputOnChange(e: any, index: number) {
-    const varian = input.varian;
+    const price = input.price;
 
-    varian[index] = {
-      ...varian[index],
-      [e.target.name]:
-        e.target.name != "name" ? Number(e.target.value) : e.target.value,
+    price[index] = {
+      ...price[index],
+      [e.target.name]: Number(e.target.value),
     };
 
-    setInput({ ...input, varian: varian });
+    setInput({ ...input, price: price });
   }
 
   function fileOnChange(e: any) {
@@ -286,40 +313,52 @@ export default function ProductMangementPage() {
                     const product = e;
 
                     return (
-                      <div
-                        key={i}
-                        className="border w-full h-64 flex flex-col overflow-hidden cursor-pointer"
-                        onClick={() => {
-                          getProductDetail(e.id!);
-                        }}
-                      >
-                        <div className="bg-gray-100 h-[60%] shrink-0">
-                          <LazyLoadImage
-                            src={product.picture}
-                            alt={product.name}
-                            className="h-full w-full object-cover"
-                          />
-                        </div>
-                        <div className="p-2 flex-grow flex flex-col justify-between">
-                          <div className="text-sm line-clamp-2">
-                            {product.name}
+                      <div key={i} className="border w-full">
+                        <div
+                          className="cursor-pointer"
+                          onClick={() => {
+                            getProductDetail(e.id!);
+                          }}
+                        >
+                          <div className="bg-gray-100 h-40 w-full relative">
+                            <LazyLoadImage
+                              src={product.picture}
+                              alt={product.name}
+                              className="h-full w-full object-cover"
+                            />
+                            <div className="absolute bottom-0 right-0 p-2">
+                              {product.active ? (
+                                <div className="text-white text-xs px-2 py-1 rounded bg-green-500 w-fit">
+                                  AKTIF
+                                </div>
+                              ) : (
+                                <div className="text-white text-xs px-2 py-1 rounded bg-red-500 w-fit">
+                                  NON AKTIF
+                                </div>
+                              )}
+                            </div>
                           </div>
-                          <div className="flex flex-col gap-2">
-                            {product.active ? (
-                              <div className="text-green-500 text-xs px-2 rounded border border-green-500 w-fit">
-                                AKTIF
-                              </div>
-                            ) : (
-                              <div className="text-red-500 text-xs px-2 rounded border border-red-500 w-fit">
-                                NON AKTIF
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex flex-col gap-2">
-                            <div className="font-semibold">
+                          <div className="p-2 flex flex-col gap-2">
+                            <div className="text-sm line-clamp-2">
+                              {product.name}
+                            </div>
+                            <div className="font-semibold line-clamp-1">
                               {currency(product.price!)}
                             </div>
                           </div>
+                        </div>
+                        <div className="p-2 flex gap-1">
+                          <button
+                            className="px-2 bg-amber-500 text-white rounded"
+                            onClick={() => {
+                              getProductEdit(e.id!);
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button className="px-2 bg-red-500 text-white rounded">
+                            Hapus
+                          </button>
                         </div>
                       </div>
                     );
@@ -468,7 +507,7 @@ export default function ProductMangementPage() {
                   onChange={inputOnChange}
                 />
               </div>
-              <div className="flex flex-col gap-1 max-h-56 overflow-scroll no-scrollbar">
+              {/* <div className="flex flex-col gap-1 max-h-56 overflow-scroll no-scrollbar">
                 {input.varian.map((e: any, i: any) => {
                   return (
                     <div
@@ -604,6 +643,129 @@ export default function ProductMangementPage() {
                     </div>
                   );
                 })}
+              </div> */}
+              <div className="flex flex-col gap-1 max-h-56 overflow-scroll">
+                {input.price.map((e: any, i: any) => {
+                  return (
+                    <div
+                      key={i}
+                      className="flex flex-col gap-2 bg-gray-100 p-2 rounded"
+                    >
+                      <div className="flex justify-between items-center">
+                        <div className="font-semibold">Harga</div>
+                        {(() => {
+                          if (i == 0) {
+                            return (
+                              <button
+                                type="button"
+                                className="py-1 px-2 bg-primary rounded text-onPrimary"
+                                onClick={() => {
+                                  setInput({
+                                    ...input,
+                                    price: [
+                                      ...input.price,
+                                      {
+                                        min: "",
+                                        max: "",
+                                        price: "",
+                                      },
+                                    ],
+                                  });
+                                }}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth={1.5}
+                                  stroke="currentColor"
+                                  className="w-4 h-4"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M12 4.5v15m7.5-7.5h-15"
+                                  />
+                                </svg>
+                              </button>
+                            );
+                          }
+
+                          return (
+                            <button
+                              type="button"
+                              className="py-1 px-2 bg-red-500 rounded text-white"
+                              onClick={() => {
+                                const price = input.price;
+                                price.splice(i, 1);
+
+                                setInput({
+                                  ...input,
+                                  price: price,
+                                });
+                              }}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="w-4 h-4"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M5 12h14"
+                                />
+                              </svg>
+                            </button>
+                          );
+                        })()}
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-2">
+                          <input
+                            type="number"
+                            placeholder="Min. QTY"
+                            name="min"
+                            min={1}
+                            required
+                            className="border-gray-200 rounded w-full"
+                            value={e.min}
+                            onChange={(e) => {
+                              multipleInputOnChange(e, i);
+                            }}
+                          />
+                          <input
+                            type="number"
+                            placeholder="Max. Qty"
+                            name="max"
+                            min={1}
+                            required
+                            className="border-gray-200 rounded w-full"
+                            value={e.max}
+                            onChange={(e) => {
+                              multipleInputOnChange(e, i);
+                            }}
+                          />
+                          <input
+                            type="number"
+                            placeholder="Harga"
+                            name="price"
+                            min={0}
+                            required
+                            className="border-gray-200 rounded w-full"
+                            value={e.price}
+                            onChange={(e) => {
+                              multipleInputOnChange(e, i);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </Modal.Body>
@@ -668,10 +830,10 @@ export default function ProductMangementPage() {
                   {productDetail?.description}
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <div className="text-xs text-gray-400">Harga</div>
                 <div>{currency(productDetail?.price!)}</div>
-              </div>
+              </div> */}
               <div>
                 <div className="text-xs text-gray-400">Terjual</div>
                 <div>{productDetail?.sell}</div>
@@ -724,36 +886,26 @@ export default function ProductMangementPage() {
                 </div>
               </div>
             </div>
-            {productDetail?.productVariant?.map((e, i) => {
-              return (
-                <div key={i}>
-                  <div>Varian Produk {i + 1}</div>
-                  <div className="bg-gray-100 p-2 rounded flex flex-col gap-2">
-                    <div>
-                      <div className="text-xs text-gray-400">Nama Varian</div>
-                      <div>{e.name}</div>
+            <div className="bg-gray-100 p-2 rounded flex flex-col gap-2">
+              <div className="flex">
+                <div className="text-xs text-gray-400 w-28">Quantity</div>
+                <div className="text-xs text-gray-400">Harga per quantity</div>
+              </div>
+
+              {productDetail?.productPrice?.map((e, i) => {
+                return (
+                  <div key={i} className="flex">
+                    <div className="w-28">
+                      {e.min} - {e.max}
                     </div>
-                    <div>
-                      <div className="text-xs text-gray-400">Harga</div>
-                      <div>{currency(e.price!)}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-gray-400">
-                        Minimum Grosir
-                      </div>
-                      <div>{e.wholesaleMin}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-gray-400">Harga Grosir</div>
-                      <div>{currency(e.wholesalePrice!)}</div>
-                    </div>
+                    <div>{currency(e.price!)}</div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </Modal.Body>
-        <Modal.Footer>
+        {/* <Modal.Footer>
           <div className="flex justify-end w-full">
             {productDetail?.active ? (
               <button
@@ -803,8 +955,277 @@ export default function ProductMangementPage() {
               </button>
             )}
           </div>
-        </Modal.Footer>
+        </Modal.Footer> */}
       </Modal>
+
+      {/* EDIT PRODUK */}
+      <Modal
+        size="lg"
+        show={productEdit != null}
+        onClose={() => {
+          setProductEdit(null);
+        }}
+      >
+        <form onSubmit={formSubmit}>
+          <Modal.Header>Edit Produk</Modal.Header>
+          <Modal.Body>
+            <div className="flex flex-col gap-4 w-full text-sm text-onSurface">
+              <div>
+                <select
+                  name="categoryId"
+                  className="border-gray-200 rounded w-full"
+                  value={productEdit?.categoryId}
+                  required
+                  onChange={(e) => {
+                    setProductEdit({
+                      ...productEdit,
+                      categoryId: e.target.value,
+                    });
+                  }}
+                >
+                  <option value="">Pilih Kategori</option>
+                  {data?.data?.category?.data.map(
+                    (e: CategoryModel, i: number) => {
+                      return (
+                        <option key={i} value={e.id}>
+                          {e.name}
+                        </option>
+                      );
+                    }
+                  )}
+                </select>
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Nama Produk"
+                  name="name"
+                  required
+                  className="border-gray-200 rounded w-full"
+                  value={productEdit?.name}
+                  onChange={(e) => {
+                    setProductEdit({ ...productEdit, name: e.target.value });
+                  }}
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Foto Produk"
+                  required
+                  className="border-gray-200 rounded w-full cursor-pointer"
+                  value={(() => {
+                    const picture = input.files.find((e) => e.tag == "picture");
+
+                    if (picture?.file != null) {
+                      const file = picture?.file as any;
+                      return file.name ?? "";
+                    }
+
+                    return "";
+                  })()}
+                  readOnly
+                  onClick={() => {
+                    coverImageRefEdit.current.click();
+                  }}
+                />
+                <input
+                  type="file"
+                  name="picture"
+                  className="hidden"
+                  ref={coverImageRefEdit}
+                  onChange={(e) => {
+                    if (e.target.files) {
+                      console.log(e.target.files[0]);
+                    }
+                  }}
+                />
+                <div className="text-red-500">
+                  * Kosongkan jika tidak mengganti foto
+                </div>
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Galeri Produk"
+                  required
+                  className="border-gray-200 rounded w-full cursor-pointer"
+                  value={(() => {
+                    const gallery = input.files.filter(
+                      (e) => e.tag == "gallery"
+                    );
+
+                    if (gallery.length > 0) {
+                      return `${gallery.length} produk dipilih`;
+                    }
+
+                    return "";
+                  })()}
+                  readOnly
+                  onClick={() => {
+                    galleryImageRefEdit.current.click();
+                  }}
+                />
+                <input
+                  multiple
+                  type="file"
+                  name="gallery"
+                  className="hidden"
+                  ref={galleryImageRefEdit}
+                  onChange={multipleFileOnChange}
+                />
+                <div className="text-red-500">
+                  * Kosongkan jika tidak mengganti galeri produk
+                </div>
+              </div>
+              <div>
+                <Textarea
+                  placeholder="Deskripsi"
+                  name="description"
+                  className="border-gray-200 rounded w-full h-36 bg-white text-base"
+                  required
+                  value={input.description}
+                  onChange={inputOnChange}
+                />
+              </div>
+              <div className="flex flex-col gap-1 max-h-56 overflow-scroll">
+                {input.price.map((e: any, i: any) => {
+                  return (
+                    <div
+                      key={i}
+                      className="flex flex-col gap-2 bg-gray-100 p-2 rounded"
+                    >
+                      <div className="flex justify-between items-center">
+                        <div className="font-semibold">Harga</div>
+                        {(() => {
+                          if (i == 0) {
+                            return (
+                              <button
+                                type="button"
+                                className="py-1 px-2 bg-primary rounded text-onPrimary"
+                                onClick={() => {
+                                  setInput({
+                                    ...input,
+                                    price: [
+                                      ...input.price,
+                                      {
+                                        min: "",
+                                        max: "",
+                                        price: "",
+                                      },
+                                    ],
+                                  });
+                                }}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth={1.5}
+                                  stroke="currentColor"
+                                  className="w-4 h-4"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M12 4.5v15m7.5-7.5h-15"
+                                  />
+                                </svg>
+                              </button>
+                            );
+                          }
+
+                          return (
+                            <button
+                              type="button"
+                              className="py-1 px-2 bg-red-500 rounded text-white"
+                              onClick={() => {
+                                const price = input.price;
+                                price.splice(i, 1);
+
+                                setInput({
+                                  ...input,
+                                  price: price,
+                                });
+                              }}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="w-4 h-4"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M5 12h14"
+                                />
+                              </svg>
+                            </button>
+                          );
+                        })()}
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-2">
+                          <input
+                            type="number"
+                            placeholder="Min. QTY"
+                            name="min"
+                            min={1}
+                            required
+                            className="border-gray-200 rounded w-full"
+                            value={e.min}
+                            onChange={(e) => {
+                              multipleInputOnChange(e, i);
+                            }}
+                          />
+                          <input
+                            type="number"
+                            placeholder="Max. Qty"
+                            name="max"
+                            min={1}
+                            required
+                            className="border-gray-200 rounded w-full"
+                            value={e.max}
+                            onChange={(e) => {
+                              multipleInputOnChange(e, i);
+                            }}
+                          />
+                          <input
+                            type="number"
+                            placeholder="Harga"
+                            name="price"
+                            min={0}
+                            required
+                            className="border-gray-200 rounded w-full"
+                            value={e.price}
+                            onChange={(e) => {
+                              multipleInputOnChange(e, i);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <div className="w-full">
+              <button
+                type="submit"
+                className="bg-primary text-onPrimary py-2 px-4 rounded float-right"
+              >
+                Submit
+              </button>
+            </div>
+          </Modal.Footer>
+        </form>
+      </Modal>
+
       <Modal
         dismissible
         show={image != null}

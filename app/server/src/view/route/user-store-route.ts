@@ -6,5 +6,6 @@ const storeController = new UserStoreController();
 
 router.get("/", storeController.show);
 router.post("/", storeController.create);
+router.put("/", storeController.update);
 
 export default router;

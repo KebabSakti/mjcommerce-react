@@ -1,5 +1,6 @@
 import { CategoryModel } from "./category-model";
 import { ProductGalery } from "./product-gallery";
+import { ProductPrice } from "./product-price";
 import { ProductRating } from "./product-rating";
 import { ProductVariant } from "./product-variant";
 import { StoreModel } from "./store-model";
@@ -26,9 +27,11 @@ export interface ProductModel {
   active?: boolean;
   created?: string;
   updated?: string;
+  deleted?: string;
   category?: CategoryModel;
   store?: StoreModel;
   productGalery?: ProductGalery[];
   productRating?: ProductRating[];
   productVariant?: ProductVariant[];
+  productPrice?: ProductPrice[];
 }
