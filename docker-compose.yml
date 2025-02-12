@@ -99,11 +99,11 @@ services:
       - majujaya
 
   adminer:
-    build:
-      context: .
-      dockerfile: adminer.dockerfile
+    image: adminer:latest
     container_name: adminer-majujaya
     restart: on-failure
+    environment:
+      ADMINER_DESIGN: dracula
     ports:
       - 1003:8080
     networks:
